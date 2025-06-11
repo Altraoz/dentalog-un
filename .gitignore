@@ -1,0 +1,29 @@
+# Logs
+frontend-dentalog/logs
+frontend-dentalog/*.log
+frontend-dentalog/npm-debug.log*
+frontend-dentalog/yarn-debug.log*
+frontend-dentalog/yarn-error.log*
+frontend-dentalog/pnpm-debug.log*
+frontend-dentalog/lerna-debug.log*
+frontend-dentalog/
+frontend-dentalog/node_modules
+frontend-dentalog/dist
+frontend-dentalog/dist-ssr
+frontend-dentalog/*.local
+frontend-dentalog/
+frontend-dentalog/# Editor directories and files
+frontend-dentalog/.vscode/*
+frontend-dentalog/!.vscode/extensions.json
+frontend-dentalog/.idea
+frontend-dentalog/.DS_Store
+frontend-dentalog/*.suo
+frontend-dentalog/*.ntvs*
+frontend-dentalog/*.njsproj
+frontend-dentalog/*.sln
+frontend-dentalog/*.sw?
+
+
+# Entorno virtual
+backend-dentalog/env
+backend-dentalog/venv
