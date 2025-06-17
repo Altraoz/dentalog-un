@@ -6,12 +6,10 @@ frontend-dentalog/yarn-debug.log*
 frontend-dentalog/yarn-error.log*
 frontend-dentalog/pnpm-debug.log*
 frontend-dentalog/lerna-debug.log*
-frontend-dentalog/
 frontend-dentalog/node_modules
 frontend-dentalog/dist
 frontend-dentalog/dist-ssr
 frontend-dentalog/*.local
-frontend-dentalog/
 frontend-dentalog/# Editor directories and files
 frontend-dentalog/.vscode/*
 frontend-dentalog/!.vscode/extensions.json
