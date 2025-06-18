@@ -3,6 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 2vw 0 1vw;
+  background: linear-gradient(rgb(0, 0, 128), rgba(0, 0, 128, 0.7));
 }
 
 .navbar__options--mobile {
@@ -14,74 +15,14 @@
 }
 
 .navbar__btn--login {
-  color: #5c3725;
   border-radius: 100px;
   display: flex;
   align-items: center;
-  padding: 1vh 1vw 1vh 2vw;
-  transition: background 0.3s;
-  background-color: rgba(188, 195, 211, 0.8);
-}
-
-.loginModal {
-  display: none;
-  z-index: 2;
-  position: absolute;
-  flex-direction: column;
-  background-color: #e8d3b2;
-  border-radius: 1vw;
-  padding: 0.5vw 1vw;
-  margin: 0.5vw 1vw;
-
-  &.open {
-    display: flex;
-    animation: aparecer 0.3s ease-in;
-  }
-  
-  & h3 {
-    text-align: center;
-    margin: -1.5vh 0 1vh 0;
-    color: #381e11;
-  }
-
-  & p {
-    text-align: center;
-    margin: 1vh 0;
-    color: #40261a;
-  }
-}
-
-.loginModal__btns {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-items: center;
-}
-
-.loginModal__btn--close {
-  background: none;
-  font-size: 1.5em;
-  width: auto;
-  height: auto;
-  align-self: flex-end;
-}
-
-.loginModal__btn--login {
-  background: none;
-  text-decoration: none;
-  color: #5c3725;
-  transition: transform 0.5s ease, color 0.5s ease;
-}
-
-.loginModal__btn--signup {
-  border-radius: 100px;
-  margin: 1vh 0;
   padding: 1vh 1vw;
-  background-color: #5c3725ca;
-  text-decoration: none;
-  color: #bccad3f0;
-  transition: transform 0.5s ease;
+  transition: background 0.3s;
+	text-decoration: none;
+	color: black;
+  background-color: rgba(188, 195, 211, 0.8);
 }
 
 
@@ -96,8 +37,8 @@
 
 .navbar__btn--burger {
   display: inline;
-  width: 10vw;
-  padding: 3vw;
+  width: 8vw;
+  padding: 0.5vw;
 }
 
 .navbar__logo {
@@ -160,6 +101,7 @@
 }
 
 .navbar__logo {
+	margin: 1.5vh 0;
   width: 5.5vw;
   cursor: pointer;
 }
