@@ -4,6 +4,7 @@
   padding: 1vh 1vw;
   border-radius: 1rem;
   background: #fff;
+  margin: 1rem;
 }
 
 
@@ -27,7 +28,6 @@
 
 .navbar__btn--option {
   color: #21bbef;
-  font-family: 'Raleway', sans-serif;
   font-size: 1.25rem;
 
   &:hover {
@@ -37,7 +37,6 @@
 
 .navbar__btn--login {
   background-color: #fff;
-  font-family: 'Raleway', sans-serif;
   color: #000;
   padding: 0.5rem;
   border: 1px solid #000;

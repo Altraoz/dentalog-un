@@ -1,0 +1,75 @@
+.aboutUs {
+    margin: 2rem 1rem;
+}
+
+.weAreTheBest__info {
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+    padding: 0 5%;
+
+    & > h2 {
+        font-size: 3em;
+        font-weight: bold;
+        margin: 2rem 0;
+
+        & > span {
+            color: #008fff;
+        }
+    }
+    & > p {
+        color: #a0a0a0;
+        margin-bottom: 2.5rem;
+    }
+}
+
+.weAreTheBest__forYou {
+    display: inline;
+    background-color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 100px;
+    width: fit-content;
+
+    & span {
+        margin-left: 0.5rem;
+    }
+}
+
+.weAreTheBest__info--btns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.exploreOurServices {
+    text-decoration: none;
+    background-color: #008fff;
+    color: #fffacd;
+    padding: 0.5rem 1rem;
+    border-radius: 100px;
+    transition: transform 0.5s ease,
+                background-color 0.5s ease,
+                color 0.5s ease;
+
+    &:hover {
+        transform: scale(1.1);
+        background-color: #44aeff;
+        color: #fffad1;
+    }
+}
+
+.videoAboutUs__btn {
+    background: none;
+    padding: 0.5rem 1rem;
+    border: 1px solid #000;
+    border-radius: 100px;
+    transition: background-color 0.3s ease;
+    
+    & > i {
+        margin-right: 1rem;
+    }
+
+    &:hover {
+        background-color: #c2c0bb;
+    }
+}
