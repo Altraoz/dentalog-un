@@ -24,4 +24,4 @@ frontend-dentalog/*.sw?
 
 # Entorno virtual
 backend-dentalog/env
-backend-dentalog/venv
+backend-dentalog/.env
