@@ -208,7 +208,7 @@ export default function FAQ() {
           <div className="items-container">
             <div className="item">
               <div className="img-container">
-                <img src="" alt="" />
+                <img src="/images/FAQ/dentist.png" alt="" />
               </div>
               <div className="text-container">
                 <h3 className="title">
@@ -223,7 +223,7 @@ export default function FAQ() {
             </div>
             <div className="item">
               <div className="img-container">
-                <img src="" alt="" />
+                <img src="/images/FAQ/dentist.png" alt="" />
               </div>
               <div className="text-container">
                 <h3 className="title">
@@ -239,7 +239,7 @@ export default function FAQ() {
             </div>
             <div className="item">
               <div className="img-container">
-                <img src="" alt="" />
+                <img src="/images/FAQ/dentist.png" alt="" />
               </div>
               <div className="text-container">
                 <h3 className="title">
@@ -255,7 +255,7 @@ export default function FAQ() {
             </div>
             <div className="item">
               <div className="img-container">
-                <img src="" alt="" />
+                <img src="/images/FAQ/dentist.png" alt="" />
               </div>
               <div className="text-container">
                 <h3 className="title">
@@ -281,7 +281,7 @@ export default function FAQ() {
               los más pequeños en un ambiente amigable y seguro.
             </p>
             <div className="image-container">
-              <img src="" alt="special-zafari" />
+              <img src="/images/FAQ/dentist.png" alt="special-zafari" />
             </div>
           </article>
           <article className="second-side">
