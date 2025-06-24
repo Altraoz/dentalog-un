@@ -27,7 +27,7 @@ export default function FAQ() {
             </div>
             <div className="second-info">
               <div className="img-container">
-                <img src="" alt="tooth-img" />
+                <img src="/images/FAQ/land_2.png" alt="tooth2-img" />
               </div>
               <div className="text-container">
                 <p>
@@ -140,7 +140,7 @@ export default function FAQ() {
             </div>
           </div>
         </article>
-        <article className="dental_care_section">
+        <article className="dental-care-section">
           <div className="title-section">
             <p className="subtitle">¿tienes preguntas sobre</p>
             <h2 className="title">EL CUIDADO DENTAL EN CASA?</h2>
@@ -271,7 +271,6 @@ export default function FAQ() {
             </div>
           </div>
         </article>
-
         <div className="final_section">
           <article className="first-side">
             <h2>¿QUÉ HACE ESPECIAL A ZAFARI PARA LOS NIÑOS?</h2>
@@ -286,15 +285,39 @@ export default function FAQ() {
             </div>
           </article>
           <article className="second-side">
-            <div>
-              <img src="" alt="" />
+            <div className="map-container">
+              <img
+                src="/images/FAQ/map.png"
+                alt="ubicación mapa"
+                className="map-image"
+              />
+              <div className="address-info">
+                <span className="address-title">Cra. 38 #18-101</span>
+                <span className="address-location">Medellín, Antioquia</span>
+              </div>
+              <a
+                href="https://www.google.com/maps/place/Zafari+Dental+by+Luisa+Bedoya/@6.2210584,-75.5817071,14.76z/data=!4m6!3m5!1s0x8e4429bdf557d4ff:0xbd30b001cdf45129!8m2!3d6.2204909!4d-75.5667969!16s%2Fg%2F11hdwfg_lw?entry=ttu&g_ep=EgoyMDI1MDYxNy4wIKXMDSoASAFQAw%3D%3D"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <button className="share-btn" title="Compartir ubicación">
+                  <svg width="36" height="36" fill="none" viewBox="0 0 22 22">
+                    <rect width="22" height="22" rx="6" fill="#fff" />
+                    <path
+                      d="M7 11l8-4-4 8-1-3-3-1z"
+                      stroke="#00B2FF"
+                      strokeWidth="1.5"
+                      fill="none"
+                    />
+                  </svg>
+                </button>
+              </a>
             </div>
-            <div>
+            <div className="location-text">
               <h2>¿DONDE ESTAMOS UBICADOS?</h2>
               <p>
-                Estamos ubicados en el corazón de la ciudad, en una zona de
-                fácil acceso para todas las familias. Visítanos en nuestra
-                clínica para recibir la mejor atención dental para tus hijos.
+                En esta sección encontrarás respuestas a las preguntas más
+                frecuentes que tienen
               </p>
             </div>
           </article>
