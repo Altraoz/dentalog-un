@@ -7,5 +7,9 @@ router = DefaultRouter()
 router.register('register', RegisterViewset, basename='register')
 router.register('login', LoginViewset, basename='login')
 router.register('users', UserViewset, basename='users')
+router.register('permissions', PermissionsViewset, basename='permissions')
+router.register('roles', RolesViewset, basename='roles')
+
+router.register('doctors', DoctorViewset, basename='doctors')
 urlpatterns = router.urls
 

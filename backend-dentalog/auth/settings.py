@@ -7,6 +7,8 @@ from decouple import config
 
 # Seguridad
 DATABASE_URL = config('DATABASE_URL')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 
 
@@ -18,9 +20,9 @@ DATABASE_URL = config('DATABASE_URL')
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,8 +39,6 @@ INSTALLED_APPS = [
     'users', 
     'knox', 
     'django_rest_passwordreset',
-    'clinical_cases',
-
 ]
 
 MIDDLEWARE = [
@@ -56,7 +56,7 @@ CORS_ALLOWED_ORIGINS = [
  'http://localhost:5173',
 ]
 
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = 'users.User'
 
 AUTHENTICATION_BACKENDS = [
     # 'users.authback.EmailBackend',
@@ -84,14 +84,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'auth.wsgi.application'
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',),
+    'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.JSONRenderer',),
+    'EXCEPTION_HANDLER': 'utils.errorHandler.custom_exception_handler',
+
 }
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    'default': dj_database_url.parse('postgresql://postgres:BcAQ0OkwT2JUYF1I@localhost:5432/postgres')
+    'default': dj_database_url.parse(DATABASE_URL)
 }
 
 
@@ -116,12 +119,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 #the email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
-DEFAULT_FROM_EMAIL = 'CBI ANALYTICS'
+EMAIL_HOST_USER = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
