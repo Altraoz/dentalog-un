@@ -1,5 +1,5 @@
 // import { Link } from "react-router-dom";
-import "./FAQ.css";
+import "./FAQ.scss";
 
 export default function FAQ() {
   return (
@@ -47,7 +47,7 @@ export default function FAQ() {
             </div>
           </div>
           <div className="image-side">
-            <img src="" alt="landing-picture" />
+            <img src="/images/FAQ/land.jpg" alt="tooth-img" />
           </div>
         </article>
         <article className="appointments-section">
