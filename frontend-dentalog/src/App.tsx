@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import FAQPage from "./pages/statics/FAQPage";
 import MainPage from "./pages/statics/MainPage";
+import UnderConstruction from "./components/statics/UnderConstruction/UnderConstruction";
 
 import AppPanel from "./pages/AppPanel";
 
@@ -20,7 +21,7 @@ function App() {
           <Route path="/" element={<MainPage />}></Route>
           <Route path="/app/*" element={<AppPanel />} />
           <Route path="/faq" element={<FAQPage />} /> {/* <-- aquí */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<UnderConstruction />} />
         </Routes>
       </Router>
     </AuthProvider>
