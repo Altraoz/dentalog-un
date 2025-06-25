@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import ServiceCard from './ServiceCard';
-import service1 from '/images/landpage/Service_1.jpg';
+
 import './SomeOfOurServices.css';
 
 export default function SomeOfOurServices() {
     const someServices = [
         {
-            service: service1,
+            service: '',
             title: 'Diagnóstico integral',
             description: 'Ayuda a valorar cómo se encuentra la salud bucal y el desarrollo óseo de tu hijo con un diagnóstico completo.'
         }
