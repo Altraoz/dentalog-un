@@ -55,6 +55,11 @@
   gap: 0.5rem;
 }
 
+.sidebar-menu a {
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
 .sidebar-button {
   width: 100%;
   display: flex;

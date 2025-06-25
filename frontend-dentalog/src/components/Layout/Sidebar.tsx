@@ -1,19 +1,51 @@
-import React from 'react';
-import { Home, Users, Calendar, Stethoscope, LogOut } from 'lucide-react';
-import icon from '../../public/logo.png';
-import { useAuth } from '../../contexts/AuthContext';
-import { NavLink } from 'react-router-dom'; // cambia a NavLink
-import './Sidebar.css';
+import React from "react";
+import {
+  Home,
+  Users,
+  Calendar,
+  Stethoscope,
+  LogOut,
+  Book,
+  Smile,
+  LineChart,
+} from "lucide-react";
+import icon from "../../public/logo.png";
+import { useAuth } from "../../contexts/AuthContext";
+import { NavLink } from "react-router-dom"; // cambia a NavLink
+import "./Sidebar.css";
 
 export const Sidebar: React.FC = () => {
   const { user, logout } = useAuth();
 
-  const menuItems = [
-    { path: '/app/dashboard', label: 'Dashboard', icon: Home },
-    { path: '/app/patients', label: 'Pacientes', icon: Users },
-    { path: '/app/appointments', label: 'Citas', icon: Calendar },
-    { path: '/app/services', label: 'Servicios', icon: Stethoscope },
+  const menuDoctorItems = [
+    { path: "/app/dashboard", label: "Dashboard", icon: Home },
+    { path: "/app/patients", label: "Pacientes", icon: Users },
+    { path: "/app/appointments", label: "Citas", icon: Calendar },
+    { path: "/app/services", label: "Servicios", icon: Stethoscope },
   ];
+
+  const menuAdminItems = [
+    { path: "/app/dashboard", label: "Dashboard", icon: Home },
+    { path: "/app/patients", label: "Pacientes", icon: Users },
+    { path: "/app/appointments", label: "Citas", icon: Calendar },
+    { path: "/app/services", label: "Servicios", icon: Stethoscope },
+  ];
+
+  const menuUserItems = [
+    { path: "/app/dashboard", label: "Dashboard", icon: Home },
+    { path: "/app/learn", label: "Aprendizaje", icon: Book },
+    { path: "/app/educational", label: "Contenido para chiquis", icon: Smile },
+    {
+      path: "/app/educational",
+      label: "Progreso de evoluciones",
+      icon: LineChart,
+    },
+  ];
+
+  let menuItems = menuUserItems;
+  if (Number(user?.role) === 1) menuItems = menuDoctorItems;
+  else if (Number(user?.role) === 21) menuItems = menuAdminItems;
+  else if (Number(user?.role) === 22) menuItems = menuUserItems;
 
   return (
     <div className="sidebar">
@@ -24,7 +56,9 @@ export const Sidebar: React.FC = () => {
           </div>
           <div>
             <h1 className="sidebar-title">Zafari Dental</h1>
-            <p className="sidebar-subtitle">Dentalog Clínica Odontopediátrica</p>
+            <p className="sidebar-subtitle">
+              Dentalog Clínica Odontopediátrica
+            </p>
           </div>
         </div>
       </div>
@@ -36,7 +70,7 @@ export const Sidebar: React.FC = () => {
               <NavLink
                 to={path}
                 className={({ isActive }) =>
-                  `sidebar-button ${isActive ? 'active' : ''}`
+                  `sidebar-button ${isActive ? "active" : ""}`
                 }
               >
                 <Icon className="sidebar-icon" />
