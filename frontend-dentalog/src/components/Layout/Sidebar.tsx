@@ -7,7 +7,7 @@ import {
   LogOut,
   Book,
   Smile,
-  LineChart,
+  // LineChart,
 } from "lucide-react";
 import icon from "../../public/logo.png";
 import { useAuth } from "../../contexts/AuthContext";

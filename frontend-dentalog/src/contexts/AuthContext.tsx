@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { User } from "../types";
+import type { User } from "../types";
 
 interface AuthContextType {
   user: User | null;
@@ -48,12 +48,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const data = await response.json();
 
       const mockUser: User = {
-        id: data.user.id_user,
-        name: data.user.first_name,
-        email: data.user.email,
+        id: String(data.user.id_user),
+        id_user: data.user.id_user,
+        created_at: data.user.created_at,
+        first_name: data.user.first_name,
+        last_name: data.user.last_name,
+        name: `${data.user.first_name} ${data.user.last_name}`,
+        phone_number: data.user.phone_number,
+        profile_photo_url: data.user.profile_photo_url,
         role: data.user.role,
-        token: data.user.token,
+        is_active: data.user.is_active,
+        last_login: data.user.last_login,
+        updated_at: data.user.updated_at,
+        email: data.user.email,
+        token: data.token, // el token viene fuera de user
       };
+
+      // const mockUser: User = {
+      //   id: data.user.id_user,
+      //   name: data.user.first_name,
+      //   email: data.user.email,
+      //   role: data.user.role,
+      //   token: data.user.token,
+      // };
 
       console.log(data);
 

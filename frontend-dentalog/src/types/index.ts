@@ -1,8 +1,17 @@
 export interface User {
-  id: string;
-  name: string;
+  name: string,
+  id: string
+  id_user: number;
+  created_at: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  profile_photo_url: string;
+  role: number;
+  is_active: boolean;
+  last_login: string | null;
+  updated_at: string;
   email: string;
-  role: "admin" | "doctor";
   avatar?: string;
   token?: string;
 }

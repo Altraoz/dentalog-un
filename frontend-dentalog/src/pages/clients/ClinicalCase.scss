@@ -14,7 +14,7 @@
       overflow: hidden;
       font-family: "Inter", sans-serif;
       max-width: 800px;
-      width: 60%;
+      width: 50%;
 
       .patient-left {
         background: #f5f7fa;
@@ -100,9 +100,8 @@
       padding: 2rem;
       font-family: "Inter", sans-serif;
       max-width: 700px;
-      margin: 2rem auto;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-      width: 40%;
+      width: 50%;
 
       .header {
         display: flex;
@@ -215,7 +214,7 @@
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-      width: 50%;
+      width: 60%;
     }
 
     .chart-container {
@@ -275,7 +274,7 @@
     }
 
     .chat {
-      width: 50%;
+      width: 40%;
 
       .card {
         background: #fff7f1;

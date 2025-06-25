@@ -4,10 +4,13 @@ import { Chart as ChartJS, ArcElement, Tooltip } from "chart.js";
 import HealthCharts from "./HealthCharts";
 import ChatCard from "./ChatCard";
 import "./ClinicalCase.scss";
+import { useAuth } from "../../contexts/AuthContext";
 
 ChartJS.register(ArcElement, Tooltip);
 
 export default function ClinicalCase() {
+  const { user } = useAuth();
+
   const data = {
     labels: ["Preventivos", "Quirúrgicos", "Diagnóstico"],
     datasets: [
@@ -38,11 +41,11 @@ export default function ClinicalCase() {
           <div className="patient-left">
             <img
               className="patient-photo"
-              src="profile.jpg"
+              src="https://img.freepik.com/psd-gratis/representacion-3d-avatar_23-2150833580.jpg"
               alt="Patient Photo"
             />
-            <h2 className="patient-name">Nombre Apellido</h2>
-            <p className="patient-email">correo@ejemplo.com</p>
+            <h2 className="patient-name">{user?.name}</h2>
+            <p className="patient-email">{user?.email}</p>
             <div className="patient-appointments">
               <div>
                 <strong>5</strong>
@@ -60,10 +63,10 @@ export default function ClinicalCase() {
 
           <div className="patient-info">
             <div className="info-pair">
-              <span>Nombre:</span> Juan
+              <span>Nombre:</span> {user?.first_name}
             </div>
             <div className="info-pair">
-              <span>Apellido:</span> Pérez
+              <span>Apellido:</span> {user?.last_login}
             </div>
             <div className="info-pair">
               <span>Fecha de nacimiento:</span> 15/08/1990
