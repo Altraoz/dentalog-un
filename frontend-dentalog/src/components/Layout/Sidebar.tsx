@@ -33,13 +33,13 @@ export const Sidebar: React.FC = () => {
 
   const menuUserItems = [
     { path: "/app/dashboard", label: "Dashboard", icon: Home },
-    { path: "/app/learn", label: "Aprendizaje", icon: Book },
-    { path: "/app/educational", label: "Contenido para chiquis", icon: Smile },
-    {
-      path: "/app/educational",
-      label: "Progreso de evoluciones",
-      icon: LineChart,
-    },
+    { path: "/app/learning", label: "Aprendizaje", icon: Book },
+    { path: "/app/child-content", label: "Contenido para chiquis", icon: Smile },
+    // {
+    //   path: "/app/educational",
+    //   label: "Progreso de evoluciones",
+    //   icon: LineChart,
+    // },
   ];
 
   let menuItems = menuUserItems;

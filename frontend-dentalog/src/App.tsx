@@ -1,12 +1,7 @@
 import "./App.css";
 import { AuthProvider } from "./contexts/AuthContext";
 
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import FAQPage from "./pages/statics/FAQPage";
 import MainPage from "./pages/statics/MainPage";
 import UnderConstruction from "./components/statics/UnderConstruction/UnderConstruction";
