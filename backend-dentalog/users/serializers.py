@@ -32,42 +32,52 @@ from rest_framework import serializers
 from .models import User, Doctors, Patients, Permissions, Roles, RolePermissions, UserRoles
 
 class DoctorsSerializer(serializers.ModelSerializer):
-    user = serializers.PrimaryKeyRelatedField(
+    id = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),
-        source='id',  # Maps to the 'id' field in the Doctors model
-        required=False
+        required=False,
+        allow_null=True
     )
-    user_data = UserSerializer(required=False, write_only=True)  # Optional nested user data for creating a new user
+    user_data = UserSerializer(
+        required=False,
+        allow_null=True,
+        write_only=True
+    )  # Para datos anidados opcionales para crear un nuevo usuario
 
     class Meta:
         model = Doctors
-        fields = ['id', 'created_at', 'profesional_license', 'speciality', 'years_experience', 'user', 'user_data']
+        fields = [
+            'id', 'created_at', 'profesional_license', 'speciality', 'years_experience',
+            'user_data'
+        ]
         extra_kwargs = {
-            'id': {'read_only': True},  # id is set to the user's id
+            'id': {'read_only': False},  # Permitir asignar usuario existente
             'created_at': {'read_only': True}
         }
 
     def create(self, validated_data):
         user_data = validated_data.pop('user_data', None)
-        user = validated_data.pop('id', None)  # Get the user instance from PrimaryKeyRelatedField
+        user = validated_data.pop('id', None)
 
+        # Si se proporcionó user_data y no un user, crear un nuevo usuario
         if user_data and not user:
-            # Create a new user if user_data is provided
             user = User.objects.create_user(**user_data)
-        elif not user:
-            raise serializers.ValidationError({"user": "Either 'user' (user_id) or 'user_data' is required."})
 
-        # Create the doctor with the user as the id
-        doctor = Doctors.objects.create(id=user, **validated_data)
+        # Si no hay user ni user_data, se permite que sea None (ya que allow_null=True)
+        validated_data['id'] = user
+
+        # Crear el doctor
+        doctor = Doctors.objects.create(**validated_data)
         return doctor
 
     def to_representation(self, instance):
-        # Include full user details in the response
+        # Incluir detalles completos del usuario en la respuesta
         representation = super().to_representation(instance)
-        representation['user'] = UserSerializer(instance.id).data
-        representation.pop('user_data', None)  # Remove user_data from response
+        if instance.id:
+            representation['id'] = UserSerializer(instance.id).data
+        else:
+            representation['id'] = None
+        representation.pop('user_data', None)  # Eliminar user_data de la respuesta
         return representation
-
 class PatientsSerializer(serializers.ModelSerializer):
     responsable_user = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),

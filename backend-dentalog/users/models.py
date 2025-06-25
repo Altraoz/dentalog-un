@@ -64,7 +64,7 @@ class User(AbstractUser):
         db_table_comment = 'Table of users'
 
 class Doctors(models.Model):
-    id = models.OneToOneField('User', models.DO_NOTHING, db_column='id', primary_key=True)
+    id = models.OneToOneField('User', models.DO_NOTHING, primary_key=True, db_column='id')
     created_at = models.DateTimeField(auto_now_add=True)
     profesional_license = models.CharField(blank=True, null=True)
     speciality = models.CharField(blank=True, null=True)

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'users', 
+    'clinical_cases',
     'knox', 
     'django_rest_passwordreset',
 ]

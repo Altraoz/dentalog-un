@@ -3,8 +3,8 @@ from django.db import models
 class ClinicalCases(models.Model):
     id = models.BigAutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Automatically set on creation
-    patient = models.ForeignKey('Patients', models.DO_NOTHING, blank=True, null=True)
-    doctor = models.ForeignKey('Doctors', models.DO_NOTHING, blank=True, null=True)
+    patient = models.ForeignKey('users.Patients', models.DO_NOTHING, blank=True, null=True)
+    doctor = models.ForeignKey('users.Doctors', models.DO_NOTHING, blank=True, null=True)
     status = models.CharField(
         max_length=20,
         choices=[
@@ -80,10 +80,10 @@ class AppointmentInventory(models.Model):
     id = models.BigAutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Automatically set on creation
     appointment = models.ForeignKey('Appointments', models.DO_NOTHING, blank=True, null=True)
-    item = models.ForeignKey('InventoryItems', models.DO_NOTHING, blank=True, null=True)
+    #item = models.ForeignKey('InventoryItems', models.DO_NOTHING, blank=True, null=True)
     amount_used = models.IntegerField(blank=True, null=True)
     description = models.CharField(max_length=500, blank=True, null=True)
-    used_by = models.ForeignKey('Doctors', models.DO_NOTHING, db_column='used_by', blank=True, null=True)
+    used_by = models.ForeignKey('users.Doctors', models.DO_NOTHING, db_column='used_by', blank=True, null=True)
     uset_at = models.CharField(max_length=100, blank=True, null=True)  # Assuming this is a typo for "used_at"
 
     class Meta:
@@ -105,7 +105,7 @@ class Appointments(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)  # Automatically set on creation
     attention_date = models.DateTimeField(blank=True, null=True)
     type = models.ForeignKey(AppointmentTypes, models.DO_NOTHING, db_column='type', blank=True, null=True)
-    doctor = models.ForeignKey('Doctors', models.DO_NOTHING, blank=True, null=True)
+    doctor = models.ForeignKey('users.Doctors', models.DO_NOTHING, blank=True, null=True)
     clinical_case = models.ForeignKey('ClinicalCases', models.DO_NOTHING, blank=True, null=True)
     status = models.CharField(
         max_length=20,
@@ -132,22 +132,22 @@ class Appointments(models.Model):
 
 
 
-    id = models.BigAutoField(primary_key=True)
-    created_at = models.DateTimeField(auto_now_add=True)  # Automatically set on creation
-    patient = models.ForeignKey('Patients', models.DO_NOTHING, blank=True, null=True)
-    doctor = models.ForeignKey('Doctors', models.DO_NOTHING, blank=True, null=True)
-    status = models.CharField(
-        max_length=20,
-        choices=[
-            ('activo', 'Activo'),
-            ('cerrado', 'Cerrado'),
-            ('en revision', 'En Revisión'),
-            ('referido', 'Referido'),
-            ('abandonado', 'Abandonado'),
-            ('cancelado', 'Cancelado'),
-        ],
-        blank=True,
-        null=True
-    )
+    # id = models.BigAutoField(primary_key=True)
+    # created_at = models.DateTimeField(auto_now_add=True)  # Automatically set on creation
+    # patient = models.ForeignKey('users.Patients', models.DO_NOTHING, blank=True, null=True)
+    # doctor = models.ForeignKey('users.Doctors', models.DO_NOTHING, blank=True, null=True)
+    # status = models.CharField(
+    #     max_length=20,
+    #     choices=[
+    #         ('activo', 'Activo'),
+    #         ('cerrado', 'Cerrado'),
+    #         ('en revision', 'En Revisión'),
+    #         ('referido', 'Referido'),
+    #         ('abandonado', 'Abandonado'),
+    #         ('cancelado', 'Cancelado'),
+    #     ],
+    #     blank=True,
+    #     null=True
+    # )
 
 

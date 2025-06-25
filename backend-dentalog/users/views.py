@@ -86,6 +86,7 @@ class DoctorViewset(viewsets.ViewSet):
         return Response(serializer.data)
 
     def create(self, request):
+        print(request.data)
         serializer = DoctorsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
