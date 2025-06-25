@@ -7,36 +7,37 @@ import service6 from '/images/landpage/Service_6.png';
 import service7 from '/images/landpage/Service_7.png';
 import service8 from '/images/landpage/Service_8.png';
 import ServiceList from './ServiceList';
+import './Services.css';
 
 export default function Services() {
     const services = [
         {
             img: service1,
-            title: 'Diagnóstico integral infantil',
+            title: 'Diagnóstico integral',
             description:
             'Evaluación completa del estado dental, funcional y óseo del niño para detectar a tiempo problemas en los dientes, huesos faciales o funciones como masticación y respiración. Ideal como primer paso para cualquier tratamiento odontopediátrico.'
         },
         {
             img: service2,
-            title: 'Cuidado preventivo infantil',
+            title: 'Cuidado preventivo',
             description:
             'Servicio enfocado en evitar enfermedades bucales mediante educación, control de hábitos, aplicación de flúor, sellantes y seguimiento personalizado. Promueve una salud bucal duradera desde temprana edad.'
         },
         {
             img: service3,
-            title: 'Tratamientos dentales infantiles',
+            title: 'Tratamientos dentales',
             description:
             'Intervenciones clínicas como restauraciones, endodoncia o extracciones para tratar caries, infecciones y otros problemas dentales. Siempre adaptados a la edad y necesidades del niño para asegurar una experiencia positiva y efectiva.'
         },
         {
             img: service4,
-            title: 'Cirugías orales infantiles',
+            title: 'Cirugías orales',
             description:
             'Procedimientos quirúrgicos menores como frenotomías o ventanas quirúrgicas, que corrigen alteraciones anatómicas o ayudan en tratamientos ortodónticos. Realizados en un entorno seguro y adaptado para niños.'
         },
         {
             img: service5,
-            title: 'Urgencias dentales infantiles',
+            title: 'Urgencias dentales',
             description:
             'Atención inmediata para casos de dolor agudo, traumatismos, fracturas dentales o infecciones. Evaluación rápida y tratamiento seguro para aliviar síntomas y proteger la salud bucal del niño.'
         },
@@ -48,7 +49,7 @@ export default function Services() {
         },
         {
             img: service7,
-            title: 'Odontología con sedación infantil',
+            title: 'Odontología con sedación',
             description:
             'Uso de técnicas de sedación como óxido nitroso para realizar tratamientos de forma tranquila y sin ansiedad. Ideal para pacientes nerviosos, con necesidades especiales o que requieren procedimientos complejos.'
         },
@@ -63,7 +64,12 @@ export default function Services() {
     
     return (
         <>
-            <ServiceList services={services}/>
+            <section>
+                <button className='services__btn--filter'>
+                    <i className='fas fa-filter'/> Filtrar <i className='fas fa-sort-down'/>
+                </button>
+                <ServiceList services={services}/>
+            </section>
         </>
     );
 }

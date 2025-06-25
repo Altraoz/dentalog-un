@@ -1,0 +1,85 @@
+.services__btn--filter {
+	background-color: #e0e0e0;
+	color: #333;
+	font-size: 1rem;
+	margin: 1rem;
+	padding: 0.5rem 1rem;
+	border-radius: 100px;
+	transition: background-color 0.25s ease-out;
+
+	&:hover {
+		background-color: #d5d5d5;
+	}
+}
+
+.service {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    &.reversed {
+    	flex-direction: row-reverse;
+    }
+}
+
+.service__imgContainer {
+    & img {
+		display: block;
+		width: 25vw;
+    }
+}
+
+.service_diagnostico_integral {
+  	background: linear-gradient(#8ec7b8, #7fbfc5);
+}
+
+.service_cuidado_preventivo {
+  	background: linear-gradient(#7fbfc5, #a5d9e0);
+}
+
+.service_tratamientos_dentales {
+  	background: linear-gradient(#a5d9e0, #91cdce);
+}
+
+.service_cirugias_orales {
+  	background: linear-gradient(#91cdce, #89c3c6);
+}
+
+.service_urgencias_dentales {
+  	background: linear-gradient(#89c3c6, #7dcbd4);
+}
+
+.service_atencion_odontologica_especial {
+  	background: linear-gradient(#7dcbd4, #6daaa5);
+}
+
+.service_odontologia_con_sedacion {
+  	background: linear-gradient(#6daaa5, #83c1b6);
+}
+
+.service_ortopedia_infantil_y_correccion_de_habitos {
+  	background: linear-gradient(#83c1b6, #a1d6cc);
+}
+
+.service__content {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	text-align: left;
+	padding-right: 2rem;
+
+	&.reversed {
+		text-align: right;
+		align-items: flex-end;
+		padding-right: 0;
+		padding-left: 2rem;
+	}
+
+	& h2 {
+		font-size: 2.5rem;
+	}
+
+	& p {
+		width: 75%;
+		font-size: 1.25rem;
+	}
+}
