@@ -1,0 +1,287 @@
+.appointment-calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.calendar-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+@media (min-width: 640px) {
+  .calendar-header {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.calendar-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.calendar-subtitle {
+  font-size: 0.875rem;
+  color: #4b5563;
+  margin-top: 0.25rem;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .calendar-grid {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.date-selector {
+  grid-column: span 12 / span 12;
+}
+
+.date-buttons {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.date-button {
+  flex-shrink: 0;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+  background: none;
+  border: none;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.date-button:hover {
+  background-color: #f9fafb;
+}
+
+.date-button.active {
+  background-color: #dbeafe;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+.date-button.today {
+  box-shadow: 0 0 0 2px #bfdbfe;
+}
+
+.date-text {
+  text-align: center;
+}
+
+.today-label {
+  font-size: 0.75rem;
+  color: #2563eb;
+  margin-top: 0.25rem;
+}
+
+.appointments-list {
+  grid-column: span 12 / span 12;
+}
+
+.appointments-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.appointments-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.title-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.appointments-count {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.appointments-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.appointment-card {
+  padding: 1rem;
+  border-left: 4px solid;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.appointment-card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.appointment-scheduled {
+  border-left-color: #3b82f6;
+  background-color: #eff6ff;
+}
+
+.appointment-completed {
+  border-left-color: #10b981;
+  background-color: #ecfdf5;
+}
+
+.appointment-cancelled {
+  border-left-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.appointment-default {
+  border-left-color: #6b7280;
+  background-color: #f9fafb;
+}
+
+.appointment-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.appointment-details {
+  flex: 1;
+}
+
+.appointment-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.patient-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: linear-gradient(to bottom right, #a78bfa, #ec4899);
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.patient-name {
+  font-weight: 600;
+  color: #111827;
+}
+
+.service-name {
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+.appointment-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin-left: 3.25rem;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.meta-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.appointment-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-tag {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.status-scheduled {
+  background-color: #dbeafe;
+  color: #1e40af;
+}
+
+.status-completed {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.status-cancelled {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.call-button {
+  padding: 0.5rem;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.call-button:hover {
+  color: #4b5563;
+}
+
+.call-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.no-appointments {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.no-appointments-icon {
+  width: 3rem;
+  height: 3rem;
+  color: #d1d5db;
+  margin: 0 auto 1rem;
+}
+
+.no-appointments-text {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.no-appointments-button {
+  margin-top: 1rem;
+}
