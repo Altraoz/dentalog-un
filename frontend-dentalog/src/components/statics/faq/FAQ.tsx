@@ -8,7 +8,6 @@ export default function FAQ() {
         <article className="land-section">
           <div className="content-side">
             <div className="first-info">
-              <p className="subtitle">Sección</p>
               <h1 className="title">PREGUNTAS FRECUENTES</h1>
               <p className="description-dark">
                 En esta sección encontrarás respuestas a las preguntas más

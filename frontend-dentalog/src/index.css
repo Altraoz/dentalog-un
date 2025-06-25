@@ -11,3 +11,16 @@
   border: 0;
   font-family: "Raleway", sans-serif;
 }
+
+body {
+  background-color: #f2f0eb;
+}
+
+.link {
+  text-decoration: none;
+  color: #000
+}
+
+button {
+  cursor: pointer;
+}

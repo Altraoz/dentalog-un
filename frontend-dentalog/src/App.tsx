@@ -16,6 +16,7 @@ import {
 } from "react-router-dom";
 import FAQPage from "./pages/statics/FAQPage";
 import MainPage from "./pages/statics/MainPage";
+import UnderConstruction from "./components/statics/UnderConstruction/UnderConstruction";
 
 const Dashboard = () => (
   <div className="section-space">
@@ -78,7 +79,7 @@ function App() {
           <Route path="/" element={<MainPage />}></Route>
           <Route path="/app/*" element={<AppContent />} />
           <Route path="/faq" element={<FAQPage />} /> {/* <-- aquí */}
-          <Route path="*" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<UnderConstruction />} />
         </Routes>
       </Router>
     </AuthProvider>
