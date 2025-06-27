@@ -26,11 +26,11 @@ ChartJS.register(
 export default function HealthCharts() {
   // Datos presión sanguínea
   const bloodPressureData = {
-    labels: ['8:00', '11:00', '14:00', '17:00', '20:00', '23:00'],
+    labels: ['10/05', '20/05', '30/05', '10/06', '22/06', '25/06'],
     datasets: [
       {
         label: 'Presión',
-        data: [110, 130, 120, 150, 135, 125],
+        data: [7, 2, 3, 1, 4, 1],
         borderColor: '#f28e2c',
         backgroundColor: 'rgba(242, 142, 44, 0.1)',
         fill: true,
@@ -45,14 +45,14 @@ export default function HealthCharts() {
     responsive: true,
     plugins: { legend: { display: false } },
     scales: {
-      y: { min: 80, max: 160, ticks: { stepSize: 20 } },
+      y: { min: 0, max: 10, ticks: { stepSize: 20 } },
       x: { ticks: { color: '#999' } },
     },
   }
 
   // Datos actividad semanal
   const activityData = {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    labels: ['Evolution 1', 'Evolution 2', 'Evolution 3 ', 'Evolution 4', 'Evolution 5', 'Evolution 6', 'Evolution 7'],
     datasets: [
       {
         label: 'Actividad',
@@ -84,7 +84,7 @@ export default function HealthCharts() {
     <div className="charts-container">
       <div className="chart-card blood-pressure">
         <div className="chart-header">
-          <h3>Blood pressure</h3>
+          <h3>Actividades odontológicas totales</h3>
           <div className="dropdown">Today</div>
         </div>
         <Line data={bloodPressureData} options={bloodPressureOptions} />
@@ -92,7 +92,7 @@ export default function HealthCharts() {
 
       <div className="chart-card activity">
         <div className="chart-header">
-          <h3>Your activity</h3>
+          <h3>Avance de en evoluciones</h3>
           <div className="dropdown">Week</div>
         </div>
         <Bar data={activityData} options={activityOptions} />

@@ -44,32 +44,32 @@ export default function ClinicalCase() {
               src="https://img.freepik.com/psd-gratis/representacion-3d-avatar_23-2150833580.jpg"
               alt="Patient Photo"
             />
-            <h2 className="patient-name">{user?.name}</h2>
-            <p className="patient-email">{user?.email}</p>
+            <h2 className="patient-name">Juan</h2>
+            <p className="patient-email">David</p>
             <div className="patient-appointments">
               <div>
-                <strong>5</strong>
+                <strong>3</strong>
                 <br />
                 Pasadas
               </div>
               <div>
-                <strong>2</strong>
+                <strong>1</strong>
                 <br />
                 Próximas
               </div>
             </div>
-            <button className="send-message">Enviar Mensaje</button>
+            {/* <button className="send-message">Enviar Mensaje</button> */}
           </div>
 
           <div className="patient-info">
             <div className="info-pair">
-              <span>Nombre:</span> {user?.first_name}
+              <span>Nombre:</span> Juan David
             </div>
             <div className="info-pair">
-              <span>Apellido:</span> {user?.last_login}
+              <span>Apellido:</span> Gomez
             </div>
             <div className="info-pair">
-              <span>Fecha de nacimiento:</span> 15/08/1990
+              <span>Fecha de nacimiento:</span> 15/08/2014
             </div>
             <div className="info-pair">
               <span>Número de documento:</span> 123456789
@@ -81,7 +81,7 @@ export default function ClinicalCase() {
               <span>Tipo de sangre:</span> O+
             </div>
             <div className="info-pair">
-              <span>Dirección:</span> Calle Falsa 123
+              <span>Dirección:</span> Calle 24 #12-1
             </div>
             <div className="info-pair">
               <span>Responsable:</span> María Gómez
@@ -102,45 +102,45 @@ export default function ClinicalCase() {
           <div className="appointment-list">
             <div className="appointment">
               <div className="time">
-                8:00 - 8:30 <span>AM</span>
-              </div>
-              <div className="card dentist">
-                <img src="icon-dentist.png" alt="Dentist" />
-                <div className="details">
-                  <h3>Dentist</h3>
-                  <p>Dr. Dianne Fisher</p>
-                </div>
-                <span className="clinic">CityMed Clinic</span>
-                <i className="icon-menu"></i>
-              </div>
-            </div>
-
-            <div className="appointment">
-              <div className="time">
-                9:00 - 9:30 <span>AM</span>
+                8:00 - 8:30 <span>28 /07 / 2025</span>
               </div>
               <div className="card neurologist">
-                <img src="icon-neuro.png" alt="Neurologist" />
+                <img src="/tooth.png" alt="Dentist" />
                 <div className="details">
-                  <h3>Neurologist</h3>
-                  <p>Dr. Paul Collins</p>
+                  <h3>Control de Crecimiento y Desarrollo</h3>
+                  <p>Dr. Carlos Urresty</p>
                 </div>
-                <span className="clinic">Huston Hospital</span>
+                <span className="clinic">Programada</span>
                 <i className="icon-menu"></i>
               </div>
             </div>
 
             <div className="appointment">
               <div className="time">
-                18:00 - 18:30 <span>PM</span>
+                8:00 - 8:30 <span>20 /07 / 2025</span>
               </div>
-              <div className="card xray">
-                <img src="icon-xray.png" alt="X-Ray" />
+              <div className="card neurologist">
+                <img src="/tooth.png" alt="Dentist" />
                 <div className="details">
-                  <h3>Digital X-Ray</h3>
-                  <p>Dr. Betty Woods</p>
+                  <h3>Consulta General Pediátrica</h3>
+                  <p>Dr. Carlos Urresty</p>
                 </div>
-                <span className="clinic">CityMed Clinic</span>
+                <span className="clinic">Realizada</span>
+                <i className="icon-menu"></i>
+              </div>
+            </div>
+
+            <div className="appointment">
+              <div className="time">
+                8:00 - 8:30 <span>15 /07 / 2025</span>
+              </div>
+              <div className="card neurologist">
+                <img src="/tooth.png" alt="Dentist" />
+                <div className="details">
+                  <h3>Consulta de Urgencia Pediátrica</h3>
+                  <p>Dr. Carlos Urresty</p>
+                </div>
+                <span className="clinic">Realizada</span>
                 <i className="icon-menu"></i>
               </div>
             </div>

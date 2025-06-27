@@ -7,7 +7,7 @@ export default function ChatCard() {
         <span className="chat-avatar">
           <i className="icon-user"></i>
         </span>
-        <span className="chat-title">Doctora Luz María</span>
+        <span className="chat-title">Chat con Odontólogo</span>
         <div className="chat-actions">
           <i className="icon-bell"></i>
           <i className="icon-settings"></i>

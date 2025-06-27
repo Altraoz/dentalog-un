@@ -8,9 +8,11 @@ import DentistView from "./dentist/DentistView";
 const RenderView: React.FC = () => {
   const { user } = useAuth();
 
+  console.log(user?.role);
+
   switch (Number(user?.role)) {
     case 1:
-        return <DentistView />;
+      return <DentistView />;
     case 21:
       return <DentistView />;
     case 22:
