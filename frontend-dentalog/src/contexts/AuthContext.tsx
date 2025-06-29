@@ -34,8 +34,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
+    const backendUrl = import.meta.env.BACKEND_URL;
     try {
-      const response = await fetch("http://127.0.0.1:8000/auth/login/", {
+      const response = await fetch('http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
