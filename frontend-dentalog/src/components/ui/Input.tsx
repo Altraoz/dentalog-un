@@ -15,6 +15,8 @@ interface InputProps {
   className?: string;
 }
 
+// type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+
 export const Input: React.FC<InputProps> = ({
   label,
   placeholder,

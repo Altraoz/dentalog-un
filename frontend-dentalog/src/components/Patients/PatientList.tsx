@@ -1,21 +1,53 @@
-import React, { useState } from 'react';
-import { Search, Plus, User, Phone, Calendar } from 'lucide-react';
-import { Card } from '../ui/Card';
-import { Input } from '../ui/Input';
-import { Button } from '../ui/Button';
-import { mockPatients } from '../../data/mockData';
-import { PatientModal } from './PatientModal';
-import { Patient } from '../../types';
-import './PatientList.css';
+import React, { useState, useEffect } from "react";
+import { Search, Plus, User, Phone, Calendar } from "lucide-react";
+import { Card } from "../ui/Card";
+import { Input } from "../ui/Input";
+import { Button } from "../ui/Button";
+// import { mockPatients } from "../../data/mockData";
+import { PatientModal } from "./PatientModal";
+import type { Patient } from "../../types";
+import "./PatientList.css";
+import axios from "axios";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const PatientList: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const { user } = useAuth();
 
-  const filteredPatients = mockPatients.filter(patient =>
-    `${patient.name} ${patient.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    patient.parentName.toLowerCase().includes(searchTerm.toLowerCase())
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const response = await axios.get(
+          "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com/auth/patients/",
+          {
+            headers: {
+              // Si necesitas autenticación, agrega aquí el token:
+              Authorization: `Token ${user?.token}`,
+            },
+            withCredentials: true, // Si tu backend lo requiere
+          }
+        );
+        setPatients(response.data); // Ajusta el mapeo si es necesario
+      } catch (error) {
+        console.error("Error al traer pacientes:", error);
+      }
+    };
+
+    fetchPatients();
+  }, []);
+
+  const filteredPatients = patients.filter(
+    (patient) =>
+      `${patient.first_name} ${patient.last_name}`
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      (patient.responsable_user &&
+        `${patient.responsable_user.first_name} ${patient.responsable_user.last_name}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase()))
   );
 
   const handlePatientClick = (patient: Patient) => {
@@ -33,7 +65,10 @@ export const PatientList: React.FC = () => {
     const birth = new Date(birthDate);
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birth.getDate())
+    ) {
       age--;
     }
     return age;
@@ -44,7 +79,9 @@ export const PatientList: React.FC = () => {
       <div className="patient-list-header">
         <div>
           <h2 className="patient-list-title">Gestión de Pacientes</h2>
-          <p className="patient-list-subtitle">Administra la información de tus pacientes pediátricos</p>
+          <p className="patient-list-subtitle">
+            Administra la información de tus pacientes pediátricos
+          </p>
         </div>
         <Button onClick={handleNewPatient} icon={Plus}>
           Nuevo Paciente
@@ -70,41 +107,51 @@ export const PatientList: React.FC = () => {
             >
               <div className="patient-card-content">
                 <div className="patient-avatar">
-                  {patient.name.charAt(0)}{patient.lastName.charAt(0)}
+                  {patient.first_name.charAt(0)}
+                  {patient.last_name.charAt(0)}
                 </div>
-                
+
                 <div className="patient-details">
                   <h3 className="patient-name">
-                    {patient.name} {patient.lastName}
+                    {patient.first_name} {patient.last_name}
                   </h3>
                   <p className="patient-info">
-                    {calculateAge(patient.birthDate)} años • {patient.gender === 'male' ? 'Niño' : 'Niña'}
+                    {calculateAge(patient.birth_date)} años •{" "}
+                    {patient.gender === "Masculino" ? "Niño" : "Niña"}
                   </p>
-                  
+
                   <div className="patient-meta">
                     <div className="meta-item">
                       <User className="meta-icon" />
-                      <span>{patient.parentName}</span>
+                      <span>
+                        {patient.responsable_user.first_name}{" "}
+                        {patient.responsable_user.last_name}
+                      </span>
                     </div>
                     <div className="meta-item">
                       <Phone className="meta-icon" />
-                      <span>{patient.parentPhone}</span>
+                      <span>{patient.responsable_user.phone_number}</span>
                     </div>
                     <div className="meta-item">
                       <Calendar className="meta-icon" />
-                      <span>Registrado: {new Date(patient.createdAt).toLocaleDateString()}</span>
+                      <span>
+                        Registrado:{" "}
+                        {new Date(patient.created_at).toLocaleDateString()}
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {patient.allergies.length > 0 && patient.allergies[0] !== 'Ninguna conocida' && (
-                <div className="patient-allergies">
-                  <span className="allergy-tag">
-                    ⚠️ Alergias
-                  </span>
-                </div>
-              )}
+              {/* {patient.allergies.length > 0 &&
+                patient.allergies[0] !== "Ninguna conocida" && (
+                  <div className="patient-allergies">
+                    <span className="allergy-tag">⚠️ Alergias</span>
+                  </div>
+                )} */}
+              <div className="patient-allergies">
+                <span className="allergy-tag">⚠️ Alergias</span>
+              </div>
             </div>
           ))}
         </div>
@@ -114,7 +161,9 @@ export const PatientList: React.FC = () => {
             <User className="no-patients-icon" />
             <p className="no-patients-text">No se encontraron pacientes</p>
             <p className="no-patients-subtext">
-              {searchTerm ? 'Intenta con otros términos de búsqueda' : 'Agrega tu primer paciente'}
+              {searchTerm
+                ? "Intenta con otros términos de búsqueda"
+                : "Agrega tu primer paciente"}
             </p>
           </div>
         )}

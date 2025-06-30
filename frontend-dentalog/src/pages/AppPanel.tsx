@@ -12,12 +12,11 @@ const RenderView: React.FC = () => {
 
   switch (Number(user?.role)) {
     case 1:
-      return <DentistView />;
-    case 21:
-      return <DentistView />;
-    case 22:
       return <ClientView />;
+    case 2:
+      return <DentistView />;
     case 3:
+      return <DentistView />;
     default:
       return <ClientView />;
   }

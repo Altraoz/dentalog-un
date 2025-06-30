@@ -1,6 +1,4 @@
-export interface User {
-  name: string,
-  id: string
+export interface ResponsableUser {
   id_user: number;
   created_at: string;
   first_name: string;
@@ -12,25 +10,23 @@ export interface User {
   last_login: string | null;
   updated_at: string;
   email: string;
-  avatar?: string;
-  token?: string;
 }
 
 export interface Patient {
-  id: string;
-  name: string;
-  lastName: string;
-  birthDate: string;
-  age: number;
-  gender: "male" | "female";
-  phone: string;
-  parentName: string;
-  parentPhone: string;
+  id: number;
+  created_at: string;
+  first_name: string;
+  last_name: string;
+  birth_date: string;
+  responsable_user: ResponsableUser;
+  gender: "Masculino" | "Femenino";
+  blood_type: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
+  insurance_provider: string;
   address: string;
-  medicalHistory: string[];
+  profile_photo_url: string;
   allergies: string[];
-  createdAt: string;
-  avatar?: string;
+
+  // allergies?: string[]; // Descomenta si tu API lo devuelve
 }
 
 export interface Appointment {

@@ -1,10 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { User, Phone, Mail, MapPin, Calendar, AlertTriangle } from 'lucide-react';
-import { Modal } from '../ui/Modal';
-import { Input } from '../ui/Input';
-import { Button } from '../ui/Button';
-import { Patient } from '../../types';
-import './PatientModal.css';
+import React, { useState, useEffect } from "react";
+import {
+  User,
+  Baby,
+  VenusAndMars,
+  Phone,
+  Mail,
+  MapPin,
+  Calendar,
+  AlertTriangle,
+  HeartPulse,
+} from "lucide-react";
+import { Modal } from "../ui/Modal";
+import { Input } from "../ui/Input";
+import { Button } from "../ui/Button";
+import type { Patient } from "../../types";
+import "./PatientModal.scss";
+import axios from "axios";
+import Cookies from "js-cookie";
+
+import { useAuth } from "../../contexts/AuthContext";
 
 interface PatientModalProps {
   isOpen: boolean;
@@ -18,62 +32,141 @@ export const PatientModal: React.FC<PatientModalProps> = ({
   patient,
 }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    lastName: '',
-    birthDate: '',
-    gender: 'male' as 'male' | 'female',
-    phone: '',
-    parentName: '',
-    parentPhone: '',
-    address: '',
-    medicalHistory: '',
-    allergies: '',
+    first_name: "",
+    last_name: "",
+    birth_date: "",
+    gender: "",
+    blood_type: "",
+    allergies: "",
+    insurance_provider: "",
+    profile_photo_url: "",
+    address: "",
+    responsable_user: {
+      first_name: "",
+      last_name: "",
+      phone_number: "",
+      email: "",
+    },
   });
 
   useEffect(() => {
     if (patient) {
       setFormData({
-        name: patient.name,
-        lastName: patient.lastName,
-        birthDate: patient.birthDate,
+        first_name: patient.first_name,
+        last_name: patient.last_name,
+        birth_date: patient.birth_date,
         gender: patient.gender,
-        phone: patient.phone,
-        parentName: patient.parentName,
-        parentPhone: patient.parentPhone,
+        blood_type: patient.blood_type,
+        allergies: patient.allergies ? patient.allergies.join(", ") : "",
+        insurance_provider: patient.insurance_provider,
+        profile_photo_url: patient.profile_photo_url,
         address: patient.address,
-        medicalHistory: patient.medicalHistory.join(', '),
-        allergies: patient.allergies.join(', '),
+        responsable_user: {
+          first_name: patient.responsable_user?.first_name || "",
+          last_name: patient.responsable_user?.last_name || "",
+          phone_number: patient.responsable_user?.phone_number || "",
+          email: patient.responsable_user?.email || "",
+        },
       });
     } else {
       setFormData({
-        name: '',
-        lastName: '',
-        birthDate: '',
-        gender: 'male',
-        phone: '',
-        parentName: '',
-        parentPhone: '',
-        address: '',
-        medicalHistory: '',
-        allergies: '',
+        first_name: "",
+        last_name: "",
+        birth_date: "",
+        gender: "",
+        blood_type: "",
+        allergies: "",
+        insurance_provider: "",
+        profile_photo_url: "",
+        address: "",
+        responsable_user: {
+          first_name: "",
+          last_name: "",
+          phone_number: "",
+          email: "",
+        },
       });
     }
   }, [patient]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { user } = useAuth();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // Here you would typically save the patient data
-    console.log('Saving patient:', formData);
+    console.log("Saving patient:", formData);
+    console.log(user?.token);
+    const csrftoken = Cookies.get("csrftoken") || "";
+
+    let response = await axios.post(
+      "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com/auth/register/",
+      // "http://127.0.0.1:8000/auth/login/",
+      {
+        email: formData.responsable_user.email,
+        password: "sancocho trifasico",
+        first_name: formData.responsable_user.first_name,
+        last_name: formData.responsable_user.last_name,
+        phone_number: formData.responsable_user.phone_number,
+        role: 1, //ESTABLECER EN BACKEND QUE SI NO SE PASA ROL ENTONCES ES user
+        is_active: "True", //ESTE TAMBIEN
+      },
+
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrftoken,
+        },
+        withCredentials: true, // Importante si tu backend requiere cookies
+      }
+    );
+
+    console.log(response);
+    let id_user = null;
+
+    if (response.status == 200) {
+      id_user = response.data.user.id_user;
+    }
+
+    response = await axios.post(
+      "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com/auth/patients/",
+      // "http://127.0.0.1:8000/auth/login/",
+      {
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        birth_date: formData.birth_date,
+        responsable_user: id_user ? id_user : 1,
+        gender: formData.gender,
+        blood_type: formData.blood_type,
+        insurance_provider: "uwu",
+        address: formData.address,
+        profile_photo_url: formData.profile_photo_url,
+      },
+
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrftoken,
+          Authorization: `Token ${user?.token}`,
+        },
+        withCredentials: true, // Importante si tu backend requiere cookies
+      }
+    );
+
+    console.log(response);
+
     onClose();
   };
 
   const calculateAge = (birthDate: string) => {
-    if (!birthDate) return '';
+    if (!birthDate) return "";
     const today = new Date();
     const birth = new Date(birthDate);
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birth.getDate())
+    ) {
       age--;
     }
     return `${age} años`;
@@ -83,32 +176,40 @@ export const PatientModal: React.FC<PatientModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={patient ? `${patient.name} ${patient.lastName}` : 'Nuevo Paciente'}
+      title={
+        patient
+          ? `${patient.first_name} ${patient.last_name}`
+          : "Nuevo Paciente"
+      }
       size="lg"
     >
       <form onSubmit={handleSubmit} className="modal-form">
-        <div className="form-grid">
+        <div className="form-grid-two">
           <Input
             label="Nombre"
-            value={formData.name}
-            onChange={(value) => setFormData({ ...formData, name: value })}
-            icon={User}
+            value={formData.first_name}
+            onChange={(value) =>
+              setFormData({ ...formData, first_name: value })
+            }
+            icon={Baby}
             required
           />
           <Input
             label="Apellido"
-            value={formData.lastName}
-            onChange={(value) => setFormData({ ...formData, lastName: value })}
+            value={formData.last_name}
+            onChange={(value) => setFormData({ ...formData, last_name: value })}
             required
           />
         </div>
 
-        <div className="form-grid form-grid-three">
+        <div className="form-grid-three">
           <Input
             label="Fecha de Nacimiento"
             type="date"
-            value={formData.birthDate}
-            onChange={(value) => setFormData({ ...formData, birthDate: value })}
+            value={formData.birth_date}
+            onChange={(value) =>
+              setFormData({ ...formData, birth_date: value })
+            }
             icon={Calendar}
             required
           />
@@ -116,51 +217,154 @@ export const PatientModal: React.FC<PatientModalProps> = ({
             <label className="form-label">
               Género <span className="required">*</span>
             </label>
-            <select
-              value={formData.gender}
-              onChange={(e) => setFormData({ ...formData, gender: e.target.value as 'male' | 'female' })}
-              className="form-select"
-            >
-              <option value="male">Niño</option>
-              <option value="female">Niña</option>
-            </select>
+
+            <div className="select-wrapper">
+              <select
+                value={formData.gender}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    gender: e.target.value as "Masculino" | "Femenino",
+                  })
+                }
+                className="form-selects"
+              >
+                {/* añadir los options de la base de datos*/}
+                <option value="Masculino">Niño</option>
+                <option value="Femenino">Niña</option>
+              </select>{" "}
+              <div className="select-icon">
+                <VenusAndMars className="icon" />
+              </div>
+            </div>
           </div>
-          {formData.birthDate && (
+          <div className="form-group">
+            <label className="form-label">
+              Tipo de sangre <span className="required">*</span>
+            </label>
+            <div className="select-wrapper">
+              <select
+                value={formData.blood_type}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    blood_type: e.target.value as
+                      | "O+"
+                      | "O-"
+                      | "A+"
+                      | "A-"
+                      | "B+"
+                      | "B-"
+                      | "AB+"
+                      | "AB-",
+                  })
+                }
+                className="form-selects"
+              >
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+              </select>{" "}
+              <div className="select-icon">
+                <HeartPulse className="icon" />
+              </div>
+            </div>
+          </div>
+          {formData.birth_date && (
             <div className="form-group">
               <label className="form-label">Edad</label>
               <div className="age-display">
-                {calculateAge(formData.birthDate)}
+                {calculateAge(formData.birth_date)}
               </div>
             </div>
           )}
         </div>
 
-        <div className="form-grid">
+        <div className="form-grid-two">
           <Input
-            label="Teléfono del Paciente"
-            type="tel"
-            value={formData.phone}
-            onChange={(value) => setFormData({ ...formData, phone: value })}
-            icon={Phone}
+            label="Nombre del responsable"
+            type="text"
+            value={formData.responsable_user.first_name}
+            onChange={(value) =>
+              setFormData({
+                ...formData,
+                responsable_user: {
+                  ...formData.responsable_user,
+                  first_name: value,
+                },
+              })
+            }
+            icon={User}
+            required
           />
           <Input
-            label="Nombre del Tutor"
-            value={formData.parentName}
-            onChange={(value) => setFormData({ ...formData, parentName: value })}
-            icon={User}
+            label="Apellido del responsable"
+            type="text"
+            value={formData.responsable_user.last_name}
+            onChange={(value) =>
+              setFormData({
+                ...formData,
+                responsable_user: {
+                  ...formData.responsable_user,
+                  last_name: value,
+                },
+              })
+            }
+            required
+          />
+        </div>
+
+        <div className="form-grid-two">
+          <Input
+            label="Teléfono"
+            type="tel"
+            value={formData.responsable_user.phone_number}
+            onChange={(value) =>
+              setFormData({
+                ...formData,
+                responsable_user: {
+                  ...formData.responsable_user,
+                  phone_number: value,
+                },
+              })
+            }
+            icon={Phone}
+            required
+          />
+          <Input
+            label="Correo electrónico"
+            type="email"
+            value={formData.responsable_user.email}
+            onChange={(value) =>
+              setFormData({
+                ...formData,
+                responsable_user: {
+                  ...formData.responsable_user,
+                  email: value,
+                },
+              })
+            }
+            icon={Mail}
             required
           />
         </div>
 
         <div className="form-grid">
-          <Input
+          {/* <Input
             label="Teléfono del Tutor"
             type="tel"
             value={formData.parentPhone}
-            onChange={(value) => setFormData({ ...formData, parentPhone: value })}
+            onChange={(value) =>
+              setFormData({ ...formData, parentPhone: value })
+            }
             icon={Phone}
             required
-          />
+          /> */}
           <Input
             label="Dirección"
             value={formData.address}
@@ -170,18 +374,18 @@ export const PatientModal: React.FC<PatientModalProps> = ({
           />
         </div>
 
-        <div className="form-group">
-          <label className="form-label">
-            Historial Médico
-          </label>
+        {/* <div className="form-group">
+          <label className="form-label">Historial Médico</label>
           <textarea
             value={formData.medicalHistory}
-            onChange={(e) => setFormData({ ...formData, medicalHistory: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, medicalHistory: e.target.value })
+            }
             rows={3}
             className="form-textarea"
             placeholder="Condiciones médicas relevantes, medicamentos, cirugías previas..."
           />
-        </div>
+        </div> */}
 
         <div className="form-group">
           <label className="form-label form-label-alert">
@@ -190,7 +394,9 @@ export const PatientModal: React.FC<PatientModalProps> = ({
           </label>
           <textarea
             value={formData.allergies}
-            onChange={(e) => setFormData({ ...formData, allergies: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, allergies: e.target.value })
+            }
             rows={2}
             className="form-textarea"
             placeholder="Alergias conocidas (medicamentos, alimentos, materiales)..."
@@ -199,7 +405,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
 
         <div className="form-actions">
           <Button type="submit" className="submit-button">
-            {patient ? 'Actualizar Paciente' : 'Crear Paciente'}
+            {patient ? "Actualizar Paciente" : "Crear Paciente"}
           </Button>
           <Button variant="outline" onClick={onClose}>
             Cancelar

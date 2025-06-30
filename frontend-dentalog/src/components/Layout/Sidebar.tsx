@@ -34,7 +34,11 @@ export const Sidebar: React.FC = () => {
   const menuUserItems = [
     { path: "/app/dashboard", label: "Dashboard", icon: Home },
     { path: "/app/learning", label: "Aprendizaje", icon: Book },
-    { path: "/app/child-content", label: "Contenido para chiquis", icon: Smile },
+    {
+      path: "/app/child-content",
+      label: "Contenido para chiquis",
+      icon: Smile,
+    },
     // {
     //   path: "/app/educational",
     //   label: "Progreso de evoluciones",
@@ -43,9 +47,9 @@ export const Sidebar: React.FC = () => {
   ];
 
   let menuItems = menuUserItems;
-  if (Number(user?.role) === 1) menuItems = menuDoctorItems;
-  else if (Number(user?.role) === 21) menuItems = menuAdminItems;
-  else if (Number(user?.role) === 22) menuItems = menuUserItems;
+  if (Number(user?.role) === 1) menuItems = menuUserItems;
+  else if (Number(user?.role) === 2) menuItems = menuDoctorItems;
+  else if (Number(user?.role) === 3) menuItems = menuAdminItems;
 
   return (
     <div className="sidebar">

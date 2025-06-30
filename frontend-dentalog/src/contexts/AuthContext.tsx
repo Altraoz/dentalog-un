@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import Cookies from "js-cookie";
+import axios from "axios";
 import type { User } from "../types";
 
 interface AuthContextType {
@@ -34,19 +36,42 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    const backendUrl = import.meta.env.BACKEND_URL;
+    const csrftoken = Cookies.get("csrftoken") || "";
+
     try {
-      const response = await fetch('http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      console.log("no no ");
 
-      if (!response.ok) {
-        return false;
-      }
+      // const response = await fetch(
+      //   "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com",
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       "X-CSRFToken": csrftoken,
+      //     },
+      //     body: JSON.stringify({ email, password }),
+      //   }
+      // );
+      const response = await axios.post(
+        "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com/auth/login/",
+        // "http://127.0.0.1:8000/auth/login/",
+        { email, password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": csrftoken,
+          },
+          withCredentials: true, // Importante si tu backend requiere cookies
+        }
+      );
 
-      const data = await response.json();
+      // if (!response.ok) {
+      //   return false;
+      // }
+      console.log("si si");
+      console.log(response);
+
+      const data = await response.data;
 
       const mockUser: User = {
         id: String(data.user.id_user),
