@@ -90,7 +90,6 @@ class Patients(models.Model):
     GENDER_CHOICES = [
     ('Masculino', 'Masculino'),
     ('Femenino', 'Femenino'),
-    ('Otro', 'Otro'),
     ]  
 
     id = models.BigAutoField(primary_key=True)
@@ -101,10 +100,11 @@ class Patients(models.Model):
     responsable_user = models.ForeignKey('User', models.DO_NOTHING, blank=True, null=True)
     gender = models.CharField(max_length=10, blank=True, null=True, choices=GENDER_CHOICES)
     blood_type = models.CharField(max_length=3, blank=True, null=True, choices=BLOOD_TYPE_CHOICES)
-    insurance_provider = models.CharField(blank=True, null=True)
     address = models.CharField(blank=True, null=True)
     profile_photo_url = models.CharField(blank=True, null=True)
-
+    dni = models.IntegerField(blank=True, null=True)
+    medical_history = models.TextField(blank=True, null=True)
+    
     class Meta:
         managed = False
         db_table = 'patients'
@@ -172,7 +172,7 @@ def password_reset_token_created(reset_password_token, *args, **kwargs):
     msg = EmailMultiAlternatives(
         subject = "Request for resetting password for {title}".format(title=reset_password_token.user.email), 
         body=plain_message,
-        from_email = "sender@example.com", 
+        from_email = "dentalog_un@proton.me", 
         to=[reset_password_token.user.email]
     )
 

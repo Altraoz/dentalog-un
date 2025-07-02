@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import User, Doctors, Patients, Permissions, Roles, RolePermissions, UserRoles
+from rest_framework import serializers
+from .models import User, Doctors, Patients, Permissions, Roles, RolePermissions, UserRoles
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -27,10 +29,6 @@ class UserSerializer(serializers.ModelSerializer):
             is_active=validated_data.get('is_active', True)
         )
         return user
-
-from rest_framework import serializers
-from .models import User, Doctors, Patients, Permissions, Roles, RolePermissions, UserRoles
-
 class DoctorsSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),
@@ -95,7 +93,7 @@ class PatientsSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'created_at', 'first_name', 'last_name', 'birth_date', 'responsable_user',
             'responsable_user_data', 'gender', 'blood_type', 'insurance_provider', 'address',
-            'profile_photo_url'
+            'profile_photo_url', 'dni', 'medical_history'  # <-- Agrega estos campos
         ]
         extra_kwargs = {
             'id': {'read_only': True},

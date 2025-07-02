@@ -76,21 +76,6 @@ class NoteImages(models.Model):
         db_table = 'note_images'
         db_table_comment = 'table of images from notes'
 
-class AppointmentInventory(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    created_at = models.DateTimeField(auto_now_add=True)  # Automatically set on creation
-    appointment = models.ForeignKey('Appointments', models.DO_NOTHING, blank=True, null=True)
-    #item = models.ForeignKey('InventoryItems', models.DO_NOTHING, blank=True, null=True)
-    amount_used = models.IntegerField(blank=True, null=True)
-    description = models.CharField(max_length=500, blank=True, null=True)
-    used_by = models.ForeignKey('users.Doctors', models.DO_NOTHING, db_column='used_by', blank=True, null=True)
-    uset_at = models.CharField(max_length=100, blank=True, null=True)  # Assuming this is a typo for "used_at"
-
-    class Meta:
-        managed = False
-        db_table = 'appointment_inventory'
-        db_table_comment = 'table of items used in an appointment'
-
 class AppointmentTypes(models.Model):
     id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=50)  # Reasonable limit for type name
@@ -102,6 +87,7 @@ class AppointmentTypes(models.Model):
 
 class Appointments(models.Model):
     id = models.BigAutoField(primary_key=True)
+    title = models.CharField(max_length=20, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Automatically set on creation
     attention_date = models.DateTimeField(blank=True, null=True)
     type = models.ForeignKey(AppointmentTypes, models.DO_NOTHING, db_column='type', blank=True, null=True)
@@ -120,8 +106,6 @@ class Appointments(models.Model):
         blank=True,
         null=True
     )
-    notes = models.CharField(max_length=500, blank=True, null=True)
-    duration = models.DurationField(blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)  # Automatically updated on each save
 
     class Meta:
@@ -129,25 +113,22 @@ class Appointments(models.Model):
         db_table = 'appointments'
         db_table_comment = 'table of appointments'
 
+class Procedures(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)  # Automatically set on creation
+    name = models.CharField(max_length=50, blank=True, null=True)
+    start_date = models.DateTimeField(blank=True, null=True)
+    end_date = models.DateTimeField(blank=True, null=True)
+    description = models.CharField(max_length=500, blank=True, null=True)
+    activations = models.CharField(max_length=500, blank=True, null=True)
 
+    class Meta:
+        managed = False
+        db_table = 'procedures'
 
-
-    # id = models.BigAutoField(primary_key=True)
-    # created_at = models.DateTimeField(auto_now_add=True)  # Automatically set on creation
-    # patient = models.ForeignKey('users.Patients', models.DO_NOTHING, blank=True, null=True)
-    # doctor = models.ForeignKey('users.Doctors', models.DO_NOTHING, blank=True, null=True)
-    # status = models.CharField(
-    #     max_length=20,
-    #     choices=[
-    #         ('activo', 'Activo'),
-    #         ('cerrado', 'Cerrado'),
-    #         ('en revision', 'En Revisión'),
-    #         ('referido', 'Referido'),
-    #         ('abandonado', 'Abandonado'),
-    #         ('cancelado', 'Cancelado'),
-    #     ],
-    #     blank=True,
-    #     null=True
-    # )
-
-
+class Activities(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    created_at = models.DateTimeField(auto_now=True)
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=500, blank=True, null=True)
+    procedure_id = models.ForeignKey(Procedures, models.CASCADE, db_column='procedure_id')

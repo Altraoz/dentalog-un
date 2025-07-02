@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import (
     ClinicalCases, EvolutionNotes, EvolutionTypes, Evolutions, NoteImages,
-    AppointmentInventory, AppointmentTypes, Appointments
+     AppointmentTypes, Appointments, Procedures, Activities
 )
 
 class ClinicalCasesSerializer(serializers.ModelSerializer):
@@ -47,18 +47,6 @@ class NoteImagesSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'created_at': {'read_only': True}
         }
-
-class AppointmentInventorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = AppointmentInventory
-        fields = [
-            'id', 'created_at', 'appointment', 'item', 'amount_used',
-            'description', 'used_by', 'uset_at'
-        ]
-        extra_kwargs = {
-            'created_at': {'read_only': True}
-        }
-
 class AppointmentTypesSerializer(serializers.ModelSerializer):
     class Meta:
         model = AppointmentTypes
@@ -68,10 +56,31 @@ class AppointmentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointments
         fields = [
-            'id', 'created_at', 'attention_date', 'type', 'doctor',
-            'clinical_case', 'status', 'notes', 'duration', 'updated_at'
+            'id', 'title', 'created_at', 'attention_date', 'type', 'doctor',
+            'clinical_case', 'status', 'duration', 'updated_at'
         ]
         extra_kwargs = {
             'created_at': {'read_only': True},
             'updated_at': {'read_only': True}
+        }
+
+class ProceduresSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Procedures
+        fields = [
+            'id', 'created_at', 'name', 'start_date', 'end_date',
+            'description', 'activations'
+        ]
+        extra_kwargs = {
+            'created_at': {'read_only': True}
+        }
+
+class ActivitiesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Activities
+        fields = [
+            'id', 'created_at', 'name', 'description', 'procedure_id'
+        ]
+        extra_kwargs = {
+            'created_at': {'read_only': True}
         }
