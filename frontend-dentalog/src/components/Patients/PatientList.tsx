@@ -25,7 +25,7 @@ export const PatientList: React.FC = () => {
       }
       const response = await getPatients(user?.token);
       if (response?.status == 200) {
-        setPatients(response.data); // Ajusta el mapeo si es necesario
+        setPatients(response.data); 
       } else {
         console.log("f trayendo pacientes");
       }

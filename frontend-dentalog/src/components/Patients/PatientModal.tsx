@@ -113,6 +113,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
     //     is_active: "True",
     //   },
     // };
+    // console.log("Saving patient:", data);
 
     const data = {
       first_name: formData.first_name,
@@ -134,8 +135,6 @@ export const PatientModal: React.FC<PatientModalProps> = ({
         is_active: "True",
       },
     };
-
-    console.log("Saving patient:", data);
 
     if (!user) {
       console.error("User is not authenticated.");

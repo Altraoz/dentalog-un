@@ -1,5 +1,15 @@
 # JSON PARA USAR LOS ENDPOINTS DEL BACKEND
 
+## PARA INICIAR SESIÓN
+### Perfil de dentista
+email: user13@gmail.com
+password: pass12345
+
+### Perfil de usuario
+email: user12@gmail.com
+password: pass12345
+
+
 ## Pacientes
 
 Para crear pacientes tenemos dos opciones
