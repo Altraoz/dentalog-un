@@ -1,14 +1,16 @@
 # JSON PARA USAR LOS ENDPOINTS DEL BACKEND
 
 ## PARA INICIAR SESIÓN
+
 ### Perfil de dentista
+
 email: user13@gmail.com
 password: pass12345
 
 ### Perfil de usuario
+
 email: user12@gmail.com
 password: pass12345
-
 
 ## Pacientes
 
@@ -20,7 +22,7 @@ Para crear pacientes tenemos dos opciones
 {
   "first_name": "Juan",
   "last_name": "Pérez",
-  "dni":1006999239,
+  "dni": 1006999239,
   "birth_date": "2015-06-25",
   "gender": "Masculino",
   "blood_type": "A+",
@@ -36,22 +38,22 @@ Para crear pacientes tenemos dos opciones
 {
   "first_name": "Juan",
   "last_name": "Pérez",
-  "dni":1006999239,
+  "dni": 1006999239,
   "birth_date": "2015-06-25",
   "gender": "Masculino",
   "blood_type": "A+",
   "address": "Calle 123 #45-67",
   "profile_photo_url": "https://shorturl.at/ANKvV",
   "responsable_user_data": {
-    "email":"user14@gmail.com",
-    "password":"pass12345",
+    "email": "user14@gmail.com",
+    "password": "pass12345",
     "first_name": "Luis",
     "last_name": "Pérez",
     "phone_number": "3178127431",
     "role": 2,
     "is_active": "True"
-    }
+  }
 }
 ```
-s
 
+s

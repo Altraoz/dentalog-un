@@ -20,6 +20,8 @@ frontend-dentalog/*.ntvs*
 frontend-dentalog/*.njsproj
 frontend-dentalog/*.sln
 frontend-dentalog/*.sw?
+frontend-dentalog/.env
+
 
 
 # Entorno virtual
