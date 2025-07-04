@@ -17,7 +17,7 @@ import type { Patient } from "../../types";
 import "./PatientModal.scss";
 // import axios from "axios";
 // import Cookies from "js-cookie";
-import { createPatient } from "../../api/patients";
+import { createPatientAndUser, updatePatientAndUser } from "../../api/patients";
 
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -140,7 +140,8 @@ export const PatientModal: React.FC<PatientModalProps> = ({
       console.error("User is not authenticated.");
       return;
     }
-    const response = await createPatient(e, user.token, data);
+
+    const response = patient ?  await createPatientAndUser(e, user.token, data): await updatePatientAndUser(e, user.token, data);
     console.log(response);
 
     if (response?.status == 201) {
