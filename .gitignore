@@ -27,3 +27,4 @@ frontend-dentalog/.env
 # Entorno virtual
 backend-dentalog/env
 backend-dentalog/.env
+**/__pycache__/
