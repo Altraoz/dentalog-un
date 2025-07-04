@@ -15,8 +15,9 @@ import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import type { Patient } from "../../types";
 import "./PatientModal.scss";
-import axios from "axios";
-import Cookies from "js-cookie";
+// import axios from "axios";
+// import Cookies from "js-cookie";
+import { createPatient } from "../../api/patients";
 
 import { useAuth } from "../../contexts/AuthContext";
 
@@ -38,7 +39,6 @@ export const PatientModal: React.FC<PatientModalProps> = ({
     gender: "",
     blood_type: "",
     allergies: "",
-    insurance_provider: "",
     profile_photo_url: "",
     address: "",
     responsable_user: {
@@ -58,7 +58,6 @@ export const PatientModal: React.FC<PatientModalProps> = ({
         gender: patient.gender,
         blood_type: patient.blood_type,
         allergies: patient.allergies ? patient.allergies.join(", ") : "",
-        insurance_provider: patient.insurance_provider,
         profile_photo_url: patient.profile_photo_url,
         address: patient.address,
         responsable_user: {
@@ -76,7 +75,6 @@ export const PatientModal: React.FC<PatientModalProps> = ({
         gender: "",
         blood_type: "",
         allergies: "",
-        insurance_provider: "",
         profile_photo_url: "",
         address: "",
         responsable_user: {
@@ -91,70 +89,122 @@ export const PatientModal: React.FC<PatientModalProps> = ({
 
   const { user } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Here you would typically save the patient data
-    console.log("Saving patient:", formData);
-    console.log(user?.token);
-    const csrftoken = Cookies.get("csrftoken") || "";
+    // console.log(user?.token);
 
-    let response = await axios.post(
-      "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com/auth/register/",
-      // "http://127.0.0.1:8000/auth/login/",
-      {
+    // const data = {
+    //   first_name: "Juan",
+    //   last_name: "Pérez",
+    //   birth_date: "2015-06-25T00:00:00Z",
+    //   gender: "Masculino",
+    //   blood_type: "A+",
+    //   address: "Calle 123 #45-67",
+    //   profile_photo_url:
+    //     "https://img.freepik.com/psd-gratis/3d-ilustracion-persona_23-2149436179.jpg", //dejar por defecto
+    //   dni: 1006999239,
+    //   responsable_user_data: {
+    //     email: "user1@gmail.com",
+    //     password: "pass12345",
+    //     first_name: "Luis",
+    //     last_name: "Pérez",
+    //     phone_number: "3178127431",
+    //     role: 2,
+    //     is_active: "True",
+    //   },
+    // };
+
+    const data = {
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      birth_date: formData.birth_date,
+      gender: formData.gender,
+      blood_type: formData.blood_type,
+      address: formData.address,
+      profile_photo_url:
+        "https://img.freepik.com/psd-gratis/3d-ilustracion-persona_23-2149436179.jpg", //dejar por defecto
+      dni: 1006999239,
+      responsable_user_data: {
         email: formData.responsable_user.email,
-        password: "sancocho trifasico",
+        password: "generic_password",
         first_name: formData.responsable_user.first_name,
         last_name: formData.responsable_user.last_name,
         phone_number: formData.responsable_user.phone_number,
-        role: 1, //ESTABLECER EN BACKEND QUE SI NO SE PASA ROL ENTONCES ES user
-        is_active: "True", //ESTE TAMBIEN
+        role: 2,
+        is_active: "True",
       },
+    };
 
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrftoken,
-        },
-        withCredentials: true, // Importante si tu backend requiere cookies
-      }
-    );
+    console.log("Saving patient:", data);
 
+    if (!user) {
+      console.error("User is not authenticated.");
+      return;
+    }
+    const response = await createPatient(e, user.token, data);
     console.log(response);
-    let id_user = null;
 
-    if (response.status == 200) {
-      id_user = response.data.user.id_user;
+    if (response?.status == 201) {
+      onClose();
     }
 
-    response = await axios.post(
-      "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com/auth/patients/",
-      // "http://127.0.0.1:8000/auth/login/",
-      {
-        first_name: formData.first_name,
-        last_name: formData.last_name,
-        birth_date: formData.birth_date,
-        responsable_user: id_user ? id_user : 1,
-        gender: formData.gender,
-        blood_type: formData.blood_type,
-        insurance_provider: "uwu",
-        address: formData.address,
-        profile_photo_url: formData.profile_photo_url,
-      },
+    // let response = await axios.post(
+    //   "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com/auth/register/",
+    //   // "http://127.0.0.1:8000/auth/login/",
+    //   {
+    //     email: formData.responsable_user.email,
+    //     password: "sancocho trifasico",
+    //     first_name: formData.responsable_user.first_name,
+    //     last_name: formData.responsable_user.last_name,
+    //     phone_number: formData.responsable_user.phone_number,
+    //     role: 1, //ESTABLECER EN BACKEND QUE SI NO SE PASA ROL ENTONCES ES user
+    //     is_active: "True", //ESTE TAMBIEN
+    //   },
 
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrftoken,
-          Authorization: `Token ${user?.token}`,
-        },
-        withCredentials: true, // Importante si tu backend requiere cookies
-      }
-    );
+    //   {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "X-CSRFToken": csrftoken,
+    //     },
+    //     withCredentials: true, // Importante si tu backend requiere cookies
+    //   }
+    // );
+
+    // console.log(response);
+    // let id_user = null;
+
+    // if (response.status == 200) {
+    //   id_user = response.data.user.id_user;
+    // }
+
+    // response = await axios.post(
+    //   "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com/auth/patients/",
+    //   // "http://127.0.0.1:8000/auth/login/",
+    //   {
+    //     first_name: formData.first_name,
+    //     last_name: formData.last_name,
+    //     birth_date: formData.birth_date,
+    //     responsable_user: id_user ? id_user : 1,
+    //     gender: formData.gender,
+    //     blood_type: formData.blood_type,
+    //     insurance_provider: "uwu",
+    //     address: formData.address,
+    //     profile_photo_url: formData.profile_photo_url,
+    //   },
+
+    //   {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "X-CSRFToken": csrftoken,
+    //       Authorization: `Token ${user?.token}`,
+    //     },
+    //     withCredentials: true, // Importante si tu backend requiere cookies
+    //   }
+    // );
 
     console.log(response);
 
-    onClose();
+    // onClose();
   };
 
   const calculateAge = (birthDate: string) => {

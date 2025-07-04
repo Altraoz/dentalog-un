@@ -29,6 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
             is_active=validated_data.get('is_active', True)
         )
         return user
+
 class DoctorsSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),
@@ -76,6 +77,7 @@ class DoctorsSerializer(serializers.ModelSerializer):
             representation['id'] = None
         representation.pop('user_data', None)  # Eliminar user_data de la respuesta
         return representation
+
 class PatientsSerializer(serializers.ModelSerializer):
     responsable_user = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),
@@ -92,9 +94,9 @@ class PatientsSerializer(serializers.ModelSerializer):
         model = Patients
         fields = [
             'id', 'created_at', 'first_name', 'last_name', 'birth_date', 'responsable_user',
-            'responsable_user_data', 'gender', 'blood_type', 'insurance_provider', 'address',
-            'profile_photo_url', 'dni', 'medical_history'  # <-- Agrega estos campos
-        ]
+            'responsable_user_data', 'gender', 'blood_type', 'address',
+            'profile_photo_url', 'dni'
+            ]
         extra_kwargs = {
             'id': {'read_only': True},
             'created_at': {'read_only': True}

@@ -73,19 +73,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       const data = await response.data;
 
-      const mockUser: User = {
+      const user: User = {
         id: String(data.user.id_user),
         id_user: data.user.id_user,
-        created_at: data.user.created_at,
         first_name: data.user.first_name,
         last_name: data.user.last_name,
         name: `${data.user.first_name} ${data.user.last_name}`,
-        phone_number: data.user.phone_number,
         profile_photo_url: data.user.profile_photo_url,
         role: data.user.role,
-        is_active: data.user.is_active,
         last_login: data.user.last_login,
-        updated_at: data.user.updated_at,
         email: data.user.email,
         token: data.token, // el token viene fuera de user
       };
@@ -98,12 +94,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       //   token: data.user.token,
       // };
 
-      console.log(data);
+      // console.log(data);
 
-      console.log(mockUser);
+      // console.log(user);
 
-      setUser(mockUser);
-      localStorage.setItem("dentalog_user", JSON.stringify(mockUser));
+      setUser(user);
+      localStorage.setItem("dentalog_user", JSON.stringify(user));
       return true;
     } catch (error) {
       console.error("Login error:", error);

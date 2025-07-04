@@ -1,3 +1,5 @@
+// import { Users } from "lucide-react";
+
 export interface ResponsableUser {
   id_user: number;
   created_at: string;
@@ -14,6 +16,7 @@ export interface ResponsableUser {
 
 export interface Patient {
   id: number;
+  dni: number;
   created_at: string;
   first_name: string;
   last_name: string;
@@ -21,7 +24,6 @@ export interface Patient {
   responsable_user: ResponsableUser;
   gender: "Masculino" | "Femenino";
   blood_type: "A+" | "A-" | "B+" | "B-" | "AB+" | "AB-" | "O+" | "O-";
-  insurance_provider: string;
   address: string;
   profile_photo_url: string;
   allergies: string[];
@@ -75,4 +77,39 @@ export interface DentalCalculation {
   results: Record<string, unknown>;
   date: string;
   notes?: string;
+}
+
+export interface User {
+  id: string;
+  id_user: string;
+  first_name: string;
+  last_name: string;
+  name: string;
+  profile_photo_url: string;
+  role: number;
+  last_login: string;
+  email: string;
+  token: string;
+}
+
+export interface UserPayload {
+  email: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  role: number; // opcional si lo dejas que lo defina el backend
+}
+
+export interface PatientPayload {
+  first_name: string;
+  last_name: string;
+  birth_date: string;
+  gender: string;
+  blood_type: string;
+  address: string;
+  profile_photo_url: string;
+  dni: number;
+  // responsable_user: number;
+  responsable_user_data: UserPayload;
 }

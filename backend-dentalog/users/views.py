@@ -43,7 +43,6 @@ class RegisterViewset(viewsets.ViewSet):
         else:
             return Response(serializer.errors, status=400)
 
-
 class UserViewset(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -69,8 +68,6 @@ class UserViewset(viewsets.ViewSet):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 class DoctorViewset(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
@@ -106,6 +103,9 @@ class DoctorViewset(viewsets.ViewSet):
         doctor.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+# ---------------------------------------
+# PATIENTS METHODS
+# Create only a patient with a existing user
 class PatientViewset(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -139,7 +139,12 @@ class PatientViewset(viewsets.ViewSet):
         patient.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+#Create a patient and user at same time
+class createPatientAndUser(viewsets.ViewSet):
+    permission_classes = [permissions.IsAuthenticated]
 
+# ---------------------------------------
+# ROLES AND PERMISIONS
 class PermissionsViewset(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -154,7 +159,6 @@ class PermissionsViewset(viewsets.ViewSet):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
     
-
 class RolesViewset(viewsets.ViewSet):
 
     
@@ -170,4 +174,3 @@ class RolesViewset(viewsets.ViewSet):
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
-    

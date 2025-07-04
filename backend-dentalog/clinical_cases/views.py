@@ -214,6 +214,7 @@ class AppointmentTypesViewSet(viewsets.ViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AppointmentsViewSet(viewsets.ViewSet):
+    
     permission_classes = [permissions.IsAuthenticated]
 
     def list(self, request):

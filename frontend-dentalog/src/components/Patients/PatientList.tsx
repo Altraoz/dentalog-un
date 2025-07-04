@@ -7,8 +7,8 @@ import { Button } from "../ui/Button";
 import { PatientModal } from "./PatientModal";
 import type { Patient } from "../../types";
 import "./PatientList.css";
-import axios from "axios";
 import { useAuth } from "../../contexts/AuthContext";
+import { getPatients } from "../../api/patients";
 
 export const PatientList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,21 +19,31 @@ export const PatientList: React.FC = () => {
 
   useEffect(() => {
     const fetchPatients = async () => {
-      try {
-        const response = await axios.get(
-          "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com/auth/patients/",
-          {
-            headers: {
-              // Si necesitas autenticación, agrega aquí el token:
-              Authorization: `Token ${user?.token}`,
-            },
-            withCredentials: true, // Si tu backend lo requiere
-          }
-        );
-        setPatients(response.data); // Ajusta el mapeo si es necesario
-      } catch (error) {
-        console.error("Error al traer pacientes:", error);
+      if (!user) {
+        console.error("User is not authenticated.");
+        return;
       }
+      const response = await getPatients(user?.token);
+      if (response?.status == 200) {
+        setPatients(response.data); // Ajusta el mapeo si es necesario
+      } else {
+        console.log("f trayendo pacientes");
+      }
+      // try {
+      //   const response = await axios.get(
+      //     "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com/auth/patients/",
+      //     {
+      //       headers: {
+      //         // Si necesitas autenticación, agrega aquí el token:
+      //         Authorization: `Token ${user?.token}`,
+      //       },
+      //       withCredentials: true, // Si tu backend lo requiere
+      //     }
+      //   );
+      //   setPatients(response.data); // Ajusta el mapeo si es necesario
+      // } catch (error) {
+      //   console.error("Error al traer pacientes:", error);
+      // }
     };
 
     fetchPatients();
