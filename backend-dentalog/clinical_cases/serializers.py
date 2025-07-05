@@ -69,18 +69,19 @@ class ProceduresSerializer(serializers.ModelSerializer):
         model = Procedures
         fields = [
             'id', 'created_at', 'name', 'start_date', 'end_date',
-            'description', 'activations'
+            'description', 'activations','is_frecuent'
         ]
         extra_kwargs = {
-            'created_at': {'read_only': True}
+            'created_at': {'read_only': True},
+            'id': {'read_only': True}
         }
 
 class ActivitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Activities
         fields = [
-            'id', 'created_at', 'name', 'description', 'procedure_id'
+            'id', 'created_at', 'name', 'description', 'is_done','procedure',
         ]
         extra_kwargs = {
-            'created_at': {'read_only': True}
+            'created_at': {'read_only': True}, 'id': {'read_only': True}
         }

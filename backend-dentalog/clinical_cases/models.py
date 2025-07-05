@@ -117,18 +117,24 @@ class Procedures(models.Model):
     id = models.BigAutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Automatically set on creation
     name = models.CharField(max_length=50, blank=True, null=True)
-    start_date = models.DateTimeField(blank=True, null=True)
-    end_date = models.DateTimeField(blank=True, null=True)
-    description = models.CharField(max_length=500, blank=True, null=True)
-    activations = models.CharField(max_length=500, blank=True, null=True)
+    start_date = models.DateField()
+    end_date = models.DateField(null=True)
+    description = models.CharField(max_length=500, null=True)
+    activations = models.CharField(max_length=500, null=True)
+    is_frecuent = models.BooleanField(default=False)
+
 
     class Meta:
         managed = False
         db_table = 'procedures'
 
 class Activities(models.Model):
-    id = models.BigIntegerField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=500, blank=True, null=True)
-    procedure_id = models.ForeignKey(Procedures, models.CASCADE, db_column='procedure_id')
+    procedure = models.ForeignKey('Procedures', models.CASCADE, null=True)
+    is_done = models.BooleanField(default=False)
+    class Meta:
+        managed = False
+        db_table = 'activities'

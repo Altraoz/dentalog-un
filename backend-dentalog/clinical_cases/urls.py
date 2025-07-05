@@ -6,6 +6,9 @@ from .views import *
 router = DefaultRouter()
 router.register('cases', ClinicalCasesViewSet, basename='cases')
 
+router.register('procedures', ProceduresViewSet, basename='procedures')
+router.register('activities', ActivitiesViewSet, basename='activities')
+
 
 router.register('appointments', AppointmentsViewSet, basename='appointments')
 router.register('appointment_types', AppointmentTypesViewSet, basename='appointment_types')
@@ -17,6 +20,7 @@ router.register('images', NoteImagesViewSet, basename='images')
 
 router.register('evolutions', EvolutionsViewSet, basename='evolutions')
 router.register('evolution_types', EvolutionTypesViewSet, basename='evolution_types')
+
 
 
 # router.register('login', LoginViewset, basename='login')

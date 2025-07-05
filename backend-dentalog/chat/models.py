@@ -15,7 +15,7 @@ class Chats(models.Model):
     created_at = models.DateTimeField()
     updated_at = models.DateTimeField()
     title = models.CharField()
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=True)
     id = models.FloatField(primary_key=True)
 
     class Meta:
@@ -27,7 +27,7 @@ class Messages(models.Model):
     message_id = models.BigAutoField(primary_key=True)
     user = models.ForeignKey('Users', models.DO_NOTHING, blank=True, null=True)
     send_at = models.DateTimeField()
-    is_read = models.BooleanField()
+    is_read = models.BooleanField(default=False)
     type = models.SmallIntegerField()
     content = models.CharField(blank=True, null=True)
     chat = models.ForeignKey(Chats, models.DO_NOTHING, blank=True, null=True)

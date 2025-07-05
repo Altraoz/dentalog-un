@@ -43,7 +43,7 @@ class User(AbstractUser):
     phone_number = models.CharField(max_length=255) 
     profile_photo_url = models.TextField(blank=True, null=True)  
     role = models.SmallIntegerField()
-    is_active = models.BooleanField() 
+    is_active = models.BooleanField(default=True) 
     last_login = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
     email = models.CharField(max_length=255, unique=True)
