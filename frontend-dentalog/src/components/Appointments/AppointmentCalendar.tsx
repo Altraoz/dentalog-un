@@ -8,7 +8,10 @@ import { Appointment } from "../../types";
 import "./AppointmentCalendar.css";
 
 export const AppointmentCalendar: React.FC = () => {
-  const [selectedDate, setSelectedDate] = useState("2025-07-06");
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);

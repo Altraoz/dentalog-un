@@ -3,7 +3,6 @@ import { Search, Plus, User, Phone, Calendar } from "lucide-react";
 import { Card } from "../ui/Card";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
-// import { mockPatients } from "../../data/mockData";
 import { PatientModal } from "./PatientModal";
 import type { Patient } from "../../types";
 import "./PatientList.css";
@@ -28,24 +27,10 @@ export const PatientList: React.FC = () => {
         setPatients(response.data.results); 
         console.log("setting patients", response)
 
+        setPatients(response.data.results); 
       } else {
         console.log("f trayendo pacientes");
       }
-      // try {
-      //   const response = await axios.get(
-      //     "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com/auth/patients/",
-      //     {
-      //       headers: {
-      //         // Si necesitas autenticación, agrega aquí el token:
-      //         Authorization: `Token ${user?.token}`,
-      //       },
-      //       withCredentials: true, // Si tu backend lo requiere
-      //     }
-      //   );
-      //   setPatients(response.data); // Ajusta el mapeo si es necesario
-      // } catch (error) {
-      //   console.error("Error al traer pacientes:", error);
-      // }
     };
 
     fetchPatients();
@@ -154,13 +139,6 @@ export const PatientList: React.FC = () => {
                   </div>
                 </div>
               </div>
-
-              {/* {patient.allergies.length > 0 &&
-                patient.allergies[0] !== "Ninguna conocida" && (
-                  <div className="patient-allergies">
-                    <span className="allergy-tag">⚠️ Alergias</span>
-                  </div>
-                )} */}
               <div className="patient-allergies">
                 <span className="allergy-tag">⚠️ Alergias</span>
               </div>
