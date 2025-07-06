@@ -1,19 +1,20 @@
-import React, { useState } from 'react';
-import { Calendar, Plus, Clock, User, Phone } from 'lucide-react';
-import { Card } from '../ui/Card';
-import { Button } from '../ui/Button';
-import { mockAppointments } from '../../data/mockData';
-import { AppointmentModal } from './AppointmentModal';
-import { Appointment } from '../../types';
-import './AppointmentCalendar.css';
+import React, { useState } from "react";
+import { Calendar, Plus, Clock, User, Phone } from "lucide-react";
+import { Card } from "../ui/Card";
+import { Button } from "../ui/Button";
+import { mockAppointments } from "../../data/mockData";
+import { AppointmentModal } from "./AppointmentModal";
+import { Appointment } from "../../types";
+import "./AppointmentCalendar.css";
 
 export const AppointmentCalendar: React.FC = () => {
-  const [selectedDate, setSelectedDate] = useState('2024-12-20');
+  const [selectedDate, setSelectedDate] = useState("2025-07-06");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<Appointment | null>(null);
 
   const dailyAppointments = mockAppointments.filter(
-    appointment => appointment.date === selectedDate
+    (appointment) => appointment.date === selectedDate
   );
 
   const handleNewAppointment = () => {
@@ -28,19 +29,27 @@ export const AppointmentCalendar: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'scheduled': return 'appointment-scheduled';
-      case 'completed': return 'appointment-completed';
-      case 'cancelled': return 'appointment-cancelled';
-      default: return 'appointment-default';
+      case "scheduled":
+        return "appointment-scheduled";
+      case "completed":
+        return "appointment-completed";
+      case "cancelled":
+        return "appointment-cancelled";
+      default:
+        return "appointment-default";
     }
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'scheduled': return 'Programada';
-      case 'completed': return 'Completada';
-      case 'cancelled': return 'Cancelada';
-      default: return status;
+      case "scheduled":
+        return "Programada";
+      case "completed":
+        return "Completada";
+      case "cancelled":
+        return "Cancelada";
+      default:
+        return status;
     }
   };
 
@@ -49,11 +58,11 @@ export const AppointmentCalendar: React.FC = () => {
     const date = new Date();
     date.setDate(date.getDate() + i);
     return {
-      date: date.toISOString().split('T')[0],
-      display: date.toLocaleDateString('es-ES', { 
-        weekday: 'short', 
-        day: 'numeric',
-        month: 'short' 
+      date: date.toISOString().split("T")[0],
+      display: date.toLocaleDateString("es-ES", {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
       }),
       isToday: i === 0,
     };
@@ -64,7 +73,9 @@ export const AppointmentCalendar: React.FC = () => {
       <div className="calendar-header">
         <div>
           <h2 className="calendar-title">Agenda de Citas</h2>
-          <p className="calendar-subtitle">Gestiona las citas de tus pacientes</p>
+          <p className="calendar-subtitle">
+            Gestiona las citas de tus pacientes
+          </p>
         </div>
         <Button onClick={handleNewAppointment} icon={Plus}>
           Nueva Cita
@@ -80,7 +91,9 @@ export const AppointmentCalendar: React.FC = () => {
                 <button
                   key={day.date}
                   onClick={() => setSelectedDate(day.date)}
-                  className={`date-button ${selectedDate === day.date ? 'active' : ''} ${day.isToday ? 'today' : ''}`}
+                  className={`date-button ${
+                    selectedDate === day.date ? "active" : ""
+                  } ${day.isToday ? "today" : ""}`}
                 >
                   <div className="date-text">
                     <div className="capitalize">{day.display}</div>
@@ -98,12 +111,19 @@ export const AppointmentCalendar: React.FC = () => {
             <div className="appointments-header">
               <h3 className="appointments-title">
                 <Calendar className="title-icon" />
-                Citas del {new Date(selectedDate).toLocaleDateString('es-ES', { 
-                  weekday: 'long', 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
-                })}
+                Citas del{" "}
+                {(() => {
+                  const [year, month, day] = selectedDate
+                    .split("-")
+                    .map(Number);
+                  const localDate = new Date(year, month - 1, day);
+                  return localDate.toLocaleDateString("es-ES", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  });
+                })()}
               </h3>
               <span className="appointments-count">
                 {dailyAppointments.length} citas programadas
@@ -118,20 +138,29 @@ export const AppointmentCalendar: React.FC = () => {
                     <div
                       key={appointment.id}
                       onClick={() => handleAppointmentClick(appointment)}
-                      className={`appointment-card ${getStatusColor(appointment.status)}`}
+                      className={`appointment-card ${getStatusColor(
+                        appointment.status
+                      )}`}
                     >
                       <div className="appointment-content">
                         <div className="appointment-details">
                           <div className="appointment-info">
                             <div className="patient-avatar">
-                              {appointment.patientName.split(' ').map(n => n[0]).join('')}
+                              {appointment.patientName
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
                             </div>
                             <div>
-                              <h4 className="patient-name">{appointment.patientName}</h4>
-                              <p className="service-name">{appointment.serviceName}</p>
+                              <h4 className="patient-name">
+                                {appointment.patientName}
+                              </h4>
+                              <p className="service-name">
+                                {appointment.serviceName}
+                              </p>
                             </div>
                           </div>
-                          
+
                           <div className="appointment-meta">
                             <div className="meta-item">
                               <Clock className="meta-icon" />
@@ -145,7 +174,9 @@ export const AppointmentCalendar: React.FC = () => {
                         </div>
 
                         <div className="appointment-actions">
-                          <span className={`status-tag status-${appointment.status}`}>
+                          <span
+                            className={`status-tag status-${appointment.status}`}
+                          >
                             {getStatusText(appointment.status)}
                           </span>
                           <button className="call-button">
@@ -158,9 +189,11 @@ export const AppointmentCalendar: React.FC = () => {
               ) : (
                 <div className="no-appointments">
                   <Calendar className="no-appointments-icon" />
-                  <p className="no-appointments-text">No hay citas programadas para este día</p>
-                  <Button 
-                    variant="outline" 
+                  <p className="no-appointments-text">
+                    No hay citas programadas para este día
+                  </p>
+                  <Button
+                    variant="outline"
                     onClick={handleNewAppointment}
                     className="no-appointments-button"
                     size="sm"
