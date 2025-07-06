@@ -2,6 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { url_backend } from "./variables";
 import type { PatientPayload } from "../types";
+import api from "./authentication";
 
 export async function createPatientAndUser(
   e: React.FormEvent<HTMLFormElement>,
@@ -13,18 +14,14 @@ export async function createPatientAndUser(
   const csrftoken = Cookies.get("csrftoken");
 
   try {
-    const response = await axios.post(
-      backendUrl,
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrftoken || "",
-          Authorization: `Token ${userToken}`,
-        },
-        withCredentials: true,
-      }
-    );
+    const response = await axios.post(backendUrl, data, {
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken || "",
+        Authorization: `Token ${userToken}`,
+      },
+      withCredentials: true,
+    });
     return response;
   } catch (error) {
     console.error("Error al crear pacientes", error);
@@ -42,18 +39,14 @@ export async function updatePatientAndUser(
   const csrftoken = Cookies.get("csrftoken");
 
   try {
-    const response = await axios.post(
-      backendUrl,
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrftoken || "",
-          Authorization: `Token ${userToken}`,
-        },
-        withCredentials: true,
-      }
-    );
+    const response = await axios.post(backendUrl, data, {
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken || "",
+        Authorization: `Token ${userToken}`,
+      },
+      withCredentials: true,
+    });
     return response;
   } catch (error) {
     console.error("Error al crear pacientes", error);
@@ -61,15 +54,13 @@ export async function updatePatientAndUser(
   }
 }
 
-
 export async function getPatients(userToken: string) {
-  const backendUrl = url_backend + "/auth/patients/";
+  const url = "/auth/patients/";
   try {
-    const response = await axios.get(backendUrl, {
+    const response = await api.get(url, {
       headers: {
         Authorization: `Token ${userToken}`,
       },
-      withCredentials: true,
     });
     return response;
   } catch (error) {

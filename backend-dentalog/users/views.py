@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 # Imports locales
 from .models import User, Doctors, Patients, Permissions, Roles
-from .serializers import UserSerializer, DoctorsSerializer, PatientsSerializer, PermissionsSerializer, RolesSerializer
+from .serializers import UserSerializer, DoctorsSerializer, PatientsSerializer, PermissionsSerializer, RolesSerializer, PatientinAppointmentSerializer
 from .pagination import PatientPagination
 from .filters import PatientSearchFilter
 User = get_user_model()
@@ -182,3 +182,9 @@ class RolesViewset(viewsets.ViewSet):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
 
+class PatientinAppoinment(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Patients.objects.all()
+    serializer_class = PatientinAppointmentSerializer
+    filter_backends = [PatientSearchFilter]
+    search_fields = ['first_name', 'last_name']

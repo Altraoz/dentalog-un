@@ -3,7 +3,7 @@ from django.db import models
 class ClinicalCases(models.Model):
     id = models.BigAutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Automatically set on creation
-    patient = models.ForeignKey('users.Patients', models.DO_NOTHING, blank=True, null=True)
+    patient = models.ForeignKey('users.Patients', models.DO_NOTHING,related_name='clinical_cases', blank=True, null=True)
     doctor = models.ForeignKey('users.Doctors', models.DO_NOTHING, blank=True, null=True)
     status = models.CharField(
         max_length=20,
@@ -122,6 +122,7 @@ class Procedures(models.Model):
     description = models.CharField(max_length=500, null=True)
     activations = models.CharField(max_length=500, null=True)
     is_frecuent = models.BooleanField(default=False)
+    clinical_case = models.ForeignKey('ClinicalCases', models.CASCADE, db_column='clinical_case', null=True, related_name="procedures")
 
 
     class Meta:
@@ -132,8 +133,7 @@ class Activities(models.Model):
     id = models.BigAutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now=True)
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=500, blank=True, null=True)
-    procedure = models.ForeignKey('Procedures', models.CASCADE, null=True)
+    procedure = models.ForeignKey('Procedures', models.CASCADE,null=True, related_name="activities" )
     is_done = models.BooleanField(default=False)
     class Meta:
         managed = False

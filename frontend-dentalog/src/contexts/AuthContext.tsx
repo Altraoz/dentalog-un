@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import type { User } from "../types";
+import { url_backend } from "../api/variables";
+import { configureAxiosInterceptor } from "../api/authentication";
 
 interface AuthContextType {
   user: User | null;
@@ -29,6 +31,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    configureAxiosInterceptor(logout);
+  }, []);
+
+  useEffect(() => {
     const savedUser = localStorage.getItem("dentalog_user");
     if (savedUser) {
       setUser(JSON.parse(savedUser));
@@ -40,34 +46,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     try {
       console.log("no no ");
-
-      // const response = await fetch(
-      //   "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com",
-      //   {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       "X-CSRFToken": csrftoken,
-      //     },
-      //     body: JSON.stringify({ email, password }),
-      //   }
-      // );
       const response = await axios.post(
-        "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com/auth/login/",
-        // "http://127.0.0.1:8000/auth/login/",
+        `${url_backend}/auth/login/`,
         { email, password },
         {
           headers: {
             "Content-Type": "application/json",
             "X-CSRFToken": csrftoken,
           },
-          withCredentials: true, // Importante si tu backend requiere cookies
+          withCredentials: true,
         }
       );
 
-      // if (!response.ok) {
-      //   return false;
-      // }
       console.log("si si");
       console.log(response);
 
@@ -85,18 +75,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         email: data.user.email,
         token: data.token, // el token viene fuera de user
       };
-
-      // const mockUser: User = {
-      //   id: data.user.id_user,
-      //   name: data.user.first_name,
-      //   email: data.user.email,
-      //   role: data.user.role,
-      //   token: data.user.token,
-      // };
-
-      // console.log(data);
-
-      // console.log(user);
 
       setUser(user);
       localStorage.setItem("dentalog_user", JSON.stringify(user));

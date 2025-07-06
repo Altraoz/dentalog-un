@@ -13,7 +13,7 @@ from .models import (
     ClinicalCases, EvolutionNotes, EvolutionTypes, Evolutions, NoteImages, AppointmentTypes, Appointments, Procedures, Activities
 )
 from .serializers import (
-    ClinicalCasesSerializer, EvolutionNotesSerializer, EvolutionTypesSerializer,
+    ClinicalCasesinAppointmentSerializer, ClinicalCasesSerializer, EvolutionNotesSerializer, EvolutionTypesSerializer,
     EvolutionsSerializer, NoteImagesSerializer,
     AppointmentTypesSerializer, AppointmentsSerializer, ProceduresSerializer, ActivitiesSerializer
 )
@@ -275,6 +275,7 @@ class ProceduresViewSet(viewsets.ModelViewSet):
     queryset = Procedures.objects.all()
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['id','is_frecuent']
+
 class ActivitiesViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = ActivitiesSerializer
@@ -290,3 +291,11 @@ class getClinicalCasesFromPatient(viewsets.ModelViewSet):
         return ClinicalCases.objects.filter(patient_id=patient_id)
     return ClinicalCases.objects.all()
 
+
+class uwu(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ClinicalCasesinAppointmentSerializer
+    queryset = ClinicalCases.objects.all()
+
+
+#https://chatgpt.com/c/6869f455-4360-800b-835b-dc9295ac8445

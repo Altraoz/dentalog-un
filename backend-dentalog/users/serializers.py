@@ -1,8 +1,6 @@
 from rest_framework import serializers
-from .models import User, Doctors, Patients, Permissions, Roles, RolePermissions, UserRoles
-from rest_framework import serializers
-from .models import User, Doctors, Patients, Permissions, Roles, RolePermissions, UserRoles
-
+from clinical_cases.serializers import ClinicalCasesSerializer
+from .models import (User, Doctors, Patients, Permissions, Roles, RolePermissions, UserRoles)
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -153,3 +151,18 @@ class UserRolesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserRoles
         fields = ['user', 'role']
+
+
+class PatientinAppointmentSerializer(serializers.ModelSerializer):
+    clinical_cases = ClinicalCasesSerializer(many=True, read_only=True)
+    class Meta:
+        model = Patients
+        fields = [
+            'id', 'created_at', 'first_name', 'last_name', 'birth_date', 'responsable_user',
+            'gender', 'blood_type', 'address',
+            'profile_photo_url', 'dni', 'clinical_cases'  # ← incluirlo aquí también
+        ]
+        extra_kwargs = {
+            'id': {'read_only': True},
+            'created_at': {'read_only': True}
+        }

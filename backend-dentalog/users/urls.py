@@ -12,5 +12,6 @@ router.register('roles', RolesViewset, basename='roles')
 
 router.register('doctors', DoctorViewset, basename='doctors')
 router.register('patients', PatientViewset, basename='patients')
+router.register('patient-appointment', PatientinAppoinment, basename='patient_appointment')
 urlpatterns = router.urls
 

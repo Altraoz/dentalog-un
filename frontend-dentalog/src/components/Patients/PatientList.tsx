@@ -25,7 +25,9 @@ export const PatientList: React.FC = () => {
       }
       const response = await getPatients(user?.token);
       if (response?.status == 200) {
-        setPatients(response.data); 
+        setPatients(response.data.results); 
+        console.log("setting patients", response)
+
       } else {
         console.log("f trayendo pacientes");
       }
