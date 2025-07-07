@@ -4,6 +4,7 @@ import { UpcomingAppointments } from "../../components/Dashboard/UpcomingAppoint
 import { PatientList } from "../../components/Patients/PatientList";
 import { AppointmentCalendar } from "../../components/Appointments/AppointmentCalendar";
 import { ServiceCatalog } from "../../components/Services/ServiceCatalog";
+import { EvolutionsView } from "../../components/Evolutions/EvolutionsView";
 
 const Dashboard = () => (
   <div className="section-space">
@@ -39,6 +40,8 @@ function DentistView() {
         <Route path="patients" element={<PatientList />} />
         <Route path="appointments" element={<AppointmentCalendar />} />
         <Route path="services" element={<ServiceCatalog />} />
+        <Route path="evolutions" element={<EvolutionsView />} />
+
         <Route path="*" element={<Navigate to="/app/dashboard" replace />} />
       </Routes>
     </div>

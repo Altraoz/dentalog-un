@@ -21,7 +21,9 @@ export const Sidebar: React.FC = () => {
     { path: "/app/dashboard", label: "Dashboard", icon: Home },
     { path: "/app/patients", label: "Pacientes", icon: Users },
     { path: "/app/appointments", label: "Citas", icon: Calendar },
-    { path: "/app/services", label: "Servicios", icon: Stethoscope },
+    // { path: "/app/services", label: "Servicios", icon: Stethoscope },
+    { path: "/app/evolutions", label: "Evoluciones", icon: Stethoscope },
+
   ];
 
   const menuAdminItems = [
@@ -29,6 +31,7 @@ export const Sidebar: React.FC = () => {
     { path: "/app/patients", label: "Pacientes", icon: Users },
     { path: "/app/appointments", label: "Citas", icon: Calendar },
     { path: "/app/services", label: "Servicios", icon: Stethoscope },
+
   ];
 
   const menuUserItems = [

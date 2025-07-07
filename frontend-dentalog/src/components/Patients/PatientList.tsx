@@ -9,6 +9,7 @@ import "./PatientList.css";
 import { useAuth } from "../../contexts/AuthContext";
 import { getPatients } from "../../api/patients";
 
+
 export const PatientList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
