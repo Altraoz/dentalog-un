@@ -8,10 +8,16 @@ import { Appointment } from "../../types";
 import "./AppointmentCalendar.css";
 
 export const AppointmentCalendar: React.FC = () => {
-  const [selectedDate, setSelectedDate] = useState(() => {
-    const today = new Date();
-    return today.toISOString().split('T')[0];
-  });
+  function getDateTimeZone(timeZone: string, date = new Date()): string {
+    const formatter = new Intl.DateTimeFormat("en-CA", {
+      timeZone,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    });
+    return formatter.format(date);
+  }
+  const [selectedDate, setSelectedDate] = useState(getDateTimeZone('America/Bogota'));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
@@ -61,7 +67,7 @@ export const AppointmentCalendar: React.FC = () => {
     const date = new Date();
     date.setDate(date.getDate() + i);
     return {
-      date: date.toISOString().split("T")[0],
+      date: getDateTimeZone('America/Bogota', date),
       display: date.toLocaleDateString("es-ES", {
         weekday: "short",
         day: "numeric",
