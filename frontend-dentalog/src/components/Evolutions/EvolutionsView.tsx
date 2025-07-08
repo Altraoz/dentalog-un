@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import {
   // Stethoscope,
   // Clock,
@@ -310,7 +311,12 @@ export const EvolutionsView: React.FC<PatientModalProps> = ({ patient }) => {
                       <img
                         src="https://img.freepik.com/psd-gratis/3d-ilustracion-persona_23-2149436179.jpg"
                         alt="sdfasdf"
-                        style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          borderRadius: "50%",
+                        }}
                       />
                     </div>
                     <div className="patient-details">
