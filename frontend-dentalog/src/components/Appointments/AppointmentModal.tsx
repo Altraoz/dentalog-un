@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import { Calendar } from 'lucide-react';
 import { Modal } from '../ui/Modal';
 import { Input } from '../ui/Input';
@@ -8,6 +8,7 @@ import { mockServices } from '../../data/mockData';
 import { getPatients } from '../../api/patients';
 import './AppointmentModal.css';
 import { useAuth } from '../../contexts/AuthContext';
+import { NewAppointmentTypeModal } from './Modals/NewAppointmentTypeModal';
 
 interface AppointmentModalProps {
   isOpen: boolean;
@@ -81,12 +82,15 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
 
   const { user } = useAuth();
 
+  // Opciones
   const [patients, setPatients] = useState([]);
   const [appointmentTypes, setAppointmentTypes] = useState([]);
   const [cases, setCases] = useState([]);
   const [procedures, setProcedures] = useState([]);
   const [activities, setActivities] = useState([]);
 
+  // Modales
+  const [isAppointmentTypeModalOpen, setIsAppointmentTypeModalOpen] = useState(false);
 
   // Petición GET patients
   useEffect(() => {
@@ -137,7 +141,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 <option value="Control">Control</option>
                 <option value="Evaluación">Evaluación</option>
               </select>
-              <span className="form-link">+ Crear nuevo</span>
+              <span className="form-link" onClick={() => setIsAppointmentTypeModalOpen(true)}>+ Crear nuevo</span>
             </div>
           </div>
 
@@ -218,6 +222,15 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
           <Button type="submit">Crear</Button>
         </div>
       </form>
+      <NewAppointmentTypeModal
+        isOpen={isAppointmentTypeModalOpen}
+        onClose={() => setIsAppointmentTypeModalOpen(false)}
+        onTypeCreated={(newType) => {
+          // Actualizar lista cuando usemos datos del back
+          setAppointmentTypes((prev) => [...prev, newType]);
+          setFormData({ ...formData, appointmentType: newType.name });
+        }}
+      />
     </Modal>
   );
 };
