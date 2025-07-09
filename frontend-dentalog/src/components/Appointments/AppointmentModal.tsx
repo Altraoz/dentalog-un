@@ -10,6 +10,8 @@ import './AppointmentModal.css';
 import { useAuth } from '../../contexts/AuthContext';
 import { NewAppointmentTypeModal } from './Modals/NewAppointmentTypeModal';
 import { NewClinicalCaseModal } from './Modals/NewClinicalCaseModal';
+import { NewProcedureModal } from './Modals/NewProcedureModal';
+import { NewActivityModal } from './Modals/NewActivityModal';
 
 interface AppointmentModalProps {
   isOpen: boolean;
@@ -80,6 +82,13 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
     }
     return slots;
   };
+  
+  const handleAddActivity = (activityName: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      activities: [...prev.activities, activityName],
+    }));
+  };
 
   const { user } = useAuth();
 
@@ -93,6 +102,8 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
   // Modales
   const [isAppointmentTypeModalOpen, setIsAppointmentTypeModalOpen] = useState(false);
   const [isCaseModalOpen, setIsCaseModalOpen] = useState(false);
+  const [isProcedureModalOpen, setIsProcedureModalOpen] = useState(false);
+  const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
 
   // Petición GET patients
   useEffect(() => {
@@ -204,7 +215,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                   <option key={service.id} value={service.id}>{service.name}</option>
                 ))}
               </select>
-              <span className="form-link">+ Crear nuevo</span>
+              <span className="form-link" onClick={() => setIsProcedureModalOpen(true)}>+ Crear nuevo</span>
             </div>
           </div>
         </div>
@@ -216,7 +227,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
             <label><input type="checkbox" checked={formData.activities.includes('Actividad por realizar 1')} onChange={() => handleCheckboxChange('Actividad por realizar 1')} /> Actividad por realizar 1</label>
             <label><input type="checkbox" checked={formData.activities.includes('Actividad por realizar 2')} onChange={() => handleCheckboxChange('Actividad por realizar 2')} /> Actividad por realizar 2</label>
           </div>
-          <span className="form-link">+ Añadir actividad</span>
+          <span className="form-link" onClick={() => setIsActivityModalOpen(true)}>+ Añadir actividad</span>
         </div>
 
         {/* Botón */}
@@ -240,6 +251,24 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
         onCaseCreated={(newCase) => {
           setCases((prev) => [...prev, newCase]);
           setFormData({ ...formData, caseId: newCase.id });
+        }}
+      />
+      <NewProcedureModal
+        isOpen={isProcedureModalOpen}
+        onClose={() => setIsProcedureModalOpen(false)}
+        selectedCaseId={formData.caseId}
+        patientId={formData.patientId}
+        onProcedureCreated={(newProcedure) => {
+          setProcedures((prev) => [...prev, newProcedure]);
+          setFormData({ ...formData, procedureId: newProcedure.id });
+        }}
+      />
+      <NewActivityModal
+        isOpen={isActivityModalOpen}
+        onClose={() => setIsActivityModalOpen(false)}
+        caseId={formData.caseId}
+        onActivityCreated={(activityName) => {
+          handleAddActivity(activityName);
         }}
       />
     </Modal>
