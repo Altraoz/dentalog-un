@@ -9,6 +9,7 @@ import { getPatients } from '../../api/patients';
 import './AppointmentModal.css';
 import { useAuth } from '../../contexts/AuthContext';
 import { NewAppointmentTypeModal } from './Modals/NewAppointmentTypeModal';
+import { NewClinicalCaseModal } from './Modals/NewClinicalCaseModal';
 
 interface AppointmentModalProps {
   isOpen: boolean;
@@ -91,6 +92,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
 
   // Modales
   const [isAppointmentTypeModalOpen, setIsAppointmentTypeModalOpen] = useState(false);
+  const [isCaseModalOpen, setIsCaseModalOpen] = useState(false);
 
   // Petición GET patients
   useEffect(() => {
@@ -184,7 +186,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 <option value="1">Caso 1</option>
                 <option value="2">Caso 2</option>
               </select>
-              <span className="form-link">+ Crear nuevo</span>
+              <span className="form-link" onClick={() => setIsCaseModalOpen(true)}>+ Crear nuevo</span>
             </div>
           </div>
 
@@ -229,6 +231,15 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
           // Actualizar lista cuando usemos datos del back
           setAppointmentTypes((prev) => [...prev, newType]);
           setFormData({ ...formData, appointmentType: newType.name });
+        }}
+      />
+      <NewClinicalCaseModal
+        isOpen={isCaseModalOpen}
+        onClose={() => setIsCaseModalOpen(false)}
+        selectedPatientId={formData.patientId}
+        onCaseCreated={(newCase) => {
+          setCases((prev) => [...prev, newCase]);
+          setFormData({ ...formData, caseId: newCase.id });
         }}
       />
     </Modal>
