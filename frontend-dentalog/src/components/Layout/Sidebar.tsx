@@ -5,8 +5,8 @@ import {
   Calendar,
   Stethoscope,
   LogOut,
-  Book,
   Smile,
+  FolderClock
   // LineChart,
 } from "lucide-react";
 import icon from "../../public/logo.png";
@@ -36,7 +36,7 @@ export const Sidebar: React.FC = () => {
 
   const menuUserItems = [
     { path: "/app/dashboard", label: "Dashboard", icon: Home },
-    { path: "/app/learning", label: "Aprendizaje", icon: Book },
+    { path: "/app/history", label: "Historia", icon: FolderClock },
     {
       path: "/app/child-content",
       label: "Contenido para chiquis",
@@ -93,7 +93,6 @@ export const Sidebar: React.FC = () => {
           <div className="user-avatar">{user?.name.charAt(0)}</div>
           <div className="user-info">
             <p className="user-name">{user?.name}</p>
-            <p className="user-role">{user?.role}</p>
           </div>
         </div>
         <button onClick={logout} className="logout-button">

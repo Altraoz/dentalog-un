@@ -1,13 +1,13 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import ClinicalCase from "./ClinicalCase";
-import LearningView from "./LearningView";
+import EvolutionView from "./EvolutionView";
 import ChildContentView from "./ChildContentView";
 function ClientView() {
   return (
             <div className="main-padding">
           <Routes>
             <Route path="dashboard" element={<ClinicalCase />} />
-            <Route path="learning" element={<LearningView />} />
+            <Route path="history" element={<EvolutionView />} />
             <Route path="child-content" element={<ChildContentView />} />
             <Route path="dashboard" element={<ClinicalCase />} />
 
