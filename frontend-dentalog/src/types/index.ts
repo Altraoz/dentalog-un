@@ -34,16 +34,29 @@ export interface Patient {
 export interface Appointment {
   id: string;
   patientId: string;
-  patientName: string;
+  clinical_case: string;
   doctorId: string;
-  doctorName: string;
-  date: string;
-  time: string;
-  duration: number;
-  serviceId: string;
-  serviceName: string;
+  type: number;
   status: "scheduled" | "completed" | "cancelled" | "no-show";
-  notes?: string;
+  attention_date: string; // Cambiado de date a attention_date
+
+  // patientName: string;
+  // doctorId: string;
+  // doctorName: string;
+  // date: string;
+  // time: string;
+  // duration: number;
+  // serviceId: string;
+  // serviceName: string;
+  // status: "scheduled" | "completed" | "cancelled" | "no-show";
+  // notes?: string;
+}
+
+export interface AppointmentPayload {
+  // clinical_case: string;
+  // doctorId: string;
+  // type: number;
+  // status: "scheduled" | "completed" | "cancelled" | "no-show";
 }
 
 export interface Service {
@@ -112,4 +125,24 @@ export interface PatientPayload {
   dni: number;
   // responsable_user: number;
   responsable_user_data: UserPayload;
+}
+
+export interface AppointmentTypePayload {
+  name: string;
+  description: string;
+}
+
+export interface ClinicalCasePayload {
+  patient: number;
+  summary: string;
+  initial_diagnosis: string;
+  treatment_plan?: string;
+}
+
+export interface ProcedurePayload {
+  name: string;
+  start_date: string;
+  // end_date: string;
+  description: string;
+  notes?: string; 
 }

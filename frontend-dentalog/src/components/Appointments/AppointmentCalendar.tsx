@@ -4,7 +4,7 @@ import { Card } from "../ui/Card";
 import { Button } from "../ui/Button";
 import { mockAppointments } from "../../data/mockData";
 import { AppointmentModal } from "./AppointmentModal";
-import { Appointment } from "../../types";
+import type { Appointment } from "../../types";
 import "./AppointmentCalendar.css";
 
 export const AppointmentCalendar: React.FC = () => {
@@ -25,7 +25,7 @@ export const AppointmentCalendar: React.FC = () => {
     useState<Appointment | null>(null);
 
   const dailyAppointments = mockAppointments.filter(
-    (appointment) => appointment.date === selectedDate
+    (appointment) => appointment.attention_date === selectedDate
   );
 
   const handleNewAppointment = () => {
@@ -144,7 +144,7 @@ export const AppointmentCalendar: React.FC = () => {
             <div className="appointments-container">
               {dailyAppointments.length > 0 ? (
                 dailyAppointments
-                  .sort((a, b) => a.time.localeCompare(b.time))
+                  // .sort((a, b) => a.time.localeCompare(b.time))
                   .map((appointment) => (
                     <div
                       key={appointment.id}
@@ -157,17 +157,17 @@ export const AppointmentCalendar: React.FC = () => {
                         <div className="appointment-details">
                           <div className="appointment-info">
                             <div className="patient-avatar">
-                              {appointment.patientName
+                              {appointment.patientId
                                 .split(" ")
                                 .map((n) => n[0])
                                 .join("")}
                             </div>
                             <div>
                               <h4 className="patient-name">
-                                {appointment.patientName}
+                                {appointment.patientId}
                               </h4>
                               <p className="service-name">
-                                {appointment.serviceName}
+                                {appointment.type}
                               </p>
                             </div>
                           </div>
@@ -175,11 +175,11 @@ export const AppointmentCalendar: React.FC = () => {
                           <div className="appointment-meta">
                             <div className="meta-item">
                               <Clock className="meta-icon" />
-                              {appointment.time} - {appointment.duration} min
+                              {/* {appointment.time} - {appointment.duration} min */}
                             </div>
                             <div className="meta-item">
                               <User className="meta-icon" />
-                              {appointment.doctorName}
+                              {appointment.doctorId}
                             </div>
                           </div>
                         </div>

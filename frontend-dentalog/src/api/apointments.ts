@@ -1,7 +1,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { url_backend } from "./variables";
-import type { PatientPayload } from "../types";
+import type { PatientPayload, AppointmentTypePayload, ClinicalCasePayload, ProcedurePayload } from "../types";
+import api from "./authentication";
 
 export async function createPatientAndUser(
   e: React.FormEvent<HTMLFormElement>,
@@ -13,18 +14,14 @@ export async function createPatientAndUser(
   const csrftoken = Cookies.get("csrftoken");
 
   try {
-    const response = await axios.post(
-      backendUrl,
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrftoken || "",
-          Authorization: `Token ${userToken}`,
-        },
-        withCredentials: true,
-      }
-    );
+    const response = await axios.post(backendUrl, data, {
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken || "",
+        Authorization: `Token ${userToken}`,
+      },
+      withCredentials: true,
+    });
     return response;
   } catch (error) {
     console.error("Error al crear pacientes", error);
@@ -42,18 +39,14 @@ export async function updatePatientAndUser(
   const csrftoken = Cookies.get("csrftoken");
 
   try {
-    const response = await axios.post(
-      backendUrl,
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrftoken || "",
-          Authorization: `Token ${userToken}`,
-        },
-        withCredentials: true,
-      }
-    );
+    const response = await axios.post(backendUrl, data, {
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken || "",
+        Authorization: `Token ${userToken}`,
+      },
+      withCredentials: true,
+    });
     return response;
   } catch (error) {
     console.error("Error al crear pacientes", error);
@@ -61,36 +54,148 @@ export async function updatePatientAndUser(
   }
 }
 
+export async function createAppointmentType(
+  e: React.FormEvent<HTMLFormElement>,
+  userToken: string,
+  data: AppointmentTypePayload
+) {
+  e.preventDefault();
+  const url = "/clinical/appointment_types/";
+  const csrftoken = Cookies.get("csrftoken");
 
-export async function getPatientsByName(userToken: string, filter: string) {
-  const backendUrl = `${url_backend}/auth/patients/?q=${filter}`;
   try {
-    const response = await axios.get(backendUrl, {
+    const response = await api.post(url, data, {
       headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken || "",
         Authorization: `Token ${userToken}`,
       },
-      withCredentials: true,
     });
     return response;
   } catch (error) {
-    console.error("Error al traer pacientes:", error);
+    console.error("Error al crear tipo de cita", error);
     return null;
   }
 }
 
+export async function createClinicalCase(
+  e: React.FormEvent<HTMLFormElement>,
+  userToken: string,
+  data: ClinicalCasePayload
+) {
+  e.preventDefault();
+  const url = "/clinical/cases/";
+  const csrftoken = Cookies.get("csrftoken");
 
-export async function getClinicCaseById(userToken: string, user_id: string) {
-  const url = `${url_backend}/clinical/cases/search/?patient=${user_id}`;
   try {
-    const response = await axios.get(url, {
+    const response = await api.post(url, data, {
       headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken || "",
         Authorization: `Token ${userToken}`,
       },
-      withCredentials: true,
     });
     return response;
   } catch (error) {
-    console.error("Error al consultar casos clínicos:", error);
+    console.error("Error al crear caso clínico", error);
+    return null;
+  }
+}
+
+export async function createProcedure(
+  e: React.FormEvent<HTMLFormElement>,
+  userToken: string,
+  data: ProcedurePayload
+) {
+  e.preventDefault();
+  const url = "/clinical/procedures/";
+  const csrftoken = Cookies.get("csrftoken");
+
+  try {
+    const response = await api.post(url, data, {
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken || "",
+        Authorization: `Token ${userToken}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error al crear caso clínico", error);
+    return null;
+  }
+}
+export async function getAppointments(userToken: string) {
+  const url = "/clinical/appointments/";
+  try {
+    const response = await api.get(url, {
+      headers: {
+        Authorization: `Token ${userToken}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error al traer citas:", error);
+    return null;
+  }
+}
+
+export async function getAppointmentsType(userToken: string) {
+  const url = "/clinical/appointment_types/";
+  try {
+    const response = await api.get(url, {
+      headers: {
+        Authorization: `Token ${userToken}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error al traer citas:", error);
+    return null;
+  }
+}
+
+export async function getPatientClinicalCases(userToken: string, patient_id: number) {
+  const url = `/clinical/cases/search/?patient=${patient_id}`;
+  try {
+    const response = await api.get(url, {
+      headers: {
+        Authorization: `Token ${userToken}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error al traer casos clínicos:", error);
+    return null;
+  }
+}
+
+export async function getCaseProcedures(userToken: string, case_id: number) {
+  const url = `/clinical/procedures/?clinical_case=${case_id}`;
+  try {
+    const response = await api.get(url, {
+      headers: {
+        Authorization: `Token ${userToken}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error al traer procedimientos:", error);
+    return null;
+  }
+}
+
+export async function getProcedureActivities(userToken: string, procedure: number) {
+  const url = `/clinical/activities/?procedure=${procedure}`;
+  try {
+    const response = await api.get(url, {
+      headers: {
+        Authorization: `Token ${userToken}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error al traer procedimientos:", error);
     return null;
   }
 }

@@ -15,7 +15,7 @@ from .models import (
 from .serializers import (
     ClinicalCasesinAppointmentSerializer, ClinicalCasesSerializer, EvolutionNotesSerializer, EvolutionTypesSerializer,
     EvolutionsSerializer, NoteImagesSerializer,
-    AppointmentTypesSerializer, AppointmentsSerializer, ProceduresSerializer, ActivitiesSerializer
+    AppointmentTypesSerializer, AppointmentsSerializer, ProceduresSerializer, ActivitiesSerializer, ProceduresinAppointmentSerializer
 )
 
 class ClinicalCasesViewSet(viewsets.ModelViewSet):
@@ -97,39 +97,12 @@ class EvolutionNotesViewSet(viewsets.ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class EvolutionTypesViewSet(viewsets.ViewSet):
+class EvolutionTypesViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
-
-    def list(self, request):
-        queryset = EvolutionTypes.objects.all()
-        serializer = EvolutionTypesSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        type_obj = get_object_or_404(EvolutionTypes, pk=pk)
-        serializer = EvolutionTypesSerializer(type_obj)
-        return Response(serializer.data)
-
-    def create(self, request):
-        serializer = EvolutionTypesSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def destroy(self, request, pk=None):
-        type_obj = get_object_or_404(EvolutionTypes, pk=pk)
-        type_obj.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def partial_update(self, request, pk=None):
-        type_obj = get_object_or_404(EvolutionTypes, pk=pk)
-        serializer = EvolutionTypesSerializer(type_obj, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    queryset = EvolutionTypes.objects.all()
+    serializer_class = EvolutionTypesSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'name']
 class EvolutionsViewSet(viewsets.ViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -196,38 +169,13 @@ class NoteImagesViewSet(viewsets.ViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class AppointmentTypesViewSet(viewsets.ViewSet):
+class AppointmentTypesViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
-
-    def list(self, request):
-        queryset = AppointmentTypes.objects.all()
-        serializer = AppointmentTypesSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        type_obj = get_object_or_404(AppointmentTypes, pk=pk)
-        serializer = AppointmentTypesSerializer(type_obj)
-        return Response(serializer.data)
-
-    def create(self, request):
-        serializer = AppointmentTypesSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def destroy(self, request, pk=None):
-        type_obj = get_object_or_404(AppointmentTypes, pk=pk)
-        type_obj.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def partial_update(self, request, pk=None):
-        type_obj = get_object_or_404(AppointmentTypes, pk=pk)
-        serializer = AppointmentTypesSerializer(type_obj, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    queryset = AppointmentTypes.objects.all()
+    serializer_class = AppointmentTypesSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'name']
+    
 
 class AppointmentsViewSet(viewsets.ViewSet):    
     permission_classes = [permissions.IsAuthenticated]
@@ -274,7 +222,7 @@ class ProceduresViewSet(viewsets.ModelViewSet):
     serializer_class = ProceduresSerializer
     queryset = Procedures.objects.all()
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['id','is_frecuent']
+    filterset_fields = ['id','is_frecuent','clinical_case']
 
 class ActivitiesViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
@@ -297,5 +245,9 @@ class uwu(viewsets.ModelViewSet):
     serializer_class = ClinicalCasesinAppointmentSerializer
     queryset = ClinicalCases.objects.all()
 
+class ProceduresinAppointmentViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = ProceduresinAppointmentSerializer
+    queryset = Procedures.objects.all()
 
 #https://chatgpt.com/c/6869f455-4360-800b-835b-dc9295ac8445

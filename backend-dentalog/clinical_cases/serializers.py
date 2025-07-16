@@ -10,8 +10,8 @@ class ClinicalCasesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClinicalCases
         fields = [
-            'id', 'created_at', 'patient', 'doctor', 'status', 'summary',
-            'initial_diagnosis', 'final_diagnosis', 'treatment_plan', 'updated_at'
+            'id', 'created_at', 'patient', 'updated_at', 'status', 'summary',
+            'initial_diagnosis', 'final_diagnosis', 'treatment_plan'
         ]
         extra_kwargs = {
             'created_at': {'read_only': True},
@@ -30,6 +30,9 @@ class EvolutionTypesSerializer(serializers.ModelSerializer):
     class Meta:
         model = EvolutionTypes
         fields = ['id', 'name', 'description']
+        extra_kwargs = {
+            'id': {'read_only': True}
+        }
 
 class EvolutionsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -63,7 +66,6 @@ class AppointmentsSerializer(serializers.ModelSerializer):
         ]
         extra_kwargs = {
             'created_at': {'read_only': True},
-            'updated_at': {'read_only': True}
         }
 
 class ProceduresSerializer(serializers.ModelSerializer):
@@ -106,13 +108,19 @@ class ProceduresinAppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Procedures
         fields = [
-            'id', 'created_at', 'name',
-            'is_frecuent', 'activities'
+            'id', 'created_at', 'name', 'start_date', 'description', 'activations',
+            'is_frecuent', 'activities', 'clinical_case'
         ]
         extra_kwargs = {
             'created_at': {'read_only': True},
             'id': {'read_only': True}
         }
+    def create(self, validated_data):
+        activities_data = validated_data.pop('activities')
+        procedure = Procedures.objects.create(**validated_data)
+        for activity_data in activities_data:
+            Activities.objects.create(procedure=procedure, **activity_data)
+        return procedure
 
 
 

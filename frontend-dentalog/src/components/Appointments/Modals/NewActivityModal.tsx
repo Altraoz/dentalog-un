@@ -9,7 +9,7 @@ interface NewActivityModalProps {
   isOpen: boolean;
   onClose: () => void;
   selectedProcedureId?: string;
-  caseId?: string;
+  caseId?: number;
   onActivityCreated?: (activityName: string) => void;
 }
 

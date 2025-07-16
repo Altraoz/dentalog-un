@@ -1,30 +1,66 @@
-import React, { useState } from 'react';
-import { Modal } from '../../ui/Modal';
-import { Input } from '../../ui/Input';
-import { Button } from '../../ui/Button';
+import React, { useState } from "react";
+import { Modal } from "../../ui/Modal";
+import { Input } from "../../ui/Input";
+import { Button } from "../../ui/Button";
+import { createAppointmentType } from "../../../api/apointments";
+import { useAuth } from "../../../contexts/AuthContext";
+import Alert from "@mui/material/Alert";
+import { CircularProgress } from "@mui/material";
 
 interface NewAppointmentTypeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onTypeCreated?: (newType: { name: string; description: string }) => void;
+  onTypeCreated?: (newType: { id: number; name: string }) => void;
+  NotificationTrigger: (message: string) => void;
 }
 
-export const NewAppointmentTypeModal: React.FC<NewAppointmentTypeModalProps> = ({
-  isOpen,
-  onClose,
-  onTypeCreated,
-}) => {
+export const NewAppointmentTypeModal: React.FC<
+  NewAppointmentTypeModalProps
+> = ({ isOpen, onClose, onTypeCreated, NotificationTrigger }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
+    name: "",
+    description: "",
   });
+  const [alertSeverity, setAlertSeverity] = useState<"success" | "error">(
+    "success"
+  );
+  const [alertMessage, setAlertMessage] = useState<string>("");
+  const [displayAlert, setDisplayAlert] = useState<number>(0);
+  const [waitingResponse, setWaitingResponse] = useState<boolean>(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const { user } = useAuth();
+  if (!user) {
+    console.error("Usuario no autenticado");
+    return;
+  }
+
+  const handleResponse = (response: {
+    status: number;
+    data: { name: string; id: number };
+  }) => {
+    if (response.status === 201) {
+      setWaitingResponse(false);
+      NotificationTrigger("🟢 Cita creada exitosamente");
+      onTypeCreated?.({
+        name: response.data.name ?? "",
+        id: response.data.id ?? 0,
+      });
+      onClose();
+    } else {
+      setAlertSeverity("error");
+      setAlertMessage("Error al crear el tipo de cita");
+      setDisplayAlert(1);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setWaitingResponse(true);
     const newType = { ...formData };
-    // Aquí va la petición POST
-    onTypeCreated?.(newType);
-    onClose();
+    const response = await createAppointmentType(e, user.token, newType);
+    if (response) {
+      handleResponse(response);
+    }
   };
 
   return (
@@ -38,6 +74,7 @@ export const NewAppointmentTypeModal: React.FC<NewAppointmentTypeModalProps> = (
             onChange={(value) => setFormData({ ...formData, name: value })}
             placeholder="Ej: Evaluación"
             required
+            disabled={waitingResponse}
           />
         </div>
 
@@ -45,7 +82,10 @@ export const NewAppointmentTypeModal: React.FC<NewAppointmentTypeModalProps> = (
           <label className="form-label">Descripción</label>
           <textarea
             value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            disabled={waitingResponse}
+            onChange={(e) =>
+              setFormData({ ...formData, description: e.target.value })
+            }
             className="form-textarea"
             placeholder="Breve descripción del tipo de cita"
             rows={3}
@@ -53,7 +93,22 @@ export const NewAppointmentTypeModal: React.FC<NewAppointmentTypeModalProps> = (
         </div>
 
         <div className="form-actions-right">
-          <Button type="submit">Crear tipo</Button>
+          <div style={{ display: "flex", gap: "10px", width: "100%" }}>
+            <Alert
+              variant="outlined"
+              severity={alertSeverity}
+              style={{ flex: 1, opacity: displayAlert }}
+            >
+              {alertMessage}
+            </Alert>
+            <Button type="submit" disabled={waitingResponse}>
+              {waitingResponse ? (
+                <CircularProgress sx={{ color: "#ffffffff" }} />
+              ) : (
+                <>Crear tipo</>
+              )}
+            </Button>
+          </div>
         </div>
       </form>
     </Modal>

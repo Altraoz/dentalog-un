@@ -3,10 +3,9 @@ from django.db import models
 class ClinicalCases(models.Model):
     id = models.BigAutoField(primary_key=True)
     created_at = models.DateTimeField(auto_now_add=True)  # Automatically set on creation
-    patient = models.ForeignKey('users.Patients', models.DO_NOTHING,related_name='clinical_cases', blank=True, null=True)
-    doctor = models.ForeignKey('users.Doctors', models.DO_NOTHING, blank=True, null=True)
+    patient = models.ForeignKey('users.Patients', models.DO_NOTHING,related_name='clinical_cases')
+    updated_at = models.DateTimeField(auto_now=True)  # Automatically updated on each save
     status = models.CharField(
-        max_length=20,
         choices=[
             ('activo', 'Activo'),
             ('cerrado', 'Cerrado'),
@@ -15,14 +14,13 @@ class ClinicalCases(models.Model):
             ('abandonado', 'Abandonado'),
             ('cancelado', 'Cancelado'),
         ],
-        blank=True,
-        null=True
+        default='activo',
+        max_length=20,
     )
-    summary = models.TextField(max_length=500, blank=True, null=True)  # Reasonable limit for summary
-    initial_diagnosis = models.CharField(max_length=200, blank=True, null=True)
-    final_diagnosis = models.CharField(max_length=200, blank=True, null=True)
-    treatment_plan = models.CharField(max_length=500, blank=True, null=True)
-    updated_at = models.DateTimeField(auto_now=True)  # Automatically updated on each save
+    summary = models.TextField(max_length=500)  # Reasonable limit for summary
+    initial_diagnosis = models.CharField(max_length=200)
+    final_diagnosis = models.CharField(max_length=200, null=True)
+    treatment_plan = models.CharField(max_length=500)
 
     class Meta:
         managed = False
@@ -122,7 +120,7 @@ class Procedures(models.Model):
     description = models.CharField(max_length=500, null=True)
     activations = models.CharField(max_length=500, null=True)
     is_frecuent = models.BooleanField(default=False)
-    clinical_case = models.ForeignKey('ClinicalCases', models.CASCADE, db_column='clinical_case', null=True, related_name="procedures")
+    clinical_case = models.ForeignKey('ClinicalCases', models.CASCADE, db_column='clinical_case', related_name="procedures")
 
 
     class Meta:
