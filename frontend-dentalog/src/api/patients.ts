@@ -68,3 +68,7 @@ export async function getPatients(userToken: string) {
     return null;
   }
 }
+
+export async function getPatientsByResponsible(userToken: string) {
+  
+}

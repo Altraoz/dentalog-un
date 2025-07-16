@@ -3,7 +3,7 @@ import { Calendar } from 'lucide-react';
 import { Modal } from '../ui/Modal';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
-import { Appointment } from '../../types';
+import { type Appointment } from '../../types';
 import { mockServices } from '../../data/mockData';
 import { getPatients } from '../../api/patients';
 import './AppointmentModal.css';
