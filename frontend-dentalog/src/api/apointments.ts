@@ -108,7 +108,7 @@ export async function createProcedure(
   data: ProcedurePayload
 ) {
   e.preventDefault();
-  const url = "/clinical/procedures/";
+  const url = "/clinical/procedures_in_appointment/";
   const csrftoken = Cookies.get("csrftoken");
 
   try {
@@ -186,7 +186,7 @@ export async function getCaseProcedures(userToken: string, case_id: number) {
 }
 
 export async function getProcedureActivities(userToken: string, procedure: number) {
-  const url = `/clinical/activities/?procedure=${procedure}`;
+  const url = `/clinical/procedures_in_appointment/${procedure}/`;
   try {
     const response = await api.get(url, {
       headers: {

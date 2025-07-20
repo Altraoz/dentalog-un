@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Modal } from "../../ui/Modal";
 import { Input } from "../../ui/Input";
 import { Button } from "../../ui/Button";
-// import { getCasesByPatient } from "../../../api/cases";
 import { useAuth } from "../../../contexts/AuthContext";
-import { NewActivityModal } from "./NewActivityModal";
 import { createProcedure } from "../../../api/apointments";
 import Alert from "@mui/material/Alert";
 import { CircularProgress } from "@mui/material";
+import { Calendar } from "lucide-react";
+import Switch from "@mui/material/Switch";
+import ActivitiesList, { type Activity } from "../DraggableList";
 
 interface NewProcedureModalProps {
   isOpen: boolean;
@@ -35,35 +36,16 @@ export const NewProcedureModal: React.FC<NewProcedureModalProps> = ({
   // const [cases, setCases] = useState<{ id: number; title: string }[]>([]);
   const [formData, setFormData] = useState({
     name: "",
-    startDate: Date.now(),
+    startDate: String(Date.now()) as string,
     clinical_case: selectedCase.id,
     description: "",
     activations: "",
     isFrequent: false,
-    activities: [] as string[],
+    activities: [] as Activity[],
   });
 
-  const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
-
-  // Traer casos clínicos si no hay uno seleccionado
-  // useEffect(() => {
-  //   if (!user || selectedCase || !patientId) return;
-
-  //   const fetchCases = async () => {
-  //     const res = await getCasesByPatient(user.token, String(patientId));
-  //     if (res?.status === 200) setCases(res.data.results);
-  //   };
-
-  //   fetchCases();
-  // }, [user, selectedCase, patientId]);
-
+  const [initialActivities, setInitialActivities] = useState<Activity[]>([]);
   const [waitingResponse, setWaitingResponse] = useState<boolean>(false);
-  const handleAddActivity = (activityName: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      activities: [...prev.activities, activityName],
-    }));
-  };
 
   const handleResponse = (response: {
     status: number;
@@ -98,52 +80,30 @@ export const NewProcedureModal: React.FC<NewProcedureModalProps> = ({
       description: formData.description,
       activations: formData.activations,
       is_frecuent: formData.isFrequent,
-      activities: formData.activities,
+      activities: initialActivities,
     };
     console.log("New case data:", newProcedure);
+    console.log(initialActivities);
     const response = await createProcedure(e, user!.token, newProcedure);
     if (response) {
       handleResponse(response);
       onProcedureCreated({ name: newProcedure.name, id: response.data.id });
       onClose();
     }
-    // Aquí puedes incluir el POST si tienes un endpoint
-    // onCaseCreated?.(newCase);
-    // onClose();
   };
 
   useEffect(() => {
-    console.log("Form data updated:", formData);
-  }, [formData]);
+    if (selectedCase.id !== undefined) {
+      setFormData((prev) => ({
+        ...prev,
+        clinical_case: selectedCase.id!,
+      }));
+    }
+  }, [selectedCase.id]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Nuevo Procedimiento">
       <form onSubmit={handleSubmit} className="modal-form">
-        {/* Caso clínico */}
-        {/* {!selectedCase && (
-          <div className="form-group">
-            <label className="form-label">Caso clínico</label>
-            <select
-              disabled
-              value={formData.clinical_case}
-              onChange={(e) =>
-                setFormData({ ...formData, clinical_case: e.target.value })
-              }
-              className="form-select"
-              required
-            >
-              <option value="">Seleccionar caso</option>
-              <option value={selectedCase.id}>
-                {selectedCase.initial_diagnosis}
-              </option>
-              {cases.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.title}
-                </option>
-              ))}
-            </select>
-          </div>
-        )} */}
         {/* Nombre */}
         <div className="form-group">
           <label className="form-label">Caso clinico</label>
@@ -181,6 +141,33 @@ export const NewProcedureModal: React.FC<NewProcedureModalProps> = ({
           />
         </div>
 
+        <div className="form-grid-two">
+          {/* Fecha */}
+          <div className="form-group">
+            <label className="form-label">Fecha de inicio</label>
+            <Input
+              type="date"
+              value={formData.startDate}
+              onChange={(value) =>
+                setFormData({ ...formData, startDate: value })
+              }
+              icon={Calendar}
+            />
+          </div>
+          <div
+            className="form-group"
+            style={{ flexDirection: "row-reverse", alignItems: "center" }}
+          >
+            <label className="form-label">Es procedimiento frecuente</label>
+            <Switch
+              checked={formData.isFrequent}
+              onChange={(e) =>
+                setFormData({ ...formData, isFrequent: e.target.checked })
+              }
+            />
+          </div>
+        </div>
+
         {/* Activaciones */}
         <div className="form-group">
           <label className="form-label">Activación</label>
@@ -197,18 +184,14 @@ export const NewProcedureModal: React.FC<NewProcedureModalProps> = ({
 
         {/* Actividades asociadas */}
         <div className="form-group">
-          <label className="form-label">Actividades asociadas</label>
-          <ul className="form-list">
-            {formData.activities.map((a, idx) => (
-              <li key={idx}>• {a}</li>
-            ))}
-          </ul>
-          <span
-            className="form-link"
-            onClick={() => setIsActivityModalOpen(true)}
-          >
-            + Añadir actividad
-          </span>
+          <p>
+            Añade las actividades a realizar ne este procedimiento, marca las
+            completadas
+          </p>
+          <ActivitiesList
+            initialItems={initialActivities}
+            setInitialActivities={setInitialActivities}
+          />
         </div>
 
         <div className="form-actions-right">
@@ -230,15 +213,6 @@ export const NewProcedureModal: React.FC<NewProcedureModalProps> = ({
           </div>
         </div>
       </form>
-
-      {/* Modal para crear nueva actividad */}
-      <NewActivityModal
-        isOpen={isActivityModalOpen}
-        onClose={() => setIsActivityModalOpen(false)}
-        onActivityCreated={(activityName) => {
-          handleAddActivity(activityName);
-        }}
-      />
     </Modal>
   );
 };

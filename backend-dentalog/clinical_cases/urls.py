@@ -16,13 +16,14 @@ router.register('appointment_types', AppointmentTypesViewSet, basename='appointm
 
 
 router.register('notes', EvolutionNotesViewSet, basename='notes')
-router.register('images', NoteImagesViewSet, basename='images')
-
 
 router.register('evolutions', EvolutionsViewSet, basename='evolutions')
 router.register('evolution_types', EvolutionTypesViewSet, basename='evolution_types')
 
 router.register('appoinment_payload', uwu, basename='appoinment_payload')
+
+router.register('upload_images', EvolutionImageViewSet, basename='upload_evolutions')
+
 # router.register('login', LoginViewset, basename='login')
 # router.register('users', UserViewset, basename='users')
 # router.register('permissions', PermissionsViewset, basename='permissions')

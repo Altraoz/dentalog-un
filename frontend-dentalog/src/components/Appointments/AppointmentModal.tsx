@@ -19,6 +19,7 @@ import {
 } from "../../api/apointments";
 import Snackbar, { type SnackbarCloseReason } from "@mui/material/Snackbar";
 import { Alert } from "@mui/material";
+import ActivitiesList from "./ActivitiesListinAppointment";
 
 // import { Appointment } from "../../types";
 // import { Appointment } from "../../types";
@@ -31,6 +32,14 @@ interface AppointmentModalProps {
   selectedDate: string;
 }
 
+export interface Activity {
+  id: number;
+  name: string;
+  is_done: boolean;
+  list_index: number;
+  to_do: boolean;
+}
+
 interface FormData {
   patient: { id: number | undefined; first_name: string; last_name: string };
   appointmentType: { id: number | undefined; name: string };
@@ -38,7 +47,7 @@ interface FormData {
   time: string;
   case: { id: number | undefined; initial_diagnosis: string }; // ← aquí
   procedure: { id: number | undefined; name: string };
-  activities: string[];
+  activities: Activity[];
 }
 
 export const AppointmentModal: React.FC<AppointmentModalProps> = ({
@@ -68,34 +77,6 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
     console.log("Form data updated:", formData);
   }, [formData]);
 
-  // useEffect(() => {
-  //   if (appointment) {
-  //     setFormData({
-  //       patientId: appointment.patientId,
-  //       date: appointment.date,
-  //       time: appointment.time,
-  //       procedureId: appointment.serviceId,
-  //       doctorId: appointment.doctorId,
-  //       notes: appointment.notes || "",
-  //       appointmentType: "",
-  //       caseId: "",
-  //       activities: [],
-  //     });
-  //   } else {
-  //     setFormData({
-  //       patientId: "",
-  //       appointmentType: "",
-  //       date: selectedDate,
-  //       time: "",
-  //       procedureId: "",
-  //       doctorId: "1",
-  //       notes: "",
-  //       caseId: "",
-  //       activities: [],
-  //     });
-  //   }
-  // }, [appointment, selectedDate]);
-
   const generateTimeSlots = () => {
     const slots = [];
     for (let hour = 8; hour < 18; hour++) {
@@ -110,11 +91,15 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
     return slots;
   };
 
-  const handleAddActivity = (activityName: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      activities: [...prev.activities, activityName],
-    }));
+  const handleAddActivity = async (procedure_id: number) => {
+    if (!user) return;
+    const casesRes = await getPatientClinicalCases(user.token, procedure_id);
+    if (casesRes?.status === 200) setCases(casesRes.data);
+    console.log("Cases for patient:", casesRes?.data);
+    // setFormData((prev) => ({
+    //   ...prev,
+    //   activities: [...prev.activities, activityName],
+    // }));
   };
 
   const handlePatientSelection = async (patient_id: number) => {
@@ -137,7 +122,18 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
       user.token,
       procedure_id
     );
-    if (activitiesRes?.status === 200) setActivities(activitiesRes.data);
+
+    console.log("wenedd", activitiesRes);
+    if (activitiesRes?.status === 200) {
+      const processedActivities = activitiesRes.data.activities.map(
+        (activity: Activity) => ({
+          ...activity,
+          to_do: false,
+        })
+      );
+      setInitialActivities(processedActivities);
+    }
+
     console.log("Actividades para procedimiento:", activitiesRes?.data);
   };
   const { user } = useAuth();
@@ -158,6 +154,8 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
   const [activities, setActivities] = useState<{ id: number; name: string }[]>(
     []
   );
+
+  const [initialActivities, setInitialActivities] = useState<Activity[]>([]);
 
   // Modales
   const [isAppointmentTypeModalOpen, setIsAppointmentTypeModalOpen] =
@@ -198,6 +196,29 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
     setOpen(false);
   };
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(formData);
+
+    // setWaitingResponse(true);
+    // const newProcedure = {
+    //   name: formData.name,
+    //   start_date: formData.startDate,
+    //   clinical_case: formData.clinical_case,
+    //   description: formData.description,
+    //   activations: formData.activations,
+    //   is_frecuent: formData.isFrequent,
+    //   activities: initialActivities,
+    // };
+    // console.log("New case data:", newProcedure);
+    // console.log(initialActivities);
+    // const response = await createProcedure(e, user!.token, newProcedure);
+    // if (response) {
+    //   handleResponse(response);
+    //   onProcedureCreated({ name: newProcedure.name, id: response.data.id });
+    //   onClose();
+    // }
+  };
   // const action = (
   //   <React.Fragment>
   //     <Button color="secondary" size="small" onClick={handleClose}>
@@ -217,11 +238,12 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Nueva Cita" size="lg">
       <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          console.log(formData);
-          onClose();
-        }}
+        onSubmit={handleSubmit}
+        // onSubmit={(e) => {
+        //   e.preventDefault();
+        //   console.log(formData);
+        //   onClose();
+        // }}
         className="modal-form"
       >
         <div className="form-grid-two">
@@ -439,13 +461,12 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
 
         {/* Actividades */}
         <div className="form-group">
-          <label className="form-label">
+          {/* <label className="form-label">
             Seleccionar actividades a realizar en esta consulta
           </label>
           <div className="checkbox-group">
             {activities.map((activity) => (
               <label key={activity.id}>
-                {/* {activity.name} */}
                 <input
                   type="checkbox"
                   checked={formData.activities.includes(activity.name)}
@@ -456,37 +477,21 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
                 {activity.name}
               </label>
             ))}
-            {/* <label>
-              <input
-                type="checkbox"
-                checked={formData.activities.includes(
-                  "Actividad por realizar 1"
-                )}
-                onChange={() =>
-                  handleCheckboxChange("Actividad por realizar 1")
-                }
-              />{" "}
-              Actividad por realizar 1
-            </label>
-            <label>
-              <input
-                type="checkbox"
-                checked={formData.activities.includes(
-                  "Actividad por realizar 2"
-                )}
-                onChange={() =>
-                  handleCheckboxChange("Actividad por realizar 2")
-                }
-              />{" "}
-              Actividad por realizar 2
-            </label> */}
           </div>
           <span
             className="form-link"
             onClick={() => setIsActivityModalOpen(true)}
           >
             + Añadir actividad
-          </span>
+          </span> */}
+          <label className="form-label">
+            Seleccione las actividades que se realizarán en la cita
+          </label>
+
+          <ActivitiesList
+            initialItems={initialActivities}
+            setInitialActivities={setInitialActivities}
+          />
         </div>
 
         {/* Botón */}
@@ -531,6 +536,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
       <NewProcedureModal
         isOpen={isProcedureModalOpen}
         onClose={() => setIsProcedureModalOpen(false)}
+        NotificationTrigger={NotificationTrigger}
         selectedCase={formData.case}
         patientId={formData.patient.id}
         onProcedureCreated={(newProcedure) => {

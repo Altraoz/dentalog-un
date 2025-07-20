@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from rest_framework.decorators import action
 from django_filters.rest_framework import DjangoFilterBackend
+from decouple import config
+import uuid
+import os
 
 
 # Create your views here.
@@ -10,12 +13,12 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 
 from .models import (
-    ClinicalCases, EvolutionNotes, EvolutionTypes, Evolutions, NoteImages, AppointmentTypes, Appointments, Procedures, Activities
+    ClinicalCases, EvolutionTypes, Evolutions, AppointmentTypes, Appointments, Procedures, Activities
 )
 from .serializers import (
-    ClinicalCasesinAppointmentSerializer, ClinicalCasesSerializer, EvolutionNotesSerializer, EvolutionTypesSerializer,
-    EvolutionsSerializer, NoteImagesSerializer,
-    AppointmentTypesSerializer, AppointmentsSerializer, ProceduresSerializer, ActivitiesSerializer, ProceduresinAppointmentSerializer
+    ClinicalCasesinAppointmentSerializer, ClinicalCasesSerializer, EvolutionTypesSerializer,
+    EvolutionsSerializer,
+    AppointmentTypesSerializer, AppointmentSerializer, ProceduresSerializer, ActivitiesSerializer, ProceduresinAppointmentSerializer
 )
 
 class ClinicalCasesViewSet(viewsets.ModelViewSet):
@@ -103,71 +106,12 @@ class EvolutionTypesViewSet(viewsets.ModelViewSet):
     serializer_class = EvolutionTypesSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['id', 'name']
-class EvolutionsViewSet(viewsets.ViewSet):
+class EvolutionsViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
-
-    def list(self, request):
-        queryset = Evolutions.objects.all()
-        serializer = EvolutionsSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        evolution = get_object_or_404(Evolutions, pk=pk)
-        serializer = EvolutionsSerializer(evolution)
-        return Response(serializer.data)
-
-    def create(self, request):
-        serializer = EvolutionsSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def destroy(self, request, pk=None):
-        evolution = get_object_or_404(Evolutions, pk=pk)
-        evolution.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def partial_update(self, request, pk=None):
-        evolution = get_object_or_404(Evolutions, pk=pk)
-        serializer = EvolutionsSerializer(evolution, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class NoteImagesViewSet(viewsets.ViewSet):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def list(self, request):
-        queryset = NoteImages.objects.all()
-        serializer = NoteImagesSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        image = get_object_or_404(NoteImages, pk=pk)
-        serializer = NoteImagesSerializer(image)
-        return Response(serializer.data)
-
-    def create(self, request):
-        serializer = NoteImagesSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def destroy(self, request, pk=None):
-        image = get_object_or_404(NoteImages, pk=pk)
-        image.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def partial_update(self, request, pk=None):
-        image = get_object_or_404(NoteImages, pk=pk)
-        serializer = NoteImagesSerializer(image, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    queryset = Evolutions.objects.all()
+    serializer_class = EvolutionsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id', 'title']
 
 class AppointmentTypesViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
@@ -177,38 +121,13 @@ class AppointmentTypesViewSet(viewsets.ModelViewSet):
     filterset_fields = ['id', 'name']
     
 
-class AppointmentsViewSet(viewsets.ViewSet):    
+class AppointmentsViewSet(viewsets.ModelViewSet):    
     permission_classes = [permissions.IsAuthenticated]
+    serializer_class = AppointmentSerializer
+    queryset = Appointments.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    # filterset_fields = ['id','is_frecuent']
 
-    def list(self, request):
-        queryset = Appointments.objects.all()
-        serializer = AppointmentsSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        appointment = get_object_or_404(Appointments, pk=pk)
-        serializer = AppointmentsSerializer(appointment)
-        return Response(serializer.data)
-
-    def create(self, request):
-        serializer = AppointmentsSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def destroy(self, request, pk=None):
-        appointment = get_object_or_404(Appointments, pk=pk)
-        appointment.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def partial_update(self, request, pk=None):
-        appointment = get_object_or_404(Appointments, pk=pk)
-        serializer = AppointmentsSerializer(appointment, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ProceduresViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
@@ -251,3 +170,52 @@ class ProceduresinAppointmentViewSet(viewsets.ModelViewSet):
     queryset = Procedures.objects.all()
 
 #https://chatgpt.com/c/6869f455-4360-800b-835b-dc9295ac8445
+
+
+from rest_framework import viewsets, permissions, status
+from rest_framework.response import Response
+from .models import EvolutionImage
+from .serializers import EvolutionImageSerializer
+
+class EvolutionImageViewSet(viewsets.ModelViewSet):
+    queryset = EvolutionImage.objects.all()
+    serializer_class = EvolutionImageSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        file = request.FILES.get("file")
+        evolution_id = request.data.get("evolution_id")
+
+        if not file:
+            return Response({"error": "No file uploaded"}, status=400)
+
+        supabase_url = config('SUPABASE_URL')
+        bucket = "evolutions"
+        supabase_key = config("SERVICE_ROL")
+
+        ext = os.path.splitext(file.name)[1]  # e.g., '.jpg'
+        unique_id = uuid.uuid4().hex
+        filename = f"{evolution_id}/{unique_id}{ext}"
+
+        import requests
+
+        headers = {
+            "apikey": supabase_key,
+            "Authorization": f"Bearer {supabase_key}",
+            "Content-Type": "application/octet-stream"
+        }
+
+        upload_url = f"{supabase_url}/storage/v1/object/{bucket}/{filename}"
+        res = requests.post(upload_url, headers=headers, data=file.read())
+
+        if res.status_code not in [200, 201]:
+            return Response({"error": res.text}, status=400)
+
+        public_url = f"{supabase_url}/storage/v1/object/public/{bucket}/{filename}"
+
+        image = EvolutionImage.objects.create(
+            evolution_id=evolution_id,
+            image_url=public_url
+        )
+
+        return Response(EvolutionImageSerializer(image).data, status=201)
