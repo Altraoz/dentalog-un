@@ -1,7 +1,16 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { url_backend } from "./variables";
+<<<<<<< Updated upstream
 import type { PatientPayload, AppointmentTypePayload, ClinicalCasePayload, ProcedurePayload, ActivityPayload, AppointmentPayload } from "../types";
+=======
+import type {
+  PatientPayload,
+  AppointmentTypePayload,
+  ClinicalCasePayload,
+  ProcedurePayload,
+} from "../types";
+>>>>>>> Stashed changes
 import api from "./authentication";
 
 export async function createPatientAndUser(
@@ -140,6 +149,24 @@ export async function getAppointments(userToken: string) {
   }
 }
 
+export async function getAppointmentsByPatient(
+  userToken: string,
+  patient_id: number
+) {
+  const url = `/clinical/appointments/?patient=${patient_id}`;
+  try {
+    const response = await api.get(url, {
+      headers: {
+        Authorization: `Token ${userToken}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error al traer citas:", error);
+    return null;
+  }
+}
+
 export async function getAppointmentsType(userToken: string) {
   const url = "/clinical/appointment_types/";
   try {
@@ -155,7 +182,10 @@ export async function getAppointmentsType(userToken: string) {
   }
 }
 
-export async function getPatientClinicalCases(userToken: string, patient_id: number) {
+export async function getPatientClinicalCases(
+  userToken: string,
+  patient_id: number
+) {
   const url = `/clinical/cases/search/?patient=${patient_id}`;
   try {
     const response = await api.get(url, {
@@ -185,7 +215,10 @@ export async function getCaseProcedures(userToken: string, case_id: number) {
   }
 }
 
-export async function getProcedureActivities(userToken: string, procedure: number) {
+export async function getProcedureActivities(
+  userToken: string,
+  procedure: number
+) {
   const url = `/clinical/procedures_in_appointment/${procedure}/`;
   try {
     const response = await api.get(url, {

@@ -7,22 +7,7 @@ import { url_backend } from "../../api/variables";
 
 const { Dragger } = Upload;
 
-interface NewEvolutionProps {
-  patient: { id: number; name: string; age: number; gender: string };
-  setImagesInfo?: (newImage: { id: number; name: string }) => void;
-
-  //   isOpen: boolean;
-  //   onClose: () => void;
-  //   selectedCase: { id: number | undefined; initial_diagnosis: string };
-  //   patientId?: number;
-  //   NotificationTrigger: (message: string) => void;
-  //   onProcedureCreated: (newProcedure: { id: number; name: string }) => void;
-}
-
-export const DraggItem: React.FC<NewEvolutionProps> = ({
-  patient,
-  setImagesInfo,
-}) => {
+export function DraggItem() {
   const csrftoken = Cookies.get("csrftoken");
   const { user } = useAuth();
   const url = url_backend + "/clinical/upload_images/";
@@ -35,7 +20,7 @@ export const DraggItem: React.FC<NewEvolutionProps> = ({
       "X-CSRFToken": csrftoken || "",
     },
     data: {
-      patient_id: 5,
+      evolution_id: 5, // o puedes hacerlo dinámico como una función
     },
     onChange(info) {
       const { status } = info.file;
@@ -47,8 +32,6 @@ export const DraggItem: React.FC<NewEvolutionProps> = ({
       } else if (status === "error") {
         message.error(`${info.file.name} file upload failed.`);
       }
-
-      // setImagesInfo();
     },
     onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
@@ -69,4 +52,4 @@ export const DraggItem: React.FC<NewEvolutionProps> = ({
       </p>
     </Dragger>
   );
-};
+}
