@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import (
     ClinicalCases, EvolutionTypes, Evolutions,
-     AppointmentTypes, Appointments, Procedures, Activities, EvolutionImage
+     AppointmentTypes, Appointments, Procedures, Activities, EvolutionImage, ActivitiesAppointments
 )
 
 from users.models import (Patients)
@@ -27,6 +27,12 @@ class EvolutionTypesSerializer(serializers.ModelSerializer):
         }
 
 
+
+class ActivitiesAppointmentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ActivitiesAppointments
+        fields = ['id_activity', 'id_appointment']
+
 class EvolutionImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = EvolutionImage
@@ -50,10 +56,20 @@ class AppointmentTypesSerializer(serializers.ModelSerializer):
         model = AppointmentTypes
         fields = ['id', 'name', 'description']
 
+
+class ActivitiesAppointmentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ActivitiesAppointments
+        fields = ['id',     'id_activity', 'id_appointment']
+
+        extra_kwargs = {
+        'id_appointment': {'required': False}, 'id': {'read_only': True}
+
+    }
+
 class AppointmentSerializer(serializers.ModelSerializer):
-    activities = serializers.ListField(
-        child=serializers.DictField(), write_only=True
-    )
+    # aquí usarás el serializer anidado para read & write
+    activities = ActivitiesAppointmentsSerializer(many=True)
 
     class Meta:
         model = Appointments
@@ -63,23 +79,20 @@ class AppointmentSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        activities_data = validated_data.pop('activities')
-        procedure = Procedures.objects.create(**validated_data)
-        for activity_data in activities_data:
-            Activities.objects.create(procedure=procedure, **activity_data)
-        return procedure
-
-    def create(self, validated_data):
         activities_data = validated_data.pop('activities', [])
         appointment = Appointments.objects.create(**validated_data)
 
-        for activity in activities_data:
-            activity_id = activity.get('id')
-            if activity_id:
-                ActivitiesAppointments.objects.create(
-                    id_appointment=appointment,
-                    id_activity_id=activity_id
-                )
+        for activity_data in activities_data:
+            id_activity = activity_data.get("id_activity")
+            if not id_activity:
+                raise serializers.ValidationError({
+                    "activities": "Each activity must include 'id_activity'."
+                })
+
+            ActivitiesAppointments.objects.create(
+                id_appointment=appointment,
+                id_activity=id_activity 
+            )
 
         return appointment
 class ProceduresSerializer(serializers.ModelSerializer):

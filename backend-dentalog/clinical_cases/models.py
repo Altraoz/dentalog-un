@@ -122,24 +122,14 @@ class Activities(models.Model):
 
 
 class ActivitiesAppointments(models.Model):
-    id_appointment = models.ForeignKey(
-        'Appointments',
-        on_delete=models.CASCADE,
-        db_column='id_appointment',
-        related_name='activities_appointments'
-    )
-    id_activity = models.ForeignKey(
-        'Activities',
-        on_delete=models.CASCADE,
-        db_column='id_activity',
-        related_name='appointments_activities'
-    )
+    id = models.BigAutoField(primary_key=True)
+
+    id_appointment = models.IntegerField(db_column='id_appointment')
+    id_activity = models.IntegerField(db_column='id_activity')
 
     class Meta:
         db_table = 'activities_appointments'
-        unique_together = ('id_appointment', 'id_activity')  # ya que ambos son claves primarias
-        managed: False
-
+        managed = False
 
 class EvolutionImage(models.Model):
     evolution = models.ForeignKey('Evolutions', models.DO_NOTHING, related_name='images', db_column='evolution')
@@ -148,5 +138,5 @@ class EvolutionImage(models.Model):
 
     class Meta:
         db_table = 'evolution_images'
-        managed: False
+        managed = False
 

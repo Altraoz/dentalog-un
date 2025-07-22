@@ -8,7 +8,7 @@ import {
   FormControl,
   TextField,
   IconButton,
-  CircularProgress,
+  // CircularProgress,
 } from "@mui/material";
 
 import {
@@ -23,10 +23,10 @@ import {
   Plus,
   Search,
   ArrowLeft,
-  Clock,
-  DollarSign,
-  Stethoscope,
-  Users,
+  // Clock,
+  // DollarSign,
+  // Stethoscope,
+  // Users,
 } from "lucide-react";
 import { Card } from "../ui/Card";
 import { Input } from "../ui/Input";
@@ -36,31 +36,32 @@ import { mockServices } from "../../data/mockData";
 import "./EvolutionsView.scss";
 import type { Patient } from "../../types";
 
-import { InboxOutlined } from "@ant-design/icons";
-import type { UploadProps } from "antd";
-import { message, Upload } from "antd";
+// import { InboxOutlined } from "@ant-design/icons";
+// import type { UploadProps } from "antd";
+// import { message, Upload } from "antd";
+import { DraggItem } from "./DraggItem";
 
-const { Dragger } = Upload;
+// const { Dragger } = Upload;
 
-const props: UploadProps = {
-  name: "file",
-  multiple: true,
-  action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== "uploading") {
-      console.log(info.file, info.fileList);
-    }
-    if (status === "done") {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === "error") {
-      message.error(`${info.file.name} file upload failed.`);
-    }
-  },
-  onDrop(e) {
-    console.log("Dropped files", e.dataTransfer.files);
-  },
-};
+// const props: UploadProps = {
+//   name: "file",
+//   multiple: true,
+//   action: "https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload",
+//   onChange(info) {
+//     const { status } = info.file;
+//     if (status !== "uploading") {
+//       console.log(info.file, info.fileList);
+//     }
+//     if (status === "done") {
+//       message.success(`${info.file.name} file uploaded successfully.`);
+//     } else if (status === "error") {
+//       message.error(`${info.file.name} file upload failed.`);
+//     }
+//   },
+//   onDrop(e) {
+//     console.log("Dropped files", e.dataTransfer.files);
+//   },
+// };
 
 interface PatientModalProps {
   isOpen: boolean;
@@ -80,48 +81,6 @@ export const EvolutionsView: React.FC<PatientModalProps> = ({ patient }) => {
   });
 
   const [buttonVariable, setButtonVariable] = useState(true);
-
-  // useEffect(() => {
-
-  //   if (patient) {
-  //     setFormData({
-  //       first_name: patient.first_name,
-  //       last_name: patient.last_name,
-  //       birth_date: patient.birth_date,
-  //       gender: patient.gender,
-  //       blood_type: patient.blood_type,
-  //       allergies: patient.allergies ? patient.allergies.join(", ") : "",
-  //       profile_photo_url: patient.profile_photo_url,
-  //       address: patient.address,
-  //       responsable_user: {
-  //         first_name: patient.responsable_user?.first_name || "",
-  //         last_name: patient.responsable_user?.last_name || "",
-  //         phone_number: patient.responsable_user?.phone_number || "",
-  //         email: patient.responsable_user?.email || "",
-  //       },
-  //     });
-  //   } else {
-  //     setFormData({
-  //       first_name: "",
-  //       last_name: "",
-  //       birth_date: "",
-  //       gender: "",
-  //       blood_type: "",
-  //       allergies: "",
-  //       profile_photo_url: "",
-  //       address: "",
-  //       responsable_user: {
-  //         first_name: "",
-  //         last_name: "",
-  //         phone_number: "",
-  //         email: "",
-  //       },
-  //     });
-  //   }
-  // }, [patient]);
-
-  // const { user } = useAuth();
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = {
@@ -176,44 +135,44 @@ export const EvolutionsView: React.FC<PatientModalProps> = ({ patient }) => {
     },
   ];
 
-  const filteredServices = mockServices.filter((service) => {
-    const matchesSearch =
-      service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      service.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory =
-      selectedCategory === "all" || service.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  // const filteredServices = mockServices.filter((service) => {
+  //   const matchesSearch =
+  //     service.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     service.description.toLowerCase().includes(searchTerm.toLowerCase());
+  //   const matchesCategory =
+  //     selectedCategory === "all" || service.category === selectedCategory;
+  //   return matchesSearch && matchesCategory;
+  // });
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case "preventive":
-        return "category-preventive";
-      case "restorative":
-        return "category-restorative";
-      case "orthodontic":
-        return "category-orthodontic";
-      case "surgical":
-        return "category-surgical";
-      default:
-        return "category-default";
-    }
-  };
+  // const getCategoryColor = (category: string) => {
+  //   switch (category) {
+  //     case "preventive":
+  //       return "category-preventive";
+  //     case "restorative":
+  //       return "category-restorative";
+  //     case "orthodontic":
+  //       return "category-orthodontic";
+  //     case "surgical":
+  //       return "category-surgical";
+  //     default:
+  //       return "category-default";
+  //   }
+  // };
 
-  const getCategoryName = (category: string) => {
-    switch (category) {
-      case "preventive":
-        return "Preventivo";
-      case "restorative":
-        return "Restaurativo";
-      case "orthodontic":
-        return "Ortodóntico";
-      case "surgical":
-        return "Quirúrgico";
-      default:
-        return category;
-    }
-  };
+  // const getCategoryName = (category: string) => {
+  //   switch (category) {
+  //     case "preventive":
+  //       return "Preventivo";
+  //     case "restorative":
+  //       return "Restaurativo";
+  //     case "orthodontic":
+  //       return "Ortodóntico";
+  //     case "surgical":
+  //       return "Quirúrgico";
+  //     default:
+  //       return category;
+  //   }
+  // };
 
   return (
     <div className="service-catalog">
@@ -545,18 +504,7 @@ export const EvolutionsView: React.FC<PatientModalProps> = ({ patient }) => {
                   </div>
                 </div>
                 <div className="side-b">
-                  <Dragger {...props}>
-                    <p className="ant-upload-drag-icon">
-                      <InboxOutlined />
-                    </p>
-                    <p className="ant-upload-text">
-                      Click or drag file to this area to upload
-                    </p>
-                    <p className="ant-upload-hint">
-                      Support for a single or bulk upload. Strictly prohibited
-                      from uploading company data or other banned files.
-                    </p>
-                  </Dragger>
+                  <DraggItem/>
                 </div>
               </div>
             </form>
