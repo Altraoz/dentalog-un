@@ -1,7 +1,14 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { url_backend } from "./variables";
-import type { PatientPayload, AppointmentTypePayload, ClinicalCasePayload, ProcedurePayload, ActivityPayload, AppointmentPayload } from "../types";
+import type {
+  PatientPayload,
+  AppointmentTypePayload,
+  ClinicalCasePayload,
+  ProcedurePayload,
+  ActivityPayload,
+  AppointmentPayload,
+} from "../types";
 import api from "./authentication";
 
 export async function createPatientAndUser(
@@ -158,8 +165,6 @@ export async function getAppointmentsByPatient(
   }
 }
 
-
-
 export async function getAppointmentsType(userToken: string) {
   const url = "/clinical/appointment_types/";
   try {
@@ -174,7 +179,6 @@ export async function getAppointmentsType(userToken: string) {
     return null;
   }
 }
-
 
 export async function getPatientClinicalCases(
   userToken: string,
@@ -209,7 +213,6 @@ export async function getCaseProcedures(userToken: string, case_id: number) {
   }
 }
 
-
 export async function getProcedureActivities(
   userToken: string,
   procedure: number
@@ -231,14 +234,33 @@ export async function getProcedureActivities(
 export async function createActivity(
   e: React.FormEvent<HTMLFormElement>,
   userToken: string,
-  data: ActivityPayload) {
-
+  data: ActivityPayload
+) {
   e.preventDefault();
-  const url = '/clinical/activities/';
+  const url = "/clinical/activities/";
   const csrftoken = Cookies.get("csrftoken");
-  
+
   try {
     const response = await api.post(url, data, {
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken || "",
+        Authorization: `Token ${userToken}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error al crear actividad", error);
+    return null;
+  }
+}
+
+export async function deleteActivity(userToken: string, id: number) {
+  const url = `/clinical/activities/${id}`;
+  const csrftoken = Cookies.get("csrftoken");
+
+  try {
+    const response = await api.post(url, {
       headers: {
         "Content-Type": "application/json",
         "X-CSRFToken": csrftoken || "",
