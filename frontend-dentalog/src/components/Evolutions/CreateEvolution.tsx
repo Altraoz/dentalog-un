@@ -201,7 +201,16 @@ export const NewProcedureModal: React.FC<NewEvolutionProps> = ({
           </div>
         </div>
         <div className="side-b">
-          <DraggItem />
+          <DraggItem
+            patient={patient}
+            setImagesInfo={(newImages) => {
+              // Actualiza el listado de imágenes en formData
+              setFormData((prev) => ({
+                ...prev,
+                images: newImages.map((img) => ({ id: img.id, url: img.url })),
+              }));
+            }}
+          />
         </div>
       </div>
     </form>
