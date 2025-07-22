@@ -21,7 +21,7 @@ export const LoginForm: React.FC = () => {
     try {
       const success = await login(email, password);
       if (!success) {
-        setError('Credenciales inválidas. Intenta con admin@dentalog.com / admin123');
+        setError('Credenciales inválidas.');
       }
     } catch (err) {
       setError('Error al iniciar sesión. Intenta de nuevo.');
