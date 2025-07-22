@@ -167,6 +167,24 @@ export async function getAppointmentsByPatient(
   }
 }
 
+export async function getAppointmentsByPatient(
+  userToken: string,
+  patient_id: number
+) {
+  const url = `/clinical/appointments/?patient=${patient_id}`;
+  try {
+    const response = await api.get(url, {
+      headers: {
+        Authorization: `Token ${userToken}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error al traer citas:", error);
+    return null;
+  }
+}
+
 export async function getAppointmentsType(userToken: string) {
   const url = "/clinical/appointment_types/";
   try {
@@ -182,6 +200,10 @@ export async function getAppointmentsType(userToken: string) {
   }
 }
 
+export async function getPatientClinicalCases(
+  userToken: string,
+  patient_id: number
+) {
 export async function getPatientClinicalCases(
   userToken: string,
   patient_id: number
@@ -215,6 +237,10 @@ export async function getCaseProcedures(userToken: string, case_id: number) {
   }
 }
 
+export async function getProcedureActivities(
+  userToken: string,
+  procedure: number
+) {
 export async function getProcedureActivities(
   userToken: string,
   procedure: number
