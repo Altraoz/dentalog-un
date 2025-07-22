@@ -29,6 +29,8 @@ import {
   ListSubheader,
 } from "@mui/material";
 import { GripVertical, Trash, PlusCircle } from "lucide-react";
+import { createActivity } from "../../api/apointments";
+import { useAuth } from "../../contexts/AuthContext";
 
 // Tipo de actividad con id, texto y list_index
 export interface Activity {
@@ -103,23 +105,24 @@ function SortableListItem({
 interface ActivitiesListProps {
   initialItems: Activity[];
   setInitialActivities: Dispatch<SetStateAction<Activity[]>>;
+  isCreatingAppointment: boolean;
+  formData: FormData;
 }
 
 export default function ActivitiesList({
   initialItems,
   setInitialActivities,
+  isCreatingAppointment,
+  formData
 }: ActivitiesListProps) {
+  const { user } = useAuth();
   const [checked, setChecked] = useState<number[]>([]);
   const [newLabel, setNewLabel] = useState("");
-  const [nextId, setNextId] = useState(
-    Math.max(...initialItems.map((i) => i.id), 0) + 1
-  );
+  const [nextId, setNextId] = useState(Math.max(...initialItems.map((i) => i.id), 0) + 1);
 
   const sensors = useSensors(useSensor(PointerSensor));
 
-  const sortedItems = [...initialItems].sort(
-    (a, b) => a.list_index - b.list_index
-  );
+  const sortedItems = [...initialItems].sort((a, b) => a.list_index - b.list_index);
 
   const handleToggle = (id: number) => {
     setChecked((prev) =>
@@ -157,42 +160,54 @@ export default function ActivitiesList({
     }
   };
 
-  const handleAddItem = () => {
+  const handleAddItem = async (e: React.FormEvent<HTMLFormElement>) => {
     const name = newLabel.trim();
     if (!name) return;
 
-    const newItem: Activity = {
-      id: nextId,
-      name,
-      is_done: false,
-      list_index: initialItems.length,
-      to_do: false,
+    if (isCreatingAppointment && !formData.procedure.id) {
+      alert("Por favor, selecciona un procedimiento primero.");
+      return;
+    }
 
+    const activityPayload = {
+      name,
+      description: "Aquí va la descripción de la actividad",
+      procedure: formData.procedure.id,
+      is_done: false,
+      list_index: 100
     };
 
-    setInitialActivities([...initialItems, newItem]);
-    setNextId((id) => id + 1);
-    setNewLabel("");
+    try {
+      const response = await createActivity(e, user!.token, activityPayload);
+
+      if (response && response.status === 201) {
+        const newItem: Activity = {
+          id: response.data.id,
+          name: response.data.name,
+          is_done: response.data.is_done,
+          list_index: initialItems.length,
+          to_do: false,
+        };
+
+        setInitialActivities([...initialItems, newItem]);
+        setNextId((id) => id + 1);
+        setNewLabel('');
+      } else {
+        console.log('Error creando la actividad');
+      }
+    } catch (err) {
+      console.error('Error al crear la actividad:', err);
+    }
   };
 
   return (
     <div className="form-group">
-      <List
-        sx={{ width: "100%" }}
-        subheader={
-          <ListSubheader component="div" id="activity-list-subheader">
-            <Box
-              display="flex"
-              justifyContent="start"
-              alignItems="center"
-              gap={5}
-            >
-              <Box width="2rem"></Box>
-              <Box flexGrow={1}>Actividad</Box>
-            </Box>
-          </ListSubheader>
-        }
-      >
+      <List sx={{ width: "100%" }} subheader={<ListSubheader component="div" id="activity-list-subheader">
+        <Box display="flex" justifyContent="start" alignItems="center" gap={5}>
+          <Box width="2rem"></Box>
+          <Box flexGrow={1}>Actividad</Box>
+        </Box>
+      </ListSubheader>}>
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -225,7 +240,7 @@ export default function ActivitiesList({
         <IconButton
           color="primary"
           aria-label="Agregar"
-          onClick={handleAddItem}
+          onClick={handleAddItem} // Llamar la función para agregar la actividad
         >
           <PlusCircle />
         </IconButton>

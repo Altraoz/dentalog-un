@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { url_backend } from "./variables";
-import type { PatientPayload, AppointmentTypePayload, ClinicalCasePayload, ProcedurePayload } from "../types";
+import type { PatientPayload, AppointmentTypePayload, ClinicalCasePayload, ProcedurePayload, ActivityPayload, AppointmentPayload } from "../types";
 import api from "./authentication";
 
 export async function createPatientAndUser(
@@ -196,6 +196,52 @@ export async function getProcedureActivities(userToken: string, procedure: numbe
     return response;
   } catch (error) {
     console.error("Error al traer procedimientos:", error);
+    return null;
+  }
+}
+
+export async function createActivity(
+  e: React.FormEvent<HTMLFormElement>,
+  userToken: string,
+  data: ActivityPayload) {
+
+  e.preventDefault();
+  const url = '/clinical/activities/';
+  const csrftoken = Cookies.get("csrftoken");
+  
+  try {
+    const response = await api.post(url, data, {
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken || "",
+        Authorization: `Token ${userToken}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error al crear actividad", error);
+    return null;
+  }
+}
+
+export async function createAppointment(
+  userToken: string,
+  data: AppointmentPayload
+) {
+  const url = "/clinical/appointments/";
+  const csrftoken = Cookies.get("csrftoken");
+
+  try {
+    const response = await api.post(url, data, {
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken || "",
+        Authorization: `Token ${userToken}`,
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error("Error al crear la cita:", error);
     return null;
   }
 }

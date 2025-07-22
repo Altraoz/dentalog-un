@@ -1,5 +1,7 @@
 // import { Users } from "lucide-react";
 
+import type { Activity } from "../components/Appointments/DraggableList";
+
 export interface ResponsableUser {
   id_user: number;
   created_at: string;
@@ -39,17 +41,6 @@ export interface Appointment {
   type: number;
   status: "scheduled" | "completed" | "cancelled" | "no-show";
   attention_date: string; // Cambiado de date a attention_date
-
-  // patientName: string;
-  // doctorId: string;
-  // doctorName: string;
-  // date: string;
-  // time: string;
-  // duration: number;
-  // serviceId: string;
-  // serviceName: string;
-  // status: "scheduled" | "completed" | "cancelled" | "no-show";
-  // notes?: string;
 }
 
 export interface AppointmentPayload {
@@ -145,4 +136,20 @@ export interface ProcedurePayload {
   // end_date: string;
   description: string;
   notes?: string; 
+}
+
+export interface ActivityPayload {
+  name: string;
+  procedure: number;
+  is_done: boolean;
+}
+
+export interface AppointmentPayload {
+  patient: { id: number | undefined; first_name: string; last_name: string };
+  appointmentType: { id: number | undefined; name: string };
+  date: string;
+  time: string;
+  case: { id: number | undefined; initial_diagnosis: string };
+  procedure: { id: number | undefined; name: string };
+  activities: Activity[];
 }
