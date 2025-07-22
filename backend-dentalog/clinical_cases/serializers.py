@@ -26,13 +26,6 @@ class EvolutionTypesSerializer(serializers.ModelSerializer):
             'id': {'read_only': True}
         }
 
-
-
-class ActivitiesAppointmentsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ActivitiesAppointments
-        fields = ['id_activity', 'id_appointment']
-
 class EvolutionImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = EvolutionImage
@@ -60,16 +53,13 @@ class AppointmentTypesSerializer(serializers.ModelSerializer):
 class ActivitiesAppointmentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActivitiesAppointments
-        fields = ['id',     'id_activity', 'id_appointment']
-
+        fields = ['activity']
         extra_kwargs = {
-        'id_appointment': {'required': False}, 'id': {'read_only': True}
-
-    }
-
+            'appointment': {'required': False}
+        }
 class AppointmentSerializer(serializers.ModelSerializer):
     # aquí usarás el serializer anidado para read & write
-    activities = ActivitiesAppointmentsSerializer(many=True)
+    activities = ActivitiesAppointmentsSerializer(source='activities_links', many=True)
 
     class Meta:
         model = Appointments
@@ -79,21 +69,20 @@ class AppointmentSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        activities_data = validated_data.pop('activities', [])
+        activities_data = validated_data.pop('activities_links', [])  # usa el 'source'
         appointment = Appointments.objects.create(**validated_data)
-
+                
         for activity_data in activities_data:
-            id_activity = activity_data.get("id_activity")
-            if not id_activity:
+            activity = activity_data.get("activity")
+            if not activity:
                 raise serializers.ValidationError({
                     "activities": "Each activity must include 'id_activity'."
                 })
 
             ActivitiesAppointments.objects.create(
-                id_appointment=appointment,
-                id_activity=id_activity 
+                appointment=appointment,
+                activity=activity 
             )
-
         return appointment
 class ProceduresSerializer(serializers.ModelSerializer):
     class Meta:
@@ -111,7 +100,7 @@ class ActivitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Activities
         fields = [
-            'id', 'created_at', 'name','is_done','procedure',
+            'id', 'created_at', 'name','is_done','procedure', 'list_index'
         ]
         extra_kwargs = {
             'created_at': {'read_only': True}, 'id': {'read_only': True}

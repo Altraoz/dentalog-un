@@ -13,6 +13,7 @@ router.register('procedures_in_appointment', ProceduresinAppointmentViewSet, bas
 
 router.register('appointments', AppointmentsViewSet, basename='appointments')
 router.register('appointment_types', AppointmentTypesViewSet, basename='appointment_types')
+router.register('activities_appointments', ActivitiesAppointmentsViewSet, basename='activities_appointments')
 
 
 router.register('notes', EvolutionNotesViewSet, basename='notes')

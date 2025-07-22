@@ -120,13 +120,10 @@ class Activities(models.Model):
         managed = False
         db_table = 'activities'
 
-
 class ActivitiesAppointments(models.Model):
     id = models.BigAutoField(primary_key=True)
-
-    id_appointment = models.IntegerField(db_column='id_appointment')
-    id_activity = models.IntegerField(db_column='id_activity')
-
+    appointment = models.ForeignKey('Appointments', models.CASCADE, db_column='appointment', related_name="activities_links")
+    activity = models.ForeignKey('Activities', models.CASCADE, db_column='activity') #related_name="activities"  
     class Meta:
         db_table = 'activities_appointments'
         managed = False

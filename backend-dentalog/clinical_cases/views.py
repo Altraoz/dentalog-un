@@ -13,11 +13,11 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 
 from .models import (
-    ClinicalCases, EvolutionTypes, Evolutions, AppointmentTypes, Appointments, Procedures, Activities
+    ClinicalCases, EvolutionTypes, Evolutions, AppointmentTypes, Appointments, Procedures, Activities, ActivitiesAppointments
 )
 from .serializers import (
     ClinicalCasesinAppointmentSerializer, ClinicalCasesSerializer, EvolutionTypesSerializer,
-    EvolutionsSerializer,
+    EvolutionsSerializer, ActivitiesAppointmentsSerializer,
     AppointmentTypesSerializer, AppointmentSerializer, ProceduresSerializer, ActivitiesSerializer, ProceduresinAppointmentSerializer
 )
 
@@ -90,13 +90,20 @@ class AppointmentTypesViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['id', 'name']
     
+class ActivitiesAppointmentsViewSet(viewsets.ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = ActivitiesAppointments.objects.all()
+    serializer_class = ActivitiesAppointmentsSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['id']
+    
 
 class AppointmentsViewSet(viewsets.ModelViewSet):    
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = AppointmentSerializer
     queryset = Appointments.objects.all()
     filter_backends = [DjangoFilterBackend]
-    # filterset_fields = ['id','is_frecuent']
+    filterset_fields = ['id','clinical_case', 'procedure', 'patient']
 
 
 class ProceduresViewSet(viewsets.ModelViewSet):
