@@ -45,7 +45,7 @@ interface SortableListItemProps {
   item: Activity;
   checked: number[];
   handleToggle: (id: number) => void;
-  onDelete: (id: number) => void;
+  onDelete: (idToRemove: number) => void;
 }
 
 function SortableListItem({
@@ -102,6 +102,13 @@ function SortableListItem({
   );
 }
 
+interface FormData {
+  procedure: {
+    id: number;
+    // puedes agregar más campos si los tienes
+  };
+}
+
 interface ActivitiesListProps {
   initialItems: Activity[];
   setInitialActivities: Dispatch<SetStateAction<Activity[]>>;
@@ -139,12 +146,7 @@ export default function ActivitiesList({
     setInitialActivities(updated);
   };
 
-  const handleDelete = async (
-    e: React.FormEvent<HTMLFormElement>,
-    idToRemove: number
-  ) => {
-    e.preventDefault();
-
+  const handleDelete = async (idToRemove: number) => {
     try {
       const response = await deleteActivity(user!.token, idToRemove);
 
@@ -179,7 +181,7 @@ export default function ActivitiesList({
     }
   };
 
-  const handleAddItem = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAddItem = async () => {
     const name = newLabel.trim();
     if (!name) return;
 
@@ -197,7 +199,7 @@ export default function ActivitiesList({
     };
 
     try {
-      const response = await createActivity(e, user!.token, activityPayload);
+      const response = await createActivity(user!.token, activityPayload);
 
       if (response && response.status === 201) {
         const newItem: Activity = {

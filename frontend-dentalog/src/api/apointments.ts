@@ -231,12 +231,7 @@ export async function getProcedureActivities(
   }
 }
 
-export async function createActivity(
-  e: React.FormEvent<HTMLFormElement>,
-  userToken: string,
-  data: ActivityPayload
-) {
-  e.preventDefault();
+export async function createActivity(userToken: string, data: ActivityPayload) {
   const url = "/clinical/activities/";
   const csrftoken = Cookies.get("csrftoken");
 
@@ -256,11 +251,11 @@ export async function createActivity(
 }
 
 export async function deleteActivity(userToken: string, id: number) {
-  const url = `/clinical/activities/${id}`;
+  const url = `/clinical/activities/${id}/`;
   const csrftoken = Cookies.get("csrftoken");
 
   try {
-    const response = await api.post(url, {
+    const response = await api.delete(url, {
       headers: {
         "Content-Type": "application/json",
         "X-CSRFToken": csrftoken || "",
