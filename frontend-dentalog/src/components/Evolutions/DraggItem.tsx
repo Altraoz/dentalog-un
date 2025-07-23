@@ -8,7 +8,13 @@ import { url_backend } from "../../api/variables";
 const { Dragger } = Upload;
 
 interface NewEvolutionProps {
-  patient: { id: number; name: string; age: number; gender: string };
+  patient: {
+    id: number;
+    name: string;
+    gender: string;
+    age: string;
+    avatarUrl: string;
+  };
   setImagesInfo?: (newImageId: number) => void;
 }
 export const DraggItem: React.FC<NewEvolutionProps> = ({

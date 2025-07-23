@@ -3,8 +3,8 @@ import { Card, Avatar, Typography, Box, Button, Chip } from "@mui/material";
 type PatientCardProps = {
   avatarUrl: string;
   name: string;
-  sex: "Male" | "Female" | "Other";
-  age: number;
+  sex: string;
+  age: string;
   bloodType: string;
   dni: string;
   handleNavigate: () => void;

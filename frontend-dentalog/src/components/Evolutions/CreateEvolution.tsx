@@ -17,7 +17,13 @@ import { createEvolution, getEvolutionTypes } from "../../api/evolutions";
 import "./CreateEvolution.scss";
 // import { CreateEvolutionTypeModal } from "./Create/CreateEvolutionTypeModal";
 interface NewEvolutionProps {
-  patient: { id: number; name: string; age: number; gender: string };
+  patient: {
+    id: number;
+    name: string;
+    gender: string;
+    age: string;
+    avatarUrl: string;
+  };
   onBack: () => void;
   //   isOpen: boolean;
   //   onClose: () => void;
@@ -132,7 +138,7 @@ export const CreateEvolution: React.FC<NewEvolutionProps> = ({
             <div className="patient-info flex">
               <div className="patient-avatar">
                 <img
-                  src="https://img.freepik.com/psd-gratis/3d-ilustracion-persona-cabello-largo_23-2149436197.jpg"
+                  src={patient.avatarUrl}
                   alt="sdfasdf"
                   style={{
                     width: "100%",

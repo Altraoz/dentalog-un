@@ -20,12 +20,13 @@ import { CreateEvolution } from "./CreateEvolution";
 import { useAuth } from "../../contexts/AuthContext";
 import { getPatients } from "../../api/patients";
 import type { Patient } from "../../types";
+import { CircularProgress } from "@mui/material";
 // import "./EvolutionsView.scss";
 // import type { Patient } from "../../types";
 
 // import { CreateEvolution } from "./CreateEvolution";
 
-const patient = { id: 24, name: "Juanito Arevalo", age: 10, gender: "Hombre" };
+// const patient = { id: 24, name: "Juanito Arevalo", age: 10, gender: "Hombre" };
 
 export const EvolutionsView = () => {
   const [buttonVariable, setButtonVariable] = useState(true);
@@ -60,6 +61,14 @@ export const EvolutionsView = () => {
   const [waitingResponse, setWaitingResponse] = useState<boolean>(false);
   const [patients, setPatients] = useState<Patient[]>([]);
 
+  const [patient, setPatient] = useState<{
+    id: number;
+    name: string;
+    gender: string;
+    age: string;
+    avatarUrl: string;
+  }>();
+
   useEffect(() => {
     const fetchPatients = async () => {
       setWaitingResponse(true);
@@ -82,6 +91,33 @@ export const EvolutionsView = () => {
 
     fetchPatients();
   }, []);
+
+  const calculateAge = (birthDate: string) => {
+    const today = new Date();
+    const birth = new Date(birthDate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birth.getDate())
+    ) {
+      age--;
+    }
+    return age;
+  };
+
+  const HandleClick = (patient: Patient) => {
+    setPatient({
+      id: patient.id,
+      name: `${patient.first_name} ${patient.last_name}`,
+      gender: patient.gender,
+      age: `${calculateAge(patient.birth_date)}`,
+      avatarUrl: `${
+        patient.profile_photo_url ||
+        "https://img.freepik.com/psd-gratis/3d-ilustracion-persona-gafas-sol_23-2149436200.jpg"
+      }`,
+    });
+  };
 
   return (
     <div className="service-catalog">
@@ -239,7 +275,7 @@ export const EvolutionsView = () => {
             </div>
           ) : (
             <CreateEvolution
-              patient={patient}
+              patient={patient!}
               onBack={() => setButtonVariable(true)}
             />
           )}
