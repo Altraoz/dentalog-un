@@ -102,7 +102,7 @@ class Patients(models.Model):
     blood_type = models.CharField(max_length=3, blank=True, null=True, choices=BLOOD_TYPE_CHOICES)
     address = models.CharField(blank=True, null=True)
     profile_photo_url = models.CharField(blank=True, null=True)
-    dni = models.IntegerField(blank=True, null=True)    
+    dni = models.BigIntegerField(blank=True, null=True)    
     class Meta:
         managed = False
         db_table = 'patients'
