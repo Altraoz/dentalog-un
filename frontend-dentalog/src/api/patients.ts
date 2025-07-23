@@ -69,6 +69,18 @@ export async function getPatients(userToken: string) {
   }
 }
 
-export async function getPatientsByResponsible(userToken: string) {
-  
+export async function getPatientsByResponsible(userToken: string, userID: number) {
+  const url = `/auth/patients/?responsable_user=${userID}`;
+  try {
+    const response = await api.get(url, {
+      headers: {
+        Authorization: `Token ${userToken}`
+      }
+  });
+  console.log('Respuesta', response)
+  return response;
+  } catch (err) {
+    console.error('Error al traer pacientes:', err);
+    return null;
+  }
 }
