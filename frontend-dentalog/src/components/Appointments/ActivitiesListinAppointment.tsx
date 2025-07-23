@@ -190,6 +190,8 @@ export default function ActivitiesList({
       return;
     }
 
+    console.log(formData);
+
     const activityPayload = {
       name,
       description: "Aquí va la descripción de la actividad",
@@ -200,7 +202,7 @@ export default function ActivitiesList({
 
     try {
       const response = await createActivity(user!.token, activityPayload);
-
+      console.log(response)
       if (response && response.status === 201) {
         const newItem: Activity = {
           id: response.data.id,
