@@ -129,9 +129,10 @@ class ActivitiesAppointments(models.Model):
         managed = False
 
 class EvolutionImage(models.Model):
-    evolution = models.ForeignKey('Evolutions', models.DO_NOTHING, related_name='images', db_column='evolution')
-    image_url = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    image_url = models.TextField()
+    patient = models.ForeignKey('users.Patients',models.DO_NOTHING, db_column='patient')
+    evolution = models.ForeignKey('Evolutions', models.DO_NOTHING, related_name='images', db_column='evolution')
 
     class Meta:
         db_table = 'evolution_images'

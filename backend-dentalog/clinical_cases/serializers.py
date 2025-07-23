@@ -29,7 +29,7 @@ class EvolutionTypesSerializer(serializers.ModelSerializer):
 class EvolutionImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = EvolutionImage
-        fields = ['id', 'evolution', 'image_url', 'created_at',]
+        fields = ['id', 'evolution', 'patient', 'image_url', 'created_at',]
 
 class EvolutionsSerializer(serializers.ModelSerializer):
     images = EvolutionImageSerializer(many=True, read_only=True)

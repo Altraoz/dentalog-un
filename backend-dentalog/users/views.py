@@ -111,40 +111,12 @@ class DoctorViewset(viewsets.ViewSet):
 class PatientViewset(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
-    # def list(self, request):
-    #     queryset = Patients.objects.all()
-    #     serializer = PatientsSerializer(queryset, many=True)
-    #     return Response(serializer.data)
-
-    # def retrieve(self, request, pk=None):
-    #     patient = get_object_or_404(Patients, pk=pk)
-    #     serializer = PatientsSerializer(patient)
-    #     return Response(serializer.data)
-
-    # def create(self, request):
-    #     serializer = PatientsSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # def partial_update(self, request, pk=None):
-    #     patient = get_object_or_404(Patients, pk=pk)
-    #     serializer = PatientsSerializer(patient, data=request.data, partial=True)
-    #     if serializer.is_valid():
-    #         serializer.save()
-    #         return Response(serializer.data, status=status.HTTP_200_OK)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # def destroy(self, request, pk=None):
-    #     patient = get_object_or_404(Patients, pk=pk)
-    #     patient.delete()
-    #     return Response(status=status.HTTP_204_NO_CONTENT)
     
     queryset = Patients.objects.all()
     serializer_class = PatientsSerializer
     pagination_class = PatientPagination
-    filter_backends = [PatientSearchFilter]
+    # filter_backends = [PatientSearchFilter]
+    filterset_fields = ['responsable_user']
     search_fields = ['first_name', 'last_name']
 #Create a patient and user at same time
 class createPatientAndUser(viewsets.ViewSet):

@@ -21,6 +21,8 @@ from .serializers import (
     AppointmentTypesSerializer, AppointmentSerializer, ProceduresSerializer, ActivitiesSerializer, ProceduresinAppointmentSerializer
 )
 
+from users.serializers import (Patients)
+
 class ClinicalCasesViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -161,7 +163,12 @@ class EvolutionImageViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         file = request.FILES.get("file")
-        evolution_id = request.data.get("evolution_id")
+        patient = request.data.get("patient")
+
+        try:
+            patient_instance = Patients.objects.get(id=patient)
+        except Patients.DoesNotExist:
+            return Response({"error": "Paciente no encontrado"}, status=404)
 
         if not file:
             return Response({"error": "No file uploaded"}, status=400)
@@ -172,7 +179,7 @@ class EvolutionImageViewSet(viewsets.ModelViewSet):
 
         ext = os.path.splitext(file.name)[1]  # e.g., '.jpg'
         unique_id = uuid.uuid4().hex
-        filename = f"{evolution_id}/{unique_id}{ext}"
+        filename = f"{patient}/{unique_id}{ext}"
 
         import requests
 
@@ -191,7 +198,7 @@ class EvolutionImageViewSet(viewsets.ModelViewSet):
         public_url = f"{supabase_url}/storage/v1/object/public/{bucket}/{filename}"
 
         image = EvolutionImage.objects.create(
-            evolution_id=evolution_id,
+            patient=patient_instance,
             image_url=public_url
         )
 
