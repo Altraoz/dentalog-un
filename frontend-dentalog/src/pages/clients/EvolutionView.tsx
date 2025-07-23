@@ -16,7 +16,7 @@ const EvolutionView = () => {
   useEffect(() => {
     if (!user) return;
     const fetchPatients = async () => {
-      const res = await getPatientsByResponsible(user.token);
+      const res = await getPatientsByResponsible(user.token, user.id_user);
       if (res?.status === 200) {
         const results = res.data.results;
         setPatients(results);
@@ -32,9 +32,8 @@ const EvolutionView = () => {
     if (!selectedPatientId) return;
     const fetchEvolutions = async () => {
       const res = await getEvolutionsByPatient(user.token, selectedPatientId);
-      if (res?.status === 200) {
-        setEvolutions(res.data);
-      }
+      console.log('EvoByPatient: ', res);
+      setEvolutions(res);
     };
     fetchEvolutions();
   }, [selectedPatientId]);
@@ -77,9 +76,9 @@ const EvolutionView = () => {
                 </div>
                 <div className="evolution-content">
                   <h3 className="evolution-title">{ev.title}</h3>
-                  <p className="evolution-date">{new Date(ev.date).toLocaleDateString()}</p>
+                  <p className="evolution-date">{ev.appointmentDate}</p>
                   <div className="images-wrapper">
-                    {ev.images.map((imgUrl, i) => (
+                    {ev.imageUrls.map((imgUrl, i) => (
                       <img
                         key={i}
                         src={imgUrl}
@@ -90,7 +89,7 @@ const EvolutionView = () => {
                     ))}
                   </div>
                   <p className="evolution-note">
-                    <i>Observación:</i> {ev.description}
+                    <i>Observación:</i> {ev.observations}
                   </p>
                 </div>
               </div>
