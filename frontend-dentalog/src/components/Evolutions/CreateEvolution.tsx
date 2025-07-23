@@ -5,17 +5,18 @@ import {
   FormControl,
   TextField,
   IconButton,
+  Button,
+  CircularProgress,
 } from "@mui/material";
 import { ArrowLeft } from "lucide-react";
-import handleSubmit from "../../data/api";
 import { DraggItem } from "./DraggItem";
 import { useEffect, useState } from "react";
 import { getAppointmentsByPatient } from "../../api/apointments";
 import { useAuth } from "../../contexts/AuthContext";
-import { getEvolutionTypes } from "../../api/evolutions";
-
+import { createEvolution, getEvolutionTypes } from "../../api/evolutions";
+import "./CreateEvolution.scss";
+// import { CreateEvolutionTypeModal } from "./Create/CreateEvolutionTypeModal";
 interface NewEvolutionProps {
-  handleBack: () => void;
   patient: { id: number; name: string; age: number; gender: string };
   onBack: () => void;
   //   isOpen: boolean;
@@ -25,28 +26,34 @@ interface NewEvolutionProps {
   //   NotificationTrigger: (message: string) => void;
   //   onProcedureCreated: (newProcedure: { id: number; name: string }) => void;
 }
-
-export const NewProcedureModal: React.FC<NewEvolutionProps> = ({
+interface FormData {
+  appointment: string;
+  clinical_case: string;
+  type: string;
+  percente_advance: string;
+  title: string;
+  description: string;
+  images: number[]; // ✅ aquí sí usamos `number[]` correctamente
+}
+export const CreateEvolution: React.FC<NewEvolutionProps> = ({
   patient,
   onBack,
 }) => {
   const { user } = useAuth();
 
-  const [formData, setFormData] = useState({
-    appoinment: "",
+  const [formData, setFormData] = useState<FormData>({
+    appointment: "",
     clinical_case: "",
     type: "",
     percente_advance: "",
     title: "",
     description: "",
+    images: [],
   });
   // Opciones
   const [appointments, setAppointments] = useState<
     { id: number; attention_date: string; time: string }[]
   >([]);
-
-  // {appointment.attention_date} {appointment.time}
-
   const [evolutionTypes, setEvolutionTypes] = useState<
     { id: number; name: string; description: string }[]
   >([]);
@@ -62,11 +69,53 @@ export const NewProcedureModal: React.FC<NewEvolutionProps> = ({
       );
       if (typesRes?.status === 200) setEvolutionTypes(typesRes.data);
       if (appointmentsRes?.status === 200)
-        setAppointments(appointmentsRes.data.results);
+        setAppointments(appointmentsRes.data);
     };
 
     fetchInitialData();
   }, [user]);
+
+  // const [alertSeverity, setAlertSeverity] = useState<"success" | "error">(
+  //   "success"
+  // );
+  // const [alertMessage, setAlertMessage] = useState<string>("");
+  // const [displayAlert, setDisplayAlert] = useState<number>(0);
+  const [waitingResponse, setWaitingResponse] = useState<boolean>(false);
+
+  if (!user) {
+    console.error("Usuario no autenticado");
+    return;
+  }
+
+  const handleResponse = (response: {
+    status: number;
+    data: { name: string; id: number };
+  }) => {
+    if (response.status === 201) {
+      setWaitingResponse(false);
+      onBack();
+      // NotificationTrigger("🟢 Cita creada exitosamente");
+      // onTypeCreated?.({
+      //   name: response.data.name ?? "",
+      //   id: response.data.id ?? 0,
+      // });
+      // onClose();
+    } else {
+      // setAlertSeverity("error");
+      // setAlertMessage("Error al crear el tipo de cita");
+      // setDisplayAlert(1);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setWaitingResponse(true);
+    const newType = { ...formData };
+    const response = await createEvolution(e, user.token, newType);
+    if (response) {
+      handleResponse(response);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="modal-form">
@@ -107,12 +156,12 @@ export const NewProcedureModal: React.FC<NewEvolutionProps> = ({
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                value={formData.appoinment}
+                value={formData.appointment}
                 label="Cita"
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    appoinment: e.target.value as "Masculino" | "Femenino",
+                    appointment: e.target.value as "Masculino" | "Femenino",
                   })
                 }
               >
@@ -123,7 +172,6 @@ export const NewProcedureModal: React.FC<NewEvolutionProps> = ({
                 ))}
               </Select>
             </FormControl>
-
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">
                 Tipo de evolución
@@ -145,8 +193,6 @@ export const NewProcedureModal: React.FC<NewEvolutionProps> = ({
                     {evolutionType.name}
                   </MenuItem>
                 ))}
-                <MenuItem value="Masculino">Masculino</MenuItem>
-                <MenuItem value="Femenino">Femenino</MenuItem>
               </Select>
             </FormControl>
           </div>
@@ -199,15 +245,24 @@ export const NewProcedureModal: React.FC<NewEvolutionProps> = ({
               />
             </FormControl>
           </div>
+          <div className="form-grid-two">
+            <Button type="submit" variant="outlined" disabled={waitingResponse}>
+              {waitingResponse ? (
+                <CircularProgress sx={{ color: "#1976D2" }} />
+              ) : (
+                <>Crear tipo</>
+              )}
+            </Button>
+          </div>
         </div>
         <div className="side-b">
           <DraggItem
             patient={patient}
-            setImagesInfo={(newImages) => {
-              // Actualiza el listado de imágenes en formData
+            setImagesInfo={(newImage) => {
+              const imageId = newImage;
               setFormData((prev) => ({
                 ...prev,
-                images: newImages.map((img) => ({ id: img.id, url: img.url })),
+                images: [...prev.images, imageId], // agrega el nuevo ID al array existente
               }));
             }}
           />

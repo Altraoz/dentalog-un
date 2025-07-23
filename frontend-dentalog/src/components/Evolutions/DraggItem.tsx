@@ -9,16 +9,8 @@ const { Dragger } = Upload;
 
 interface NewEvolutionProps {
   patient: { id: number; name: string; age: number; gender: string };
-  setImagesInfo?: (newImage: { id: number; name: string }) => void;
-
-  //   isOpen: boolean;
-  //   onClose: () => void;
-  //   selectedCase: { id: number | undefined; initial_diagnosis: string };
-  //   patientId?: number;
-  //   NotificationTrigger: (message: string) => void;
-  //   onProcedureCreated: (newProcedure: { id: number; name: string }) => void;
+  setImagesInfo?: (newImageId: number) => void;
 }
-
 export const DraggItem: React.FC<NewEvolutionProps> = ({
   patient,
   setImagesInfo,
@@ -35,21 +27,29 @@ export const DraggItem: React.FC<NewEvolutionProps> = ({
       "X-CSRFToken": csrftoken || "",
     },
     data: {
-      patient_id: 5,
+      patient: patient.id,
     },
     onChange(info) {
+      console.log(patient.id);
       const { status } = info.file;
-      if (status !== "uploading") {
-        console.log(info.file, info.fileList);
-      }
       if (status === "done") {
+        const response = info.file.response;
+        console.log("sending_response form dragger", response);
+        if (setImagesInfo && response && Array.isArray(response.images)) {
+          setImagesInfo(response.id);
+        }
         message.success(`${info.file.name} file uploaded successfully.`);
       } else if (status === "error") {
         message.error(`${info.file.name} file upload failed.`);
       }
-
-      // setImagesInfo();
     },
+    // {
+    //     "id": 11,
+    //     "evolution": null,
+    //     "patient": 17,
+    //     "image_url": "url",
+    //     "created_at": "2025-07-23T01:24:06.884557Z"
+    // }
     onDrop(e) {
       console.log("Dropped files", e.dataTransfer.files);
     },
