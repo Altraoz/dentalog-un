@@ -4,6 +4,8 @@ from django_filters.rest_framework import DjangoFilterBackend
 from decouple import config
 import uuid
 import os
+from .filters import EvolutionFilter
+
 
 
 # Create your views here.
@@ -83,7 +85,7 @@ class EvolutionsViewSet(viewsets.ModelViewSet):
     queryset = Evolutions.objects.all()
     serializer_class = EvolutionsSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['id', 'title']
+    filterset_class = EvolutionFilter
 
 class AppointmentTypesViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
