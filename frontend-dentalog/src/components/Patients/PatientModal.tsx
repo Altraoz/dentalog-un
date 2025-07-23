@@ -131,7 +131,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
         first_name: formData.responsable_user.first_name,
         last_name: formData.responsable_user.last_name,
         phone_number: formData.responsable_user.phone_number,
-        role: 2,
+        role: 1,
         is_active: "True",
       },
     };
