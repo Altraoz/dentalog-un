@@ -107,7 +107,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
         "https://img.freepik.com/psd-gratis/3d-ilustracion-persona_23-2149436179.jpg", //dejar por defecto
       responsable_user_data: {
         email: formData.responsable_user.email,
-        password: "generic_password",
+        password: formData.dni.toString(),
         first_name: formData.responsable_user.first_name,
         last_name: formData.responsable_user.last_name,
         phone_number: formData.responsable_user.phone_number,
