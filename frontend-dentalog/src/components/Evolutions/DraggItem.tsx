@@ -15,7 +15,7 @@ interface NewEvolutionProps {
     age: string;
     avatarUrl: string;
   };
-  setImagesInfo?: (newImageId: number) => void;
+  setImagesInfo: (newImageId: number) => void;
 }
 export const DraggItem: React.FC<NewEvolutionProps> = ({
   patient,
@@ -41,9 +41,7 @@ export const DraggItem: React.FC<NewEvolutionProps> = ({
       if (status === "done") {
         const response = info.file.response;
         console.log("sending_response form dragger", response);
-        if (setImagesInfo && response && Array.isArray(response.images)) {
-          setImagesInfo(response.id);
-        }
+        setImagesInfo(response.id);
         message.success(`${info.file.name} file uploaded successfully.`);
       } else if (status === "error") {
         message.error(`${info.file.name} file upload failed.`);

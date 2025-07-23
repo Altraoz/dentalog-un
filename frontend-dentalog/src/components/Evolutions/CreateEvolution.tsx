@@ -39,7 +39,7 @@ interface FormData {
   percente_advance: string;
   title: string;
   description: string;
-  images: number[]; // ✅ aquí sí usamos `number[]` correctamente
+  image_ids: number[]; // ✅ aquí sí usamos `number[]` correctamente
 }
 export const CreateEvolution: React.FC<NewEvolutionProps> = ({
   patient,
@@ -54,11 +54,16 @@ export const CreateEvolution: React.FC<NewEvolutionProps> = ({
     percente_advance: "",
     title: "",
     description: "",
-    images: [],
+    image_ids: [],
   });
   // Opciones
   const [appointments, setAppointments] = useState<
-    { id: number; attention_date: string; time: string }[]
+    {
+      id: number;
+      attention_date: string;
+      time: string;
+      clinical_case: string;
+    }[]
   >([]);
   const [evolutionTypes, setEvolutionTypes] = useState<
     { id: number; name: string; description: string }[]
@@ -76,6 +81,17 @@ export const CreateEvolution: React.FC<NewEvolutionProps> = ({
       if (typesRes?.status === 200) setEvolutionTypes(typesRes.data);
       if (appointmentsRes?.status === 200)
         setAppointments(appointmentsRes.data);
+      // ✅ Tomar el clinical_case del primer appointment (si hay)
+      if (
+        appointmentsRes?.data.length > 0 &&
+        appointmentsRes?.data[0].clinical_case
+      ) {
+        const firstClinicalCase = appointmentsRes.data[0].clinical_case;
+        setFormData((prev) => ({
+          ...prev,
+          clinical_case: String(firstClinicalCase),
+        }));
+      }
     };
 
     fetchInitialData();
@@ -98,6 +114,8 @@ export const CreateEvolution: React.FC<NewEvolutionProps> = ({
     data: { name: string; id: number };
   }) => {
     if (response.status === 201) {
+      // const updateResponse = await createEvolution(e, user.token, newType);
+
       setWaitingResponse(false);
       onBack();
       // NotificationTrigger("🟢 Cita creada exitosamente");
@@ -118,6 +136,7 @@ export const CreateEvolution: React.FC<NewEvolutionProps> = ({
     setWaitingResponse(true);
     const newType = { ...formData };
     const response = await createEvolution(e, user.token, newType);
+    console.log("seindinfrom create evolution", newType);
     if (response) {
       handleResponse(response);
     }
@@ -268,7 +287,7 @@ export const CreateEvolution: React.FC<NewEvolutionProps> = ({
               const imageId = newImage;
               setFormData((prev) => ({
                 ...prev,
-                images: [...prev.images, imageId], // agrega el nuevo ID al array existente
+                image_ids: [...prev.image_ids, imageId], // agrega el nuevo ID al array existente
               }));
             }}
           />

@@ -9,7 +9,7 @@ export interface EvolutionPayload {
   percente_advance: string;
   title: string;
   description: string;
-  images: number[]; // ✅ aquí sí usamos `number[]` correctamente
+  image_ids: number[]; // ✅ aquí sí usamos `number[]` correctamente
 }
 
 // {
@@ -22,13 +22,16 @@ export interface EvolutionPayload {
 //   "image_ids": [11, 12,13]
 // }
 
-export async function getEvolutionsByPatient(userToken: string, patientId: string) {
+export async function getEvolutionsByPatient(
+  userToken: string,
+  patientId: string
+) {
   const url = `/clinical/evolutions/?patient=${patientId}`;
   try {
     const response = await api.get(url, {
       headers: {
-        Authorization: `Token ${userToken}`
-      }
+        Authorization: `Token ${userToken}`,
+      },
     });
     if (response.status !== 200) return [];
 
@@ -37,7 +40,7 @@ export async function getEvolutionsByPatient(userToken: string, patientId: strin
     if (!appointmentsResponse || !appointmentsResponse.data) {
       console.error("Error al obtener citas");
       return [];
-    };
+    }
 
     const appointments = appointmentsResponse.data;
 
@@ -48,10 +51,12 @@ export async function getEvolutionsByPatient(userToken: string, patientId: strin
         );
 
         if (appointment) {
-          const imageUrls = evolution.images.map((image: any) => image.image_url);
+          const imageUrls = evolution.images.map(
+            (image: any) => image.image_url
+          );
           return {
             title: evolution.title,
-            appointmentDate: appointment.attention_date.split('T')[0],
+            appointmentDate: appointment.attention_date.split("T")[0],
             imageUrls: imageUrls,
             observations: evolution.description,
           };
@@ -63,7 +68,10 @@ export async function getEvolutionsByPatient(userToken: string, patientId: strin
       .filter((evolution) => evolution !== null)
       .sort((a, b) => {
         if (a && b) {
-          return new Date(a.appointmentDate).getTime() - new Date(b.appointmentDate).getTime();
+          return (
+            new Date(a.appointmentDate).getTime() -
+            new Date(b.appointmentDate).getTime()
+          );
         }
         return 0;
       });

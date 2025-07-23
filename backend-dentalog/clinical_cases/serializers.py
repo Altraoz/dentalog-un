@@ -49,6 +49,9 @@ class EvolutionsSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         image_ids = validated_data.pop('image_ids', [])
         evolution = super().create(validated_data)
+        images = EvolutionImage.objects.filter(id__in=image_ids)
+        print(image_ids)
+        print("Image IDs encontrados:", list(images.values_list('id', flat=True)))
         EvolutionImage.objects.filter(id__in=image_ids).update(evolution=evolution)
         return evolution
 
