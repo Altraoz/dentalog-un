@@ -141,7 +141,9 @@ export const PatientModal: React.FC<PatientModalProps> = ({
       return;
     }
 
-    const response = patient ?  await createPatientAndUser(e, user.token, data): await updatePatientAndUser(e, user.token, data);
+    const response = patient
+      ? await createPatientAndUser(e, user.token, data)
+      : await updatePatientAndUser(e, user.token, data);
     console.log(response);
 
     if (response?.status == 201) {
@@ -280,6 +282,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
                 className="form-selects"
               >
                 {/* añadir los options de la base de datos*/}
+                <option value="" disabled></option>
                 <option value="Masculino">Niño</option>
                 <option value="Femenino">Niña</option>
               </select>{" "}
@@ -311,6 +314,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
                 }
                 className="form-selects"
               >
+                <option value="" disabled></option>
                 <option value="O+">O+</option>
                 <option value="O-">O-</option>
                 <option value="A+">A+</option>

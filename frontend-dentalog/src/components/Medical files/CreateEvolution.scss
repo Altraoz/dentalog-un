@@ -1,0 +1,46 @@
+.modal-form {
+  display: flex;
+  flex-direction: column;
+
+  .side-a {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+
+    .icon {
+      width: 1.5rem;
+      height: 1.5rem;
+      color: #9ca3af;
+    }
+
+    .patient-row {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      .patient-info {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin-bottom: 0;
+        box-sizing: border-box;
+        .patient-details {
+          display: flex;
+          flex-direction: column;
+          .patient-name {
+            border-radius: 0;
+            font-size: 1rem;
+            padding: 0;
+            background-color: transparent;
+          }
+          .patient-age {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+
+  .side-b {
+    display: inline-table;
+  }
+}

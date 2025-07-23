@@ -15,12 +15,12 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 
 from .models import (
-    ClinicalCases, EvolutionTypes, Evolutions, AppointmentTypes, Appointments, Procedures, Activities, ActivitiesAppointments
+    ClinicalCases, EvolutionTypes, Evolutions, AppointmentTypes, Appointments, ImagesMedicalFiles, Procedures, Activities, ActivitiesAppointments, MedicalFiles
 )
 from .serializers import (
     ClinicalCasesinAppointmentSerializer, ClinicalCasesSerializer, EvolutionTypesSerializer,
     EvolutionsSerializer, ActivitiesAppointmentsSerializer,
-    AppointmentTypesSerializer, AppointmentSerializer, ProceduresSerializer, ActivitiesSerializer, ProceduresinAppointmentSerializer
+    AppointmentTypesSerializer, AppointmentSerializer, ImagesMedicalFilesSerializer, ProceduresSerializer, ActivitiesSerializer, ProceduresinAppointmentSerializer, MedicalFilesSerializer
 )
 
 from users.serializers import (Patients)
@@ -40,40 +40,6 @@ class ClinicalCasesViewSet(viewsets.ModelViewSet):
         cases = ClinicalCases.objects.filter(patient_id=patient_id)
         serializer = self.get_serializer(cases, many=True)
         return Response(serializer.data)
-
-class EvolutionNotesViewSet(viewsets.ViewSet):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def list(self, request):
-        queryset = EvolutionNotes.objects.all()
-        serializer = EvolutionNotesSerializer(queryset, many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        note = get_object_or_404(EvolutionNotes, pk=pk)
-        serializer = EvolutionNotesSerializer(note)
-        return Response(serializer.data)
-
-    def create(self, request):
-        serializer = EvolutionNotesSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def destroy(self, request, pk=None):
-        note = get_object_or_404(EvolutionNotes, pk=pk)
-        note.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def partial_update(self, request, pk=None):
-        note = get_object_or_404(EvolutionNotes, pk=pk)
-        serializer = EvolutionNotesSerializer(note, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 class EvolutionTypesViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     queryset = EvolutionTypes.objects.all()
@@ -205,3 +171,68 @@ class EvolutionImageViewSet(viewsets.ModelViewSet):
         )
 
         return Response(EvolutionImageSerializer(image).data, status=201)
+    
+
+
+class MedicalFilesViewSet(viewsets.ModelViewSet):
+    queryset = MedicalFiles.objects.all()
+    serializer_class = MedicalFilesSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    # Opcional: permite filtrar por paciente con ?patient=17
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        patient_id = self.request.query_params.get('patient')
+        if patient_id:
+            queryset = queryset.filter(patient=patient_id)
+        return queryset
+    
+
+class ImagesMedicalFilesViewSet(viewsets.ModelViewSet):
+    queryset = ImagesMedicalFiles.objects.all()
+    serializer_class = ImagesMedicalFilesSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        file = request.FILES.get("file")
+        patient = request.data.get("patient")
+
+        try:
+            patient_instance = Patients.objects.get(id=patient)
+        except Patients.DoesNotExist:
+            return Response({"error": "Paciente no encontrado"}, status=404)
+
+        if not file:
+            return Response({"error": "No file uploaded"}, status=400)
+
+        supabase_url = config('SUPABASE_URL')
+        bucket = "medicalfiles"
+        supabase_key = config("SERVICE_ROL")
+
+        ext = os.path.splitext(file.name)[1]  # e.g., '.jpg'
+        unique_id = uuid.uuid4().hex
+        filename = f"{patient}/{unique_id}{ext}"
+
+        import requests
+
+        headers = {
+            "apikey": supabase_key,
+            "Authorization": f"Bearer {supabase_key}",
+            "Content-Type": "application/octet-stream"
+        }
+
+        upload_url = f"{supabase_url}/storage/v1/object/{bucket}/{filename}"
+        res = requests.post(upload_url, headers=headers, data=file.read())
+
+        if res.status_code not in [200, 201]:
+            return Response({"error": res.text}, status=400)
+
+        public_url = f"{supabase_url}/storage/v1/object/public/{bucket}/{filename}"
+
+        image = ImagesMedicalFiles.objects.create(
+            patient=patient_instance,
+            image_url=public_url
+        )
+
+        return Response(ImagesMedicalFilesSerializer(image).data, status=201)
+    

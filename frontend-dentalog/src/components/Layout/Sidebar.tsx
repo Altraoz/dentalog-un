@@ -6,7 +6,8 @@ import {
   Stethoscope,
   LogOut,
   Smile,
-  FolderClock
+  FolderClock,
+  ClipboardPlus,
   // LineChart,
 } from "lucide-react";
 import icon from "../../public/logo.png";
@@ -23,15 +24,24 @@ export const Sidebar: React.FC = () => {
     { path: "/app/appointments", label: "Citas", icon: Calendar },
     // { path: "/app/services", label: "Servicios", icon: Stethoscope },
     { path: "/app/evolutions", label: "Evoluciones", icon: Stethoscope },
-
+    {
+      path: "/app/medical_files",
+      label: "Archivos médicos",
+      icon: ClipboardPlus,
+    },
   ];
 
   const menuAdminItems = [
     { path: "/app/dashboard", label: "Dashboard", icon: Home },
     { path: "/app/patients", label: "Pacientes", icon: Users },
     { path: "/app/appointments", label: "Citas", icon: Calendar },
-    { path: "/app/services", label: "Servicios", icon: Stethoscope },
-
+    // { path: "/app/services", label: "Servicios", icon: Stethoscope },
+    { path: "/app/evolutions", label: "Evoluciones", icon: Stethoscope },
+    {
+      path: "/app/medical_files",
+      label: "Archivos médicos",
+      icon: ClipboardPlus,
+    },
   ];
 
   const menuUserItems = [

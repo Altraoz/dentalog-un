@@ -135,7 +135,7 @@ export const NewProcedureModal: React.FC<NewProcedureModalProps> = ({
             onChange={(e) =>
               setFormData({ ...formData, description: e.target.value })
             }
-            className="form-textarea"
+            className="form-textarea"setImagesInfo
             rows={3}
             required
           />

@@ -61,32 +61,34 @@ class AppointmentTypes(models.Model):
 
 class Appointments(models.Model):
     id = models.BigAutoField(primary_key=True)
-    created_at = models.DateTimeField(auto_now_add=True)  # Automatically set on creation
+    created_at = models.DateTimeField(auto_now_add=True)
+
     patient = models.ForeignKey(
-    'users.Patients',
-    models.DO_NOTHING,
-    related_name='appointment',
-    db_column='patient'  # <- asegúrate que así se llama la columna en la base de datos
+        'users.Patients',
+        models.DO_NOTHING,
+        related_name='appointment',
+        db_column='patient'
     )
+
     attention_date = models.DateTimeField(blank=True, null=True)
     type = models.ForeignKey(AppointmentTypes, models.DO_NOTHING, db_column='type', blank=True, null=True)
-    time = models.TimeField()  # Django maneja time sin zona horaria por defecto
+    time = models.TimeField()
     clinical_case = models.ForeignKey('ClinicalCases', models.DO_NOTHING, db_column='clinical_case')
-    procedure = models.ForeignKey('Procedures', models.CASCADE,null=True, db_column='procedure' , related_name="appointment" )
+
+    procedure = models.ForeignKey(
+        'Procedures',
+        models.CASCADE,
+        null=True,
+        db_column='procedure',
+        related_name="appointment"
+    )
+
     status = models.CharField(
         max_length=20,
-        choices=[
-            ('programada', 'Programada'),
-            ('finalizada', 'Finalizada'),
-            ('cancelada', 'Cancelada'),
-            ('no asistió', 'No Asistió'),
-            ('en progreso', 'En Progreso'),
-            ('reprogramada', 'Reprogramada'),
-        ],
         blank=True,
         null=True
     )
-    updated_at = models.DateTimeField(auto_now=True)  # Automatically updated on each save
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
@@ -137,4 +139,26 @@ class EvolutionImage(models.Model):
     class Meta:
         db_table = 'evolution_images'
         managed = False
+class MedicalFiles(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=255)
+    patient = models.ForeignKey('users.Patients',models.DO_NOTHING, db_column='patient')
+    details = models.TextField(blank=True, null=True)
+    image_url = models.TextField(blank=True, null=True)
 
+    class Meta:
+        managed = False
+        db_table = 'medical_files'
+
+    def __str__(self):
+        return self.nombre
+
+class ImagesMedicalFiles(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    patient = models.ForeignKey('users.Patients',models.DO_NOTHING, db_column='patient')
+    image_url = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False  # porque ya existe en la base de datos
+        db_table = 'images_medical_files'

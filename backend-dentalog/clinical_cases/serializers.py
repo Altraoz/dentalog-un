@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import (
-    ClinicalCases, EvolutionTypes, Evolutions,
+    ClinicalCases, EvolutionTypes, Evolutions, ImagesMedicalFiles, MedicalFiles,
      AppointmentTypes, Appointments, Procedures, Activities, EvolutionImage, ActivitiesAppointments
 )
 
@@ -61,7 +61,7 @@ class AppointmentTypesSerializer(serializers.ModelSerializer):
 class ActivitiesAppointmentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ActivitiesAppointments
-        fields = ['activity']
+        fields = ['activity', 'appointment']  # ✅ ahora sí lo incluye
         extra_kwargs = {
             'appointment': {'required': False}
         }
@@ -208,3 +208,22 @@ class ClinicalCasesinAppointmentSerializer(serializers.ModelSerializer):
                 Activities.objects.create(procedure=procedure, **activity_data)
 
         return clinical_case
+
+class MedicalFilesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MedicalFiles
+        fields = [
+            'id',
+            'created_at',
+            'name',
+            'patient',
+            'details',
+            'image_url'
+        ]
+        read_only_fields = ['id', 'created_at']
+
+class ImagesMedicalFilesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImagesMedicalFiles
+        fields = ['id', 'patient', 'image_url']
+        read_only_fields = ['id']

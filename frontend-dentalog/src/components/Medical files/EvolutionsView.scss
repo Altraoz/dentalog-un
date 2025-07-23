@@ -1,0 +1,133 @@
+.service-catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  .header-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    @media (min-width: 640px) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .header-description {
+      color: #4b5563;
+      margin-top: 0.25rem;
+    }
+  }
+
+  .filters-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    @media (min-width: 1024px) {
+      flex-direction: row;
+    }
+
+    .search-input-container {
+      flex: 1;
+    }
+
+    .categories-container {
+      display: flex;
+      gap: 0.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+
+      @media (min-width: 1024px) {
+        padding-bottom: 0;
+      }
+
+      .category-button {
+        flex-shrink: 0;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #4b5563;
+        border: 1px solid #d1d5db;
+        background-color: transparent;
+        cursor: pointer;
+        transition: background-color 0.2s, color 0.2s;
+
+        &:hover {
+          background-color: #f9fafb;
+        }
+
+        &.category-button-active {
+          background-color: #dbeafe;
+          color: #1e40af;
+          border-color: #bfdbfe;
+        }
+      }
+    }
+  }
+
+  .evolution-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    width: 100%;
+
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+      //   grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: 1fr;
+    }
+
+    .card-evolution {
+      .modal-form {
+        display: flex;
+        flex-direction: column;
+
+        .side-a {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 2rem;
+
+          .icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: #9ca3af;
+          }
+
+          .patient-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            .patient-info {
+              display: flex;
+              gap: 1rem;
+              align-items: center;
+              margin-bottom: 0;
+              .patient-details {
+                .patient-age {
+                  margin-bottom: 0;
+                }
+              }
+            }
+          }
+        }
+
+        .side-b {
+          display: inline-table;
+        }
+      }
+    }
+  }
+}
+
