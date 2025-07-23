@@ -1,11 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, Plus, Clock, User, Phone } from "lucide-react";
 import { Card } from "../ui/Card";
 import { Button } from "../ui/Button";
-import { mockAppointments } from "../../data/mockData";
+import { getAppointments, getAppointmentsType, getActivities } from "../../api/apointments";
+import { getPatients } from "../../api/patients";
 import { AppointmentModal } from "./AppointmentModal";
 import type { Appointment } from "../../types";
 import "./AppointmentCalendar.css";
+import { useAuth } from "../../contexts/AuthContext";
+
 
 export const AppointmentCalendar: React.FC = () => {
   function getDateTimeZone(timeZone: string, date = new Date()): string {
@@ -23,10 +26,68 @@ export const AppointmentCalendar: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
+  const [patients, setPatients] = useState<any[]>([]);
+  const [appointmentTypes, setAppointmentTypes] = useState<any[]>([]);
+  const [activities, setActivities] = useState<any[]>([])
 
-  const dailyAppointments = mockAppointments.filter(
-    (appointment) => appointment.attention_date === selectedDate
-  );
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const appointmentsResponse = await getAppointments(user!.token);
+        if (!appointmentsResponse) return null;
+
+        const patientResponse = await getPatients(user!.token);
+        const patients = patientResponse?.data.results;
+
+        const appointmentTypeResponse = await getAppointmentsType(user!.token);
+        const appointmentTypes = appointmentTypeResponse?.data;
+
+        const activitiesResponse = await getActivities(user!.token);
+        const activities = activitiesResponse?.data;
+
+        const enrichedAppointments = appointmentsResponse.data.map((appointment: any) => {
+          const patient = patients.find((p: any) => p.id === appointment.patient);
+          const patientName = patient.first_name + " " + patient.last_name;
+
+          const appointmentType = appointmentTypes.find((type: any) => type.id === appointment.type);
+          const appointmentTypeName = appointmentType.name;
+
+          const appointmentActivities = appointment.activities.map((actv: any) => {
+            const activity = activities.find((act: any) => act.id === actv.activity);
+            return activity.name;
+          });
+
+          return {
+            ...appointment,
+            patientName,
+            typeName: appointmentTypeName,
+            activities: appointmentActivities
+          };
+        });
+
+        setAppointments(enrichedAppointments);
+        setPatients(patients);
+        setAppointmentTypes(appointmentTypes);
+      } catch (err) {
+        console.error(err)
+      }
+    };
+
+    fetchAppointments();
+  }, [user]);
+
+  const filterAppointments = () => {
+  return appointments.filter((appointment) => {
+    const appointmentDate = appointment.attention_date.split("T")[0];
+    
+    return appointmentDate === selectedDate;
+  });
+};
+
+  const dailyAppointments = filterAppointments();
 
   const handleNewAppointment = () => {
     setSelectedAppointment(null);
@@ -40,28 +101,23 @@ export const AppointmentCalendar: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "scheduled":
+      case "programada":
         return "appointment-scheduled";
-      case "completed":
+      case "atendida":
         return "appointment-completed";
-      case "cancelled":
+      case "cancelada":
         return "appointment-cancelled";
+      case "no asistió":
+        return "appointment-cancelled";
+      case "reprogramada":
+        return "appointment-scheduled";
       default:
         return "appointment-default";
     }
   };
 
   const getStatusText = (status: string) => {
-    switch (status) {
-      case "scheduled":
-        return "Programada";
-      case "completed":
-        return "Completada";
-      case "cancelled":
-        return "Cancelada";
-      default:
-        return status;
-    }
+    return status.charAt(0).toUpperCase() + status.slice(1);
   };
 
   // Generate next 7 days for quick selection
@@ -143,60 +199,52 @@ export const AppointmentCalendar: React.FC = () => {
 
             <div className="appointments-container">
               {dailyAppointments.length > 0 ? (
-                dailyAppointments
-                  // .sort((a, b) => a.time.localeCompare(b.time))
-                  .map((appointment) => (
-                    <div
-                      key={appointment.id}
-                      onClick={() => handleAppointmentClick(appointment)}
-                      className={`appointment-card ${getStatusColor(
-                        appointment.status
-                      )}`}
-                    >
-                      <div className="appointment-content">
-                        <div className="appointment-details">
-                          <div className="appointment-info">
-                            <div className="patient-avatar">
-                              {appointment.patientId
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </div>
-                            <div>
-                              <h4 className="patient-name">
-                                {appointment.patientId}
-                              </h4>
-                              <p className="service-name">
-                                {appointment.type}
-                              </p>
-                            </div>
+                dailyAppointments.map((appointment) => (
+                  <div
+                    key={appointment.id}
+                    onClick={() => handleAppointmentClick(appointment)}
+                    className={`appointment-card ${getStatusColor(appointment.status)}`}
+                  >
+                    <div className="appointment-content">
+                      <div className="appointment-details">
+                        <div className="appointment-info">
+                          <div className="patient-avatar">
+                            {appointment.patientName.split(' ').reduce((acc, curr) => acc + curr.charAt(0), '')}
                           </div>
-
-                          <div className="appointment-meta">
-                            <div className="meta-item">
-                              <Clock className="meta-icon" />
-                              {/* {appointment.time} - {appointment.duration} min */}
-                            </div>
-                            <div className="meta-item">
-                              <User className="meta-icon" />
-                              {appointment.doctorId}
-                            </div>
+                          <div>
+                            <h4 className="patient-name">
+                              {appointment.patientName}
+                            </h4>
+                            <p className="service-name">{appointment.typeName}</p>
+                            {appointment.activities.map((activity) => <li>{activity}</li>)}
                           </div>
                         </div>
 
-                        <div className="appointment-actions">
-                          <span
-                            className={`status-tag status-${appointment.status}`}
-                          >
-                            {getStatusText(appointment.status)}
-                          </span>
-                          <button className="call-button">
-                            <Phone className="call-icon" />
-                          </button>
+                        <div className="appointment-meta">
+                          <div className="meta-item">
+                            <Clock className="meta-icon" />
+                            {appointment.time.slice(0,5)}
+                          </div>
+                          <div className="meta-item">
+                            <User className="meta-icon" />
+                            Luisa
+                          </div>
                         </div>
                       </div>
+
+                      <div className="appointment-actions">
+                        <span
+                          className={`status-tag status-${appointment.status}`}
+                        >
+                          {getStatusText(appointment.status)}
+                        </span>
+                        <button className="call-button">
+                          <Phone className="call-icon" />
+                        </button>
+                      </div>
                     </div>
-                  ))
+                  </div>
+                ))
               ) : (
                 <div className="no-appointments">
                   <Calendar className="no-appointments-icon" />

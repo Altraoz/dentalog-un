@@ -189,9 +189,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
   try {
     const response = await createAppointment(user!.token, appointmentPayload);
 
-    if (response?.status === 201) {
-      console.log(response);
-    }
+    onClose();
   } catch (err) {
     console.error('Error al crear cita:', err);
   }

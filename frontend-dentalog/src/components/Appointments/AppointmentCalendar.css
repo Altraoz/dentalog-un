@@ -232,17 +232,17 @@
   font-weight: 500;
 }
 
-.status-scheduled {
+.status-programada {
   background-color: #dbeafe;
   color: #1e40af;
 }
 
-.status-completed {
+.status-atendida {
   background-color: #d1fae5;
   color: #065f46;
 }
 
-.status-cancelled {
+.status-cancelada {
   background-color: #fee2e2;
   color: #991b1b;
 }

@@ -290,3 +290,18 @@ export async function createAppointment(
     return null;
   }
 }
+
+export async function getActivities(userToken: string) {
+  const url = '/clinical/activities/'
+  try {
+    const response = await api.get(url, {
+      headers: {
+        Authorization: `Token ${userToken}`
+      }
+    });
+    return response;
+  } catch (err) {
+    console.error('Error al traer actividades');
+    return null;
+  }
+}
