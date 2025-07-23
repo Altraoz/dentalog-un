@@ -36,6 +36,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
     first_name: "",
     last_name: "",
     birth_date: "",
+    dni: 0,
     gender: "",
     blood_type: "",
     allergies: "",
@@ -55,6 +56,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
         first_name: patient.first_name,
         last_name: patient.last_name,
         birth_date: patient.birth_date,
+        dni: patient.dni,
         gender: patient.gender,
         blood_type: patient.blood_type,
         allergies: patient.allergies ? patient.allergies.join(", ") : "",
@@ -72,6 +74,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
         first_name: "",
         last_name: "",
         birth_date: "",
+        dni: 0,
         gender: "",
         blood_type: "",
         allergies: "",
@@ -91,40 +94,17 @@ export const PatientModal: React.FC<PatientModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // console.log(user?.token);
-
-    // const data = {
-    //   first_name: "Juan",
-    //   last_name: "Pérez",
-    //   birth_date: "2015-06-25T00:00:00Z",
-    //   gender: "Masculino",
-    //   blood_type: "A+",
-    //   address: "Calle 123 #45-67",
-    //   profile_photo_url:
-    //     "https://img.freepik.com/psd-gratis/3d-ilustracion-persona_23-2149436179.jpg", //dejar por defecto
-    //   dni: 1006999239,
-    //   responsable_user_data: {
-    //     email: "user1@gmail.com",
-    //     password: "pass12345",
-    //     first_name: "Luis",
-    //     last_name: "Pérez",
-    //     phone_number: "3178127431",
-    //     role: 2,
-    //     is_active: "True",
-    //   },
-    // };
-    // console.log("Saving patient:", data);
 
     const data = {
       first_name: formData.first_name,
       last_name: formData.last_name,
       birth_date: formData.birth_date,
+      dni: formData.dni,
       gender: formData.gender,
       blood_type: formData.blood_type,
       address: formData.address,
       profile_photo_url:
         "https://img.freepik.com/psd-gratis/3d-ilustracion-persona_23-2149436179.jpg", //dejar por defecto
-      dni: 1006999239,
       responsable_user_data: {
         email: formData.responsable_user.email,
         password: "generic_password",
@@ -150,63 +130,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
       onClose();
     }
 
-    // let response = await axios.post(
-    //   "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com/auth/register/",
-    //   // "http://127.0.0.1:8000/auth/login/",
-    //   {
-    //     email: formData.responsable_user.email,
-    //     password: "sancocho trifasico",
-    //     first_name: formData.responsable_user.first_name,
-    //     last_name: formData.responsable_user.last_name,
-    //     phone_number: formData.responsable_user.phone_number,
-    //     role: 1, //ESTABLECER EN BACKEND QUE SI NO SE PASA ROL ENTONCES ES user
-    //     is_active: "True", //ESTE TAMBIEN
-    //   },
-
-    //   {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "X-CSRFToken": csrftoken,
-    //     },
-    //     withCredentials: true, // Importante si tu backend requiere cookies
-    //   }
-    // );
-
-    // console.log(response);
-    // let id_user = null;
-
-    // if (response.status == 200) {
-    //   id_user = response.data.user.id_user;
-    // }
-
-    // response = await axios.post(
-    //   "http://django-env.eba-3ppwu5a9.us-west-2.elasticbeanstalk.com/auth/patients/",
-    //   // "http://127.0.0.1:8000/auth/login/",
-    //   {
-    //     first_name: formData.first_name,
-    //     last_name: formData.last_name,
-    //     birth_date: formData.birth_date,
-    //     responsable_user: id_user ? id_user : 1,
-    //     gender: formData.gender,
-    //     blood_type: formData.blood_type,
-    //     insurance_provider: "uwu",
-    //     address: formData.address,
-    //     profile_photo_url: formData.profile_photo_url,
-    //   },
-
-    //   {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "X-CSRFToken": csrftoken,
-    //       Authorization: `Token ${user?.token}`,
-    //     },
-    //     withCredentials: true, // Importante si tu backend requiere cookies
-    //   }
-    // );
-
     console.log(response);
-
-    // onClose();
   };
 
   const calculateAge = (birthDate: string) => {
@@ -254,7 +178,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
           />
         </div>
 
-        <div className="form-grid-three">
+        <div className="form-grid-two">
           <Input
             label="Fecha de Nacimiento"
             type="date"
@@ -265,6 +189,14 @@ export const PatientModal: React.FC<PatientModalProps> = ({
             icon={Calendar}
             required
           />
+          <Input
+            label="Número de Identificación"
+            type="number"
+            value={formData.dni.toString()}
+            onChange={(value) => setFormData({...formData, dni: parseInt(value)})}
+          />
+        </div>
+        <div className="form-grid-two">
           <div className="form-group">
             <label className="form-label">
               Género <span className="required">*</span>
