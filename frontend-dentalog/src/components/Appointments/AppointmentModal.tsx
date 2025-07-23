@@ -187,7 +187,7 @@ export const AppointmentModal: React.FC<AppointmentModalProps> = ({
   };
 
   try {
-    const response = await createAppointment(user!.token, appointmentPayload);
+    await createAppointment(user!.token, appointmentPayload);
 
     onClose();
   } catch (err) {

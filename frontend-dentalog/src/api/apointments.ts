@@ -305,3 +305,29 @@ export async function getActivities(userToken: string) {
     return null;
   }
 }
+
+export async function updateAppointment(userToken: string, appointmentID: number, data: any) {
+  const url = `/clinical/appointments/${appointmentID}/`; // Endpoint para actualizar la cita
+  const csrftoken = Cookies.get("csrftoken");
+
+  try {
+    // Realizamos la solicitud PATCH para actualizar la cita
+    const response = await api.patch(url, data, {
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": csrftoken || "",
+        Authorization: `Token ${userToken}`, // Token de autenticación
+      },
+    });
+
+    if (response.status === 200) {
+      return response.data; // Si la respuesta es exitosa, devolvemos los datos actualizados
+    } else {
+      console.error("Error al actualizar la cita:", response.status);
+      return null;
+    }
+  } catch (err) {
+    console.error("Error en la solicitud de actualización:", err);
+    return null; // Si ocurre un error, devolvemos null
+  }
+}

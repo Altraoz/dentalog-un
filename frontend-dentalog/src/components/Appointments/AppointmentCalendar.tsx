@@ -8,6 +8,7 @@ import { AppointmentModal } from "./AppointmentModal";
 import type { Appointment } from "../../types";
 import "./AppointmentCalendar.css";
 import { useAuth } from "../../contexts/AuthContext";
+import { AppointmentEditModal } from "./AppointmentEditModal";
 
 
 export const AppointmentCalendar: React.FC = () => {
@@ -20,17 +21,15 @@ export const AppointmentCalendar: React.FC = () => {
     });
     return formatter.format(date);
   }
-  const [selectedDate, setSelectedDate] = useState(
-    getDateTimeZone("America/Bogota")
-  );
+  const [selectedDate, setSelectedDate] = useState(getDateTimeZone("America/Bogota"));
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedAppointment, setSelectedAppointment] =
-    useState<Appointment | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
   const [patients, setPatients] = useState<any[]>([]);
   const [appointmentTypes, setAppointmentTypes] = useState<any[]>([]);
-  const [activities, setActivities] = useState<any[]>([])
-
+  const [activities, setActivities] = useState<any[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+
   const { user } = useAuth();
 
   useEffect(() => {
@@ -59,6 +58,13 @@ export const AppointmentCalendar: React.FC = () => {
             const activity = activities.find((act: any) => act.id === actv.activity);
             return activity.name;
           });
+
+          console.log({
+            ...appointment,
+            patientName,
+            typeName: appointmentTypeName,
+            activities: appointmentActivities
+          })
 
           return {
             ...appointment,
@@ -96,7 +102,7 @@ export const AppointmentCalendar: React.FC = () => {
 
   const handleAppointmentClick = (appointment: Appointment) => {
     setSelectedAppointment(appointment);
-    setIsModalOpen(true);
+    setIsEditModalOpen(true);
   };
 
   const getStatusColor = (status: string) => {
@@ -265,6 +271,11 @@ export const AppointmentCalendar: React.FC = () => {
           </Card>
         </div>
       </div>
+      <AppointmentEditModal
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        appointment={selectedAppointment}
+      />
 
       <AppointmentModal
         isOpen={isModalOpen}
