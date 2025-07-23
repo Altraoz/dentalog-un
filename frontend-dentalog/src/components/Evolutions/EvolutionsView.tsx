@@ -1,72 +1,68 @@
 import React, { useState } from "react";
 import { PatientCard } from "./Card";
 
-import {
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
-  TextField,
-  IconButton,
-  // CircularProgress,
-} from "@mui/material";
+// import {
+//   Select,
+//   MenuItem,
+//   InputLabel,
+//   FormControl,
+//   TextField,
+//   IconButton,
+//   // CircularProgress,
+// } from "@mui/material";
 
-import { Plus, Search, ArrowLeft } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { Card } from "../ui/Card";
 import { Input } from "../ui/Input";
 import { Button } from "../ui/Button";
 import { mockServices } from "../../data/mockData";
-import "./EvolutionsView.scss";
-import type { Patient } from "../../types";
+import { CreateEvolution } from "./CreateEvolution";
+// import "./EvolutionsView.scss";
+// import type { Patient } from "../../types";
 
-import { DraggItem } from "./DraggItem";
+// import { CreateEvolution } from "./CreateEvolution";
 
+const patient = { id: 24, name: "Juanito Arevalo", age: 10, gender: "Hombre" };
 
-interface PatientModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  patient: Patient | null;
-}
-
-export const EvolutionsView: React.FC<PatientModalProps> = ({ patient }) => {
-  const patientId = patient ? patient.id : null;
-  const [formData, setFormData] = useState({
-    appoinment: "",
-    clinical_case: "",
-    type: "",
-    percente_advance: "",
-    title: "",
-    description: "",
-  });
+export const EvolutionsView = () => {
+  // const patientId = patient ? patient.id : null;
+  // const [formData, setFormData] = useState({
+  //   appoinment: "",
+  //   clinical_case: "",
+  //   type: "",
+  //   percente_advance: "",
+  //   title: "",
+  //   description: "",
+  // });
 
   const [buttonVariable, setButtonVariable] = useState(true);
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const data = {
-      appoinment: formData.appoinment,
-      clinical_case: formData.clinical_case,
-      type: formData.type,
-      percente_advance: formData.percente_advance,
-      title: formData.title,
-      description: formData.description,
-    };
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   const data = {
+  //     appoinment: formData.appoinment,
+  //     clinical_case: formData.clinical_case,
+  //     type: formData.type,
+  //     percente_advance: formData.percente_advance,
+  //     title: formData.title,
+  //     description: formData.description,
+  //   };
 
-    console.log("Form submitted with data:", data);
-    console.log("Patient ID:", patientId);
+  // console.log("Form submitted with data:", data);
+  // console.log("Patient ID:", patientId);
 
-    // if (!user) {
-    //   console.error("User is not authenticated.");
-    //   return;
-    // }
+  // if (!user) {
+  //   console.error("User is not authenticated.");
+  //   return;
+  // }
 
-    // const response = patient ?  await createPatientAndUser(e, user.token, data): await updatePatientAndUser(e, user.token, data);
-    // console.log(response);
+  // const response = patient ?  await createPatientAndUser(e, user.token, data): await updatePatientAndUser(e, user.token, data);
+  // console.log(response);
 
-    // if (response?.status == 201) {
-    //   onClose();
-    // }
-    // console.log(response);
-  };
+  // if (response?.status == 201) {
+  //   onClose();
+  // }
+  // console.log(response);
+  // };
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -292,181 +288,10 @@ export const EvolutionsView: React.FC<PatientModalProps> = ({ patient }) => {
               />
             </div>
           ) : (
-            // {filteredServices.length === 0 && (
-            //   <Card className="empty-state">
-            //     <div className="empty-state-content">
-            //       <Stethoscope className="empty-state-icon" />
-            //       <p className="empty-state-text">No se encontraron servicios</p>
-            //       <p className="empty-state-subtext">
-            //         {searchTerm ? 'Intenta con otros términos de búsqueda' : 'No hay servicios en esta categoría'}
-            //       </p>
-            //     </div>
-            //   </Card>
-            // )}
-
-            <form onSubmit={handleSubmit} className="modal-form">
-              <div className="form-grid-two">
-                <div className="form-grid side-a">
-                  <div className="patient-row">
-                    <IconButton
-                      color="primary"
-                      aria-label="add to shopping cart"
-                      onClick={() => setButtonVariable(true)}
-                    >
-                      <ArrowLeft />
-                    </IconButton>
-                    <div className="patient-info flex">
-                      <div className="patient-avatar">
-                        <img
-                          src="https://img.freepik.com/psd-gratis/3d-ilustracion-persona-cabello-largo_23-2149436197.jpg"
-                          alt="sdfasdf"
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            borderRadius: "50%",
-                          }}
-                        />
-                      </div>
-                      <div className="patient-details">
-                        <span className="patient-name">Sofiía Rodriguez</span>
-                        <p className="patient-age">7 años - Female</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="form-grid-two">
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Cita
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={formData.appoinment}
-                        label="Cita"
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            appoinment: e.target.value as
-                              | "Masculino"
-                              | "Femenino",
-                          })
-                        }
-                      >
-                        <MenuItem value="Masculino">Masculino</MenuItem>
-                        <MenuItem value="Femenino">Femenino</MenuItem>
-                      </Select>
-                    </FormControl>
-
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Tipo de evolución
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={formData.type}
-                        label="Tipo de evolución"
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            type: e.target.value as "Masculino" | "Femenino",
-                          })
-                        }
-                      >
-                        <MenuItem value="Masculino">Masculino</MenuItem>
-                        <MenuItem value="Femenino">Femenino</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </div>
-                  <div className="form-grid-two">
-                    <FormControl>
-                      <TextField
-                        id="outlined-basic"
-                        label="Nombre de la evolución"
-                        variant="outlined"
-                        value={formData.title}
-                        onChange={(event) =>
-                          setFormData({
-                            ...formData,
-                            title: event.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </FormControl>
-                    {/* <Input
-                    label="Titulo de la evolución"
-                    value={formData.title}
-                    onChange={(value) =>
-                      setFormData({ ...formData, title: value })
-                    }
-                    icon={LetterText}
-                    required
-                  /> */}
-
-                    <FormControl>
-                      <TextField
-                        id="outlined-basic"
-                        label="Avance (%)"
-                        variant="outlined"
-                        value={formData.percente_advance}
-                        type="number"
-                        onChange={(event) =>
-                          setFormData({
-                            ...formData,
-                            percente_advance: event.target.value,
-                          })
-                        }
-                        required
-                      />
-                    </FormControl>
-                    {/* <Input
-                    label="Avance (%)"
-                    value={formData.percente_advance}
-                    onChange={(value) =>
-                      setFormData({ ...formData, percente_advance: value })
-                    }
-                    icon={ChartNoAxesCombined}
-                    required
-                  /> */}
-                  </div>
-                  <div className="form-group">
-                    <FormControl fullWidth>
-                      <TextField
-                        label="Observaciones"
-                        multiline
-                        rows={4}
-                        value={formData.description}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            description: e.target.value,
-                          })
-                        }
-                      />
-                    </FormControl>
-                    {/* 
-                  <label className="form-label form-label-alert">
-                    <AlignLeft className="icon" />
-                    Descripción de la evolución
-                  </label>
-                  <textarea
-                    value={formData.description}
-                    onChange={(e) =>
-                      setFormData({ ...formData, description: e.target.value })
-                    }
-                    rows={2}
-                    className="form-textarea"
-                    placeholder="Alergias conocidas (medicamentos, alimentos, materiales)..."
-                  /> */}
-                  </div>
-                </div>
-                <div className="side-b">
-                  <DraggItem />
-                </div>
-              </div>
-            </form>
+            <CreateEvolution
+              patient={patient}
+              onBack={() => setButtonVariable(true)}
+            />
           )}
         </Card>
       </div>
