@@ -33,16 +33,24 @@ class EvolutionImageSerializer(serializers.ModelSerializer):
 
 class EvolutionsSerializer(serializers.ModelSerializer):
     images = EvolutionImageSerializer(many=True, read_only=True)
+    image_ids = serializers.ListField(
+        write_only=True, child=serializers.IntegerField(), required=False
+    )
 
     class Meta:
         model = Evolutions
         fields = [
             'id', 'created_at', 'appointment', 'type',
-            'percent_advance', 'description', 'title','images'
+            'percent_advance', 'description', 'title','images', 'image_ids'
         ]
         extra_kwargs = {
             'created_at': {'read_only': True}
         }
+    def create(self, validated_data):
+        image_ids = validated_data.pop('image_ids', [])
+        evolution = super().create(validated_data)
+        EvolutionImage.objects.filter(id__in=image_ids).update(evolution=evolution)
+        return evolution
 
 class AppointmentTypesSerializer(serializers.ModelSerializer):
     class Meta:

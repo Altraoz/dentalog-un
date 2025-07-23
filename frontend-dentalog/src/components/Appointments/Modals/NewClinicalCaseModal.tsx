@@ -85,7 +85,7 @@ export const NewClinicalCaseModal: React.FC<NewCaseModalProps> = ({
     e.preventDefault();
     setWaitingResponse(true);
     const newCase = {
-      patient: 3,
+      patient: Number(formData.patientId),
       summary: formData.summary,
       initial_diagnosis: formData.diagnosis,
       treatment_plan: formData.treatmentPlan,
