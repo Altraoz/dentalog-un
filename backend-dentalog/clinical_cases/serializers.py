@@ -92,6 +92,34 @@ class AppointmentSerializer(serializers.ModelSerializer):
                 activity=activity 
             )
         return appointment
+    
+    def update(self, instance, validated_data):
+        # Extraemos actividades
+        new_activities_data = validated_data.pop('activities_links', [])
+
+        # Actualizamos los campos normales del appointment
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        # Actualizamos las actividades asociadas
+        # 1. Obtener los nuevos IDs de actividades
+        new_activity_ids = [activity_data['activity'].id for activity_data in new_activities_data]
+        print(new_activity_ids)
+        # 2. Eliminar actividades existentes que ya no están
+        ActivitiesAppointments.objects.filter(appointment=instance).exclude(activity_id__in=new_activity_ids).delete()
+
+        # 3. Agregar nuevas actividades (evitando duplicados)
+        existing_links = ActivitiesAppointments.objects.filter(appointment=instance).values_list('activity_id', flat=True)
+
+        for activity_id in new_activity_ids:
+            if activity_id not in existing_links:
+                ActivitiesAppointments.objects.create(
+                    appointment=instance,
+                    activity_id=activity_id
+                )
+        return instance
+
 class ProceduresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Procedures

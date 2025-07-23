@@ -227,59 +227,6 @@ export const MedicalFilesView = () => {
       <div className="evolution-grid">
         <Card className="card-evolution">
           {buttonVariable ? (
-            // <div className="services-grid">
-            //   {filteredServices.map((service) => (
-            //     <Card key={service.id} hover className="service-card">
-            //       <div className="card-content">
-            //         <div className="card-header">
-            //           <div className="icon-container">
-            //             <Stethoscope className="icon" />
-            //           </div>
-            //           <span
-            //             className={`category-tag ${getCategoryColor(
-            //               service.category
-            //             )}`}
-            //           >
-            //             {getCategoryName(service.category)}
-            //           </span>
-            //         </div>
-
-            //         <div className="card-body">
-            //           <h3 className="service-title">{service.name}</h3>
-            //           <p className="service-description">
-            //             {service.description}
-            //           </p>
-
-            //           <div className="service-details">
-            //             <div className="detail-item">
-            //               <Clock className="detail-icon" />
-            //               <span>{service.duration} minutos</span>
-            //             </div>
-            //             <div className="detail-item">
-            //               <Users className="detail-icon" />
-            //               <span>{service.ageRange}</span>
-            //             </div>
-            //             <div className="detail-item">
-            //               <DollarSign className="detail-icon price-icon" />
-            //               <span className="price">{service.price}</span>
-            //             </div>
-            //           </div>
-            //         </div>
-
-            //         <div className="card-footer">
-            //           <div className="button-group">
-            //             <Button variant="outline" className="action-button">
-            //               Editar
-            //             </Button>
-            //             <Button className="action-button">
-            //               Programar Cita
-            //             </Button>
-            //           </div>
-            //         </div>
-            //       </div>
-            //     </Card>
-            //   ))}
-            // </div>
             <div
               className="patient-grid"
               style={
@@ -327,8 +274,81 @@ export const MedicalFilesView = () => {
                   ))}
                 </>
               )}
+            </div>
+          ) : (
+            <CreateEvolution
+              patient={{
+                id: patient!.id,
+                name: patient!.name,
+                gender: patient!.gender,
+                age: patient!.age,
+                avatarUrl: patient!.avatarUrl,
+              }}
+              onBack={() => setButtonVariable(true)}
+            />
+          )}
+        </Card>
+      </div>
+    </div>
+  );
+};
 
-              {/* <PatientCard
+// <div className="services-grid">
+//   {filteredServices.map((service) => (
+//     <Card key={service.id} hover className="service-card">
+//       <div className="card-content">
+//         <div className="card-header">
+//           <div className="icon-container">
+//             <Stethoscope className="icon" />
+//           </div>
+//           <span
+//             className={`category-tag ${getCategoryColor(
+//               service.category
+//             )}`}
+//           >
+//             {getCategoryName(service.category)}
+//           </span>
+//         </div>
+
+//         <div className="card-body">
+//           <h3 className="service-title">{service.name}</h3>
+//           <p className="service-description">
+//             {service.description}
+//           </p>
+
+//           <div className="service-details">
+//             <div className="detail-item">
+//               <Clock className="detail-icon" />
+//               <span>{service.duration} minutos</span>
+//             </div>
+//             <div className="detail-item">
+//               <Users className="detail-icon" />
+//               <span>{service.ageRange}</span>
+//             </div>
+//             <div className="detail-item">
+//               <DollarSign className="detail-icon price-icon" />
+//               <span className="price">{service.price}</span>
+//             </div>
+//           </div>
+//         </div>
+
+//         <div className="card-footer">
+//           <div className="button-group">
+//             <Button variant="outline" className="action-button">
+//               Editar
+//             </Button>
+//             <Button className="action-button">
+//               Programar Cita
+//             </Button>
+//           </div>
+//         </div>
+//       </div>
+//     </Card>
+//   ))}
+// </div>
+
+{
+  /* <PatientCard
                 avatarUrl="https://img.freepik.com/psd-gratis/3d-ilustracion-persona-cabello-largo_23-2149436197.jpg"
                 name="Sofía Ramírez"
                 sex="Female"
@@ -381,22 +401,5 @@ export const MedicalFilesView = () => {
                 bloodType="A+"
                 dni="106789012"
                 handleNavigate={() => setButtonVariable(false)}
-              /> */}
-            </div>
-          ) : (
-            <CreateEvolution
-              patient={{
-                id: patient!.id,
-                name: patient!.name,
-                gender: patient!.gender,
-                age: patient!.age,
-                avatarUrl: patient!.avatarUrl
-              }}
-              onBack={() => setButtonVariable(true)}
-            />
-          )}
-        </Card>
-      </div>
-    </div>
-  );
-};
+              /> */
+}
