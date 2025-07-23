@@ -55,7 +55,7 @@ export const PatientModal: React.FC<PatientModalProps> = ({
       setFormData({
         first_name: patient.first_name,
         last_name: patient.last_name,
-        birth_date: patient.birth_date,
+        birth_date: patient.birth_date.split('T')[0],
         dni: patient.dni,
         gender: patient.gender,
         blood_type: patient.blood_type,
